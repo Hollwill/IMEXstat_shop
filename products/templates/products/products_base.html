@@ -4,10 +4,12 @@
 {% block content %}
 <section class="search search__min">
 	<div class="container-fluid">
-		<div class="row search__row">
-			<input type="text" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
-			<button class="search__button">Поиск</button>
-		</div>
+		<form action="", method="get">
+			<div class="row search__row">
+				<input type="text" name="research" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
+				<button type="submit" class="search__button">Поиск</button>
+			</div>
+		</form>
 	</div>
 </section>
 <section class="ready">

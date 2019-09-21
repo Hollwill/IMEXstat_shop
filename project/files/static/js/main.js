@@ -21,14 +21,20 @@ $(function ()    {
             }
         });
     });
+    /* На основе url меняет цвет нужного типа исследования */
     $(document).ready(function(){
-        if (window.location.href.indexOf('industry') >= 0) {
-            $('#industry').addClass('ready__type-itemActive') 
-        } else if (window.location.href.indexOf('export') >= 0) {
-            $('#export').addClass('ready__type-itemActive')
-        } else if (window.location.href.indexOf('import') >= 0) {
-            $('#import').addClass('ready__type-itemActive')
+        if (window.location.href.indexOf('research=') >= 0) {
+            $('.ready__type-item').Class('ready__type-item');
+        } else {
+            if (window.location.href.indexOf('industry') >= 0) {
+                $('#industry').addClass('ready__type-itemActive'); 
+            } else if (window.location.href.indexOf('export') >= 0) {
+                $('#export').addClass('ready__type-itemActive');
+            } else if (window.location.href.indexOf('import') >= 0) {
+                $('#import').addClass('ready__type-itemActive');
+            }
         }
+        
     });
     $(document).ready(function(){
         $('#contents_button').on('click', function (event) {

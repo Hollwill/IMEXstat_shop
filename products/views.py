@@ -4,12 +4,16 @@ from .models import(
     Category
 )
 from .mixins import CategoryContextMixin
+from django.views import View
 
 class ResearchListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
     def get_queryset(self):
-        return Research.objects.filter(research_type=self.kwargs['type'])
+        if self.request.GET.get('research'):
+            return Research.objects.filter(title__icontains=self.request.GET.get('research'))
+        else:
+            return Research.objects.filter(research_type=self.kwargs['type'])
 
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
