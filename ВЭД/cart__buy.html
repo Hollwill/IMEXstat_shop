@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head> 
+    <title>[[*pagetitle]] - [[++site_name]]</title>	
+    <meta charset="utf-8" />   
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap&subset=cyrillic" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/app/css/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/app/css/slick-theme.css"/>
+    <link rel="stylesheet" href="assets/app/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/app/css/main.css">
+</head>
+<body id="cartBuy">
+
+<section class="header__top">
+    <div class="container-fluid">
+        <div class="row header__top-row">
+            <div class="header__top-left">
+                <a href="tel:+7 913 903 56 16" class="header__top-links">+7 913 903 56 16</a>
+                <a href="tel:+7 913 903 56 16" class="header__top-links">+7 913 903 56 16</a>
+                <a href="mailto:mail@imexstat.ru" class="header__top-links">mail@imexstat.ru</a>
+            </div>
+            <div class="header__top-right">
+                <a href="" class="header__top-links">Статьи</a>
+                <a href="" class="header__top-links">Справочник</a>
+                <a href="" class="header__top-links">Корзина</a>
+                <a href="" class="header__top-login">Войти в личный кабинет</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<header>
+    <div class="container-fluid">
+        <div class="row header__row">
+            <a href="" class="header__logo">
+                <div class="logo">
+
+                </div>
+                <p>IMEXstat</p>
+            </a>
+            <div class="header__menu header__menu-desktop" id="header__menu">
+                <nav class="navbar navbar-expand-lg navbar-light" id="menu">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Таможенная статистика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Заказные исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Готовые исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">По ИНН</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Контакты</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="header__menu header__menu-desktop header__menu-mobile" id="header__menu">
+                <nav class="navbar navbar-expand-lg navbar-light" id="menu">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Таможенная статистика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Заказные исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Готовые исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">По ИНН</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Контакты</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<section class="cartBuy__bio">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="section__title">
+                <h2>Оформление заказа</h2>
+                <div class="section__title-line"></div>
+            </div>
+        </div>
+        <div class="row cartBuy__bio-types">
+            <div class="cartBuy__bio-type">
+                <label class="checkbox-transform">
+                    <input type="radio" name="bio" class="checkbox__input" checked onchange="cartBuy('fizbioform','cartBuy__paysfiz','urbioform','cartBuy__paysur');">
+                    <span class="checkbox__label">Физическое лицо</span>
+                </label>
+            </div>
+            <div class="cartBuy__bio-type">
+                <label class="checkbox-transform">
+                    <input type="radio" name="bio" class="checkbox__input" onchange="cartBuy('urbioform','cartBuy__paysur','fizbioform','cartBuy__paysfiz');">
+                    <span class="checkbox__label">Юридическое лицо</span>
+                </label>
+            </div>
+        </div>
+        <div class="row cartBuy__bio-forms" id="fizbioform">
+            <div class="cartBuy__bio-formItem">
+                <p>Как вас зовут?</p>
+                <input type="text" placeholder="Иван Сергеевич">
+            </div>
+            <div class="cartBuy__bio-formItem">
+                <p>Контактные данные</p>
+                <input type="text" placeholder="Например E-mail">
+            </div>
+        </div>
+        <div class="row cartBuy__bio-forms" id="urbioform">
+            <div class="cartBuy__bio-formItem">
+                <p>Как вас зовут?</p>
+                <input type="text" placeholder="Иван Сергеевич">
+                <p>Название компании</p>
+                <input type="text" placeholder="">
+            </div>
+            <div class="cartBuy__bio-formItem">
+                <p>Контактные данные</p>
+                <input type="text" placeholder="Например E-mail">
+                <div class="row">
+                    <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot">
+                        <p>ИНН</p>
+                        <input type="text">
+                    </div>
+                    <div class="cartBuy__bio-formItem cartBuy__bio-formItemBot">
+                        <p>КПП</p>
+                        <input type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="cartBuy__list inn__point">
+    <div class="container-fluid">
+        <div class="row">
+            <h3>Перечень покупок</h3>
+        </div>
+        <div class="row cartBuy__items">
+            <div class="cartBuy__item">
+                <div class="cartBuy__item-name">
+                    <h5>Отчёт номер 1</h5>
+                </div>
+                <div class="cartBuy__item-settings">
+                    <div class="cartBuy__item-settingsLeft">
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio2" class="checkbox__input" checked>
+                            <span class="checkbox__label">Ежемесячное обновление</span>
+                        </label>
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio2" class="checkbox__input">
+                            <span class="checkbox__label">Ежеквартальное обновление</span>
+                        </label>
+                    </div>
+                    <div class="cartBuy__item-settingsRight">
+                        <a href="">На один месяц</a>
+                        <a href="">На пол года</a>
+                        <a href="">На один квартал</a>
+                        <a href="">На один год</a>
+                    </div>
+                </div>
+                <div class="cartBuy__item-price">
+                    <div class="cartBuy__item-priceBlock">
+                        <p>250 Р</p>
+                        <a href="">Отменить заказ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="cartBuy__item">
+                <div class="cartBuy__item-name">
+                    <h5>Отчёт номер 2</h5>
+                </div>
+                <div class="cartBuy__item-settings">
+                    <div class="cartBuy__item-settingsLeft">
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio3" class="checkbox__input" checked>
+                            <span class="checkbox__label">Ежемесячное обновление</span>
+                        </label>
+                        <label class="checkbox-transform">
+                            <input type="radio" name="bio3" class="checkbox__input">
+                            <span class="checkbox__label">Ежеквартальное обновление</span>
+                        </label>
+                    </div>
+                    <div class="cartBuy__item-settingsRight">
+                        <a href="">На один месяц</a>
+                        <a href="">На пол года</a>
+                        <a href="">На один квартал</a>
+                        <a href="">На один год</a>
+                    </div>
+                </div>
+                <div class="cartBuy__item-price">
+                    <div class="cartBuy__item-priceBlock">
+                        <p>250 Р</p>
+                        <a href="">Отменить заказ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="cartBuy__pay inn__point">
+    <div class="container-fluid">
+        <div class="row">
+            <h3>Способ оплаты</h3>
+        </div>
+        <div class="row cartBuy__pay-row">
+            <div class="cartBuy__pays" id="cartBuy__paysfiz">
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input" checked>
+                    <span class="checkbox__label">Банковской картой</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input">
+                    <span class="checkbox__label">Яндекс деньги</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input" >
+                    <span class="checkbox__label">Сбербанк онлайн</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input" >
+                    <span class="checkbox__label">Вебмани</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input" >
+                    <span class="checkbox__label">Киви кошелёк</span>
+                </label>
+            </div>
+            <div class="cartBuy__pays" id="cartBuy__paysur">
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input" checked>
+                    <span class="checkbox__label">По безналичному расчёту</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" name="pays" class="checkbox__input">
+                    <span class="checkbox__label">Банковской картой</span>
+                </label>
+
+            </div>
+            <div class="cartBuy__pay-button">
+                <a href="">Оплатить</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer__bg-none">
+    <div class="container">
+        <div class="row header__row footer__menu">
+            <a href="" class="header__logo">
+                <div class="logo">
+
+                </div>
+                <p>IMEXstat</p>
+            </a>
+            <div class="header__menu header__menu-desktop" id="header__menu">
+                <nav class="navbar navbar-expand-lg navbar-light" id="menu">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Таможенная статистика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Заказные исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Готовые исследования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">По ИНН</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Контакты</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="row footer__content">
+            <div class="footer__item">
+                <p>ИНН 1231542453445</p>
+                <p>ОГРН 123154245345</p>
+            </div>
+            <div class="footer__item">
+                <table>
+                    <tr>
+                        <td><p>Телефон: </p></td>
+                        <td><a href="tel:+7 913 903 56 16">+7 913 903 56 16</a></td>
+                    </tr>
+                    <tr>
+                        <td><p>Факс: </p></td>
+                        <td><a href="tel:+7 913 903 56 16">+7 913 903 56 16</a></td>
+                    </tr>
+                    <tr>
+                        <td><p>E-mail:</p></td>
+                        <td><a href="mailto:mail@imexstat.ru">mail@imexstat.ru</a></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="footer__item">
+                <p>Наши социальные сети</p>
+                <div class="footer__item-social">
+                    <a href="" class="social__item">
+                        <img src="assets/app/img/facebook.svg" alt="">
+                    </a>
+                    <a href="" class="social__item">
+                        <img src="assets/app/img/vk.svg" alt="">
+                    </a>
+                    <a href="" class="social__item">
+                        <img src="assets/app/img/telegram.svg" alt="">
+                    </a>
+                    <a href="" class="social__item">
+                        <img src="assets/app/img/twitter.svg" alt="">
+                    </a>
+                    <a href="" class="social__item">
+                        <img src="assets/app/img/inst.svg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="" class="up">
+        <img src="assets/app/img/up.svg" alt="">
+    </a>
+</footer>
+
+
+
+<script src="assets/app/js/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="assets/app/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/app/js/slick.min.js"></script>
+<script type="text/javascript" src="assets/app/js/slick.js"></script>
+<script src="assets/app/js/main.js"></script>
+
+
+</body>
+</html>
