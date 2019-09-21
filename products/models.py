@@ -3,9 +3,9 @@ from personal_cabinet.models import Client
 
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
-        ('OTR', 'Отраслевое'),
-        ('EXP', 'Экспорт'),
-        ('IMP', 'Импорт')
+        ('industry', 'Отраслевое'),
+        ('export', 'Экспорт'),
+        ('import', 'Импорт')
     ]
     title = models.CharField(max_length=100)
     category = models.ForeignKey('Category', on_delete=models.PROTECT)
@@ -17,7 +17,7 @@ class Research(models.Model):
     contents = models.TextField()
     using_methods = models.TextField()
     data_sources = models.TextField()
-    research_type = models.CharField(max_length=3, choices=TYPE_RESEARCH_CHOICE)
+    research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE)
     OM_cost = models.IntegerField()
     OQ_cost = models.IntegerField()
     HY_cost = models.IntegerField()

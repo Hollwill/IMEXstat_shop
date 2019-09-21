@@ -1,0 +1,39 @@
+{% extends 'products/products_base.html' %}
+
+
+{% block title %}Отраслевые исследования{% endblock title %}
+
+{% load static %}
+{% block inner_content %}
+<div itemscope itemtype="https://schema.org/NewsArticle" class="ready__items">
+    {% for research in researchs %}
+    <div class="ready__item">
+        <div itemprop="associatedMedia" class="ready__item-img">
+            <img class="ready__item-img" src="{{ research.image.url }}" alt="">
+        </div> 
+        <div class="ready__item-right">
+            <div class="ready__item-top">
+                <div class="ready__item-topLeft">
+                    <div class="ready__item-topLeftRow">
+                        <h2 itemprop="headline">{{ research.title}}</h2>
+                        <div class="ready__item-stars"></div>
+                        <h2>{{ research.OM_cost}} Р</h2>
+                    </div>
+                    <p itemprop="description">{{ research.description}}</p>
+                    <a href="{% url 'research_detail' research.pk %}">Подробнее...</a>
+                </div>
+                <div class="ready__item-topRight">
+                    <h2>Дополнительно:</h2>
+                    <p>Ежемесячное обноваление данных</p>
+                    <p><span>*обновления первых трех месяцев бесплатно</span></p>
+                </div>
+            </div>
+            <div class="ready__item-bottom">
+                <a href="">Добавить в корзину</a>
+                <a href="{% url 'research_buy' research.pk %}">Купить</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock inner_content %}

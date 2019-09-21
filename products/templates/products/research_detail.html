@@ -1,0 +1,37 @@
+{% extends "products/products_base.html" %}
+
+{% load static %}
+{% block inner_content %}
+<div itemscope itemtype="https://schema.org/NewsArticle" class="readyMore__content">
+	<div itemprop="associatedMedia" class="readyMore__content-img">
+		<img class="readyMore__content-img" src="{{ research.image.url }}" alt="">
+	</div>
+	<div class="readyMore__content-desc">
+		<div class="readyMore__content-title">
+			<div class="readyMore__content-titleLeft">
+				<h2 itemprop="headline">{{ research.title }}</h2>
+				<img src="{% static "img/star.svg" %}" alt="">
+			</div>
+			<div class="readyMore__content-titleRight">
+				<h2>{{ research.OM_cost}} Р</h2>
+			</div>
+		</div>
+		<div class="readyMore__content-mid">
+			<p itemprop="description">{{ research.description}} </p>
+		</div>
+		<!--
+		<div class="readyMore__content-checkbox">
+			<div class="cartBuy__item-settingsLeft">
+				<label class="checkbox-transform">
+					<input type="radio" name="bio1" class="checkbox__input">
+					<span class="checkbox__label">Ежемесячное обновление</span>
+				</label>
+			</div>
+		</div>-->
+		<div class="readyMore__content-bot">
+			<a href="" class="readyMore__content-cart">Добавить в корзину</a>
+			<a href="{% url 'research_buy' research.pk %}" class="readyMore__content-buy">Купить</a>
+		</div>
+	</div>
+</div>
+{% endblock inner_content %}
