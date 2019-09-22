@@ -24,7 +24,7 @@ $(function ()    {
     /* На основе url меняет цвет нужного типа исследования */
     $(document).ready(function(){
         if (window.location.href.indexOf('research=') >= 0) {
-            $('.ready__type-item').Class('ready__type-item');
+            $('.ready__type-item').className = 'ready__type-item';
         } else {
             if (window.location.href.indexOf('industry') >= 0) {
                 $('#industry').addClass('ready__type-itemActive'); 

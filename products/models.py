@@ -1,6 +1,6 @@
 from django.db import models
 from personal_cabinet.models import Client
-
+from pytils.translit import slugify
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
         ('industry', 'Отраслевое'),
@@ -9,19 +9,29 @@ class Research(models.Model):
     ]
     title = models.CharField(max_length=100)
     category = models.ForeignKey('Category', on_delete=models.PROTECT)
-    target = models.TextField()
-    description = models.TextField()
-    data_update = models.TextField()
-    image = models.ImageField()
-    demo = models.FileField()
-    contents = models.TextField()
-    using_methods = models.TextField()
-    data_sources = models.TextField()
+    target = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    data_update = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
+    demo = models.FileField(blank=True, null=True)
+    contents = models.TextField(blank=True, null=True)
+    using_methods = models.TextField(blank=True, null=True)
+    data_sources = models.TextField(blank=True, null=True)
     research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE)
     OM_cost = models.IntegerField()
-    OQ_cost = models.IntegerField()
-    HY_cost = models.IntegerField()
-    OY_cost = models.IntegerField()
+    OQ_cost = models.IntegerField(blank=True, null=True)
+    HY_cost = models.IntegerField(blank=True, null=True)
+    OY_cost = models.IntegerField(blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse('settings', args=(self.slug,))
+
+    def save(self):
+        super(Research, self).save()
+        if not self.slug.endswith('-' + str(self.id)):
+            self.slug += '-' + str(self.id)
+            super(Research, self).save()
     
 
 
@@ -35,6 +45,12 @@ class Research(models.Model):
 
 class Category(models.Model):
     title = models.CharField(max_length=50)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

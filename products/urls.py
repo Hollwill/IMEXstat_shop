@@ -6,8 +6,9 @@ from .views import (
     ResearchCategoryListView
 )
 urlpatterns = [
-    path('list/<str:type>', ResearchListView.as_view(), name='researchs'),
-    path('category/<int:pk>', ResearchCategoryListView.as_view(), name='researchs_category' ),
-    path('buy/<int:pk>', ResearchBuyView.as_view(), name='research_buy'),
-    path('detail/<int:pk>', ResearchDetailView.as_view(), name='research_detail')
+	path('list/', ResearchListView.as_view(), name='research_list'),
+    path('catalog/<str:type>', ResearchListView.as_view(), name='research_type'),
+    path('category/<slug:slug>', ResearchCategoryListView.as_view(), name='research_category' ),
+    path('buy/<slug:slug>', ResearchBuyView.as_view(), name='research_buy'),
+    path('detail/<slug:slug>', ResearchDetailView.as_view(), name='research_detail')
 ]

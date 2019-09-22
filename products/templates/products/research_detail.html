@@ -3,9 +3,11 @@
 {% load static %}
 {% block inner_content %}
 <div itemscope itemtype="https://schema.org/NewsArticle" class="readyMore__content">
+	{% if research.image %}
 	<div itemprop="associatedMedia" class="readyMore__content-img">
 		<img class="readyMore__content-img" src="{{ research.image.url }}" alt="">
 	</div>
+	{% endif %}
 	<div class="readyMore__content-desc">
 		<div class="readyMore__content-title">
 			<div class="readyMore__content-titleLeft">
@@ -30,7 +32,7 @@
 		</div>-->
 		<div class="readyMore__content-bot">
 			<a href="" class="readyMore__content-cart">Добавить в корзину</a>
-			<a href="{% url 'research_buy' research.pk %}" class="readyMore__content-buy">Купить</a>
+			<a href="{% url 'research_buy' research.slug %}" class="readyMore__content-buy">Купить</a>
 		</div>
 	</div>
 </div>

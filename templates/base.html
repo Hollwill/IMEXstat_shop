@@ -28,8 +28,16 @@
                 <div class="header__top-right">
                     <a href="" class="header__top-links">Статьи</a>
                     <a href="" class="header__top-links">Справочник</a>
+
+                    
+                    {% if user.is_authenticated %}
                     <a href="" class="header__top-links">Корзина</a>
-                    <a href="" class="header__top-login">Войти в личный кабинет</a>
+                    <a href="{% url 'lk_settings' client.slug %}" class="header__top-login">Войти в личный кабинет</a>
+                    {% else %}
+                    <a href="" class="header__top-login">Войти</a>
+                    <a href="" class="header__top-login">Зарегестрироваться</a>
+                    {% endif %}
+                    
                 </div>
             </div>
         </div>
@@ -56,7 +64,7 @@
                                     <a class="nav-link" href="#">Таможенная статистика</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Заказные исследования</a>
+                                    <a class="nav-link" href="{% url 'research_list' %}">Заказные исследования</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Готовые исследования</a>

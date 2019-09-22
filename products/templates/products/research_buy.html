@@ -67,9 +67,11 @@
                     </div>
 
                     <div class="readyInner__content" itemscope itemtype="https://schema.org/NewsArticle">
+                        {% if research.image %}
                         <div class="readyInner__content-img">
-							<img class="readyInner__content-img" src="{{ research.image.url }}" alt="">
+                            <img class="readyInner__content-img" src="{{ research.image.url }}" alt="">
                         </div>
+                        {% endif %}
                         <div class="readyInner__content-text">
                             <h3>Цель иследования</h3>
                             <div class="readyInner__content-textLine"></div>
@@ -104,10 +106,12 @@
                         </div>
                     </div>
                     <div class="readyInner__btns">
+                        {% if research.demo %}
                         <div class="readyInner__btns-left">
                             <a href="{{ research.demo.url }}">Скачать демо версию</a>
                             <img src="{% static "img/pdf.svg" %}" alt="">
                         </div>
+                        {% endif %}
                         <div class="readyInner__btns-right">
                             <a href="" class="readyInner__btns-add">Добавить в корзину</a>
                             <a href="" class="readyInner__btns-buy">Купить</a>

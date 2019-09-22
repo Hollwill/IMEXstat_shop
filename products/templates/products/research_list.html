@@ -1,7 +1,7 @@
 {% extends 'products/products_base.html' %}
 
 
-{% block title %}Отраслевые исследования{% endblock title %}
+{% block title %}Каталог исследований{% endblock title %}
 
 {% load static %}
 {% block inner_content %}
@@ -9,7 +9,9 @@
     {% for research in researchs %}
     <div class="ready__item">
         <div itemprop="associatedMedia" class="ready__item-img">
+        {% if research.image %}
             <img class="ready__item-img" src="{{ research.image.url }}" alt="">
+        {% endif %}
         </div> 
         <div class="ready__item-right">
             <div class="ready__item-top">
@@ -20,7 +22,7 @@
                         <h2>{{ research.OM_cost}} Р</h2>
                     </div>
                     <p itemprop="description">{{ research.description}}</p>
-                    <a href="{% url 'research_detail' research.pk %}">Подробнее...</a>
+                    <a href="{% url 'research_detail' research.slug %}">Подробнее...</a>
                 </div>
                 <div class="ready__item-topRight">
                     <h2>Дополнительно:</h2>
@@ -30,7 +32,7 @@
             </div>
             <div class="ready__item-bottom">
                 <a href="">Добавить в корзину</a>
-                <a href="{% url 'research_buy' research.pk %}">Купить</a>
+                <a href="{% url 'research_buy' research.slug %}">Купить</a>
             </div>
         </div>
     </div>

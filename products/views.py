@@ -13,13 +13,20 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
         if self.request.GET.get('research'):
             return Research.objects.filter(title__icontains=self.request.GET.get('research'))
         else:
-            return Research.objects.filter(research_type=self.kwargs['type'])
+            try:
+                return Research.objects.filter(research_type=self.kwargs['type'])
+            except KeyError:
+                return Research.objects.all()
+            
+            
+        
+        
 
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
     def get_queryset(self):
-        return Research.objects.filter(category_id=self.kwargs['pk'])
+        return Research.objects.filter(category__slug=self.kwargs['slug'])
 
 class ResearchDetailView(generic.DetailView, CategoryContextMixin):
     model = Research
