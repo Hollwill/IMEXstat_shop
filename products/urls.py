@@ -5,10 +5,13 @@ from .views import (
     ResearchBuyView,
     ResearchCategoryListView
 )
+
+app_name = 'research'
+
 urlpatterns = [
-	path('list/', ResearchListView.as_view(), name='research_list'),
-    path('catalog/<str:type>', ResearchListView.as_view(), name='research_type'),
-    path('category/<slug:slug>', ResearchCategoryListView.as_view(), name='research_category' ),
-    path('buy/<slug:slug>', ResearchBuyView.as_view(), name='research_buy'),
-    path('detail/<slug:slug>', ResearchDetailView.as_view(), name='research_detail')
+	path('list/', ResearchListView.as_view(), name='list'),
+    path('catalog/<str:type>', ResearchListView.as_view(), name='type'),
+    path('category/<slug:slug>', ResearchCategoryListView.as_view(), name='category' ),
+    path('buy/<slug:slug>', ResearchBuyView.as_view(), name='buy'),
+    path('detail/<slug:slug>', ResearchDetailView.as_view(), name='detail')
 ]

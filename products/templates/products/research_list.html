@@ -22,7 +22,7 @@
                         <h2>{{ research.OM_cost}} Р</h2>
                     </div>
                     <p itemprop="description">{{ research.description}}</p>
-                    <a href="{% url 'research_detail' research.slug %}">Подробнее...</a>
+                    <a href="{% url 'research:detail' research.slug %}">Подробнее...</a>
                 </div>
                 <div class="ready__item-topRight">
                     <h2>Дополнительно:</h2>
@@ -32,7 +32,7 @@
             </div>
             <div class="ready__item-bottom">
                 <a href="">Добавить в корзину</a>
-                <a href="{% url 'research_buy' research.slug %}">Купить</a>
+                <a href="{% url 'research:buy' research.slug %}">Купить</a>
             </div>
         </div>
     </div>

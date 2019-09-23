@@ -4,7 +4,7 @@
 {% block content %}
 <section class="search search__min">
 	<div class="container-fluid">
-		<form action="{% url 'research_list' %}", method="get">
+		<form action="{% url 'research:list' %}", method="get">
 			<div class="row search__row">
 				<input type="text" name="research" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
 				<button type="submit" class="search__button">Поиск</button>
@@ -19,15 +19,15 @@
 				<div class="content__menu">
 					<div class="list-group">
 						{% for category in categories %}
-						<a href="{% url 'research_category' category.slug %}" class="list-group-item list-group-item-action">{{ category.title}}</a>
+						<a href="{% url 'research:category' category.slug %}" class="list-group-item list-group-item-action">{{ category.title}}</a>
 						{% endfor %}
 					</div>
 				</div> 
 				<div class="content__main">
 					<div class="ready__type">
-						<a href="{% url 'research_type' 'industry' %}" id="industry" class="ready__type-item ">Отраслевые</a>
-						<a href="{% url 'research_type' 'export' %}" id="export" class="ready__type-item">Экспорт</a>
-						<a href="{% url 'research_type' 'import' %}" id="import" class="ready__type-item">Импорт</a>
+						<a href="{% url 'research:type' 'industry' %}" id="industry" class="ready__type-item ">Отраслевые</a>
+						<a href="{% url 'research:type' 'export' %}" id="export" class="ready__type-item">Экспорт</a>
+						<a href="{% url 'research:type' 'import' %}" id="import" class="ready__type-item">Импорт</a>
 					</div>
 					{% block inner_content %}
 					

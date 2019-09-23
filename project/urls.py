@@ -8,8 +8,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lk/', include('personal_cabinet.urls')),
-    path('research/', include('products.urls')),
+    path('lk/', include('personal_cabinet.urls', namespace='lk')),
+    path('research/', include('products.urls', namespace='research')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 

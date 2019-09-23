@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from pytils.translit import slugify
-
+import os
 
 
 
@@ -16,7 +16,7 @@ class Client(models.Model):
     legal_adress = models.CharField(max_length=100, blank=True, verbose_name='Юридический адрес')
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     KPP = models.IntegerField(blank=True, null=True, verbose_name='КПП')
-    requisites_file = models.FileField(blank=True, verbose_name='Файл с реквизитами')
+    requisites_file = models.FileField(blank=True, null=True, verbose_name='Файл с реквизитами')
     slug = models.SlugField(unique=True, blank=True, ) 
 
     def save(self, *args, **kwargs):
@@ -25,6 +25,9 @@ class Client(models.Model):
 
     def __str__(self):
         return self.firstname + ' ' + self.lastname + ' ' + self.user.username
+
+    def filename(self):
+        return os.path.basename(self.file.name)
 
     class Meta:
         verbose_name = 'Клиент'

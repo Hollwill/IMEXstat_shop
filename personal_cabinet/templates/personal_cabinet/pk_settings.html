@@ -1,128 +1,164 @@
 {% extends "personal_cabinet/pk_base.html" %}
 
 {% load static %}
-
 {% block inner_content %}
-
+{% if user.is_authenticated %}
 <section class="lk__profile">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="section__title">
-				<h2>Ваш профиль</h2>
-				<div class="section__title-line"></div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="lk__profile-data">
-				<div class="lk__data-top">
-					<p>Заполните ваш профиль</p>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Ваш профиль</h2>
+					<div class="section__title-line"></div>
 				</div>
-				<form action="">
-					{% csrf_token %}
-					{{ profile_form.as_p}}
-					<button name='action' value='login' type="submit">Сохранить данные</button>
-				</form>
 			</div>
-		</div>
-	</div>
-</section>
 
-
-<section class="lk__social">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="section__title">
-				<h2>Социальные сети</h2>
-				<div class="section__title-line"></div>
-			</div>
-		</div>
-
-		<div class="row">
-			<p class="lk__social-miniTitle">Подключите аккаунт социальной сети для быстрого входа на наш сайт</p>
-		</div>
-		<div class="row">
-			<div class="lk__social-items">
-				<div class="lk__social-item">
-					<img src="{% static "img/lk__facebook.svg" %}" alt="">
-					<a href="">Подключить</a>
-				</div>
-				<div class="lk__social-item">
-					<img src="{% static "img/lk__twitter.svg" %}" alt="">
-					<a href="">Подключить</a>
-				</div>
-			</div>
-			<div class="lk__social-items">
-				<div class="lk__social-item">
-					<img src="{% static "img/lk__vk.svg" %}" alt="">
-					<a href="">Подключить</a>
-				</div>
-				<div class="lk__social-item">
-					<img src="{% static "img/lk__instagram.svg" %}" alt="">
-					<a href="">Подключить</a>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-
-<section class="lk__rekvz">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="section__title">
-				<h2>Реквизиты Юр. Лица</h2>
-				<div class="section__title-line"></div>
-				
-			</div>
-		</div>
-		<div class="row">
-			<p class="lk__social-miniTitle">Тут тоже нужно описание или обьяснение для чего это </p>
-		</div>
-		<div class="row">
-			<div class="lk__profile-data">
-				<div class="lk__data-top">
-					<p>Заполните ваш профиль</p>
-				</div>
-				<div class="lk__data-mid">
-					<div class="lk__data-items">
-						<form action="{% url 'requizites_form' %}" method="post">
-							{% csrf_token %}
-							<div class="lk__data-mid">
-								<div class="lk__data-items">
-									<div class="lk__data-item">
-										<p>{{ requizites_form.firm_name.label }}</p>
-										{{ requizites_form.firm_name }}
-									</div>
-									<div class="lk__data-item lk__data-itemLong">
-										<p>{{ requizites_form.legal_adress.label }}</p>
-										{{ requizites_form.legal_adress }}
-									</div>
-								</div>
+			<div class="row">
+				<div class="lk__profile-data">
+					<div class="lk__data-top">
+						<p>Заполните ваш профиль</p>
+					</div>
+					<div class="lk__data-mid">
+						<div class="lk__data-items">
+							<div class="lk__data-item">
+								<p>Ваша фамилия</p>
+								{{ forms.profile_form.lastname }}
 							</div>
-							<div class="lk__data-bot lk__data-botLong">
-								<div class="lk__data-item">
-									<p>{{ requizites_form.INN.label }}</p>
-									{{ requizites_form.INN.as_text }}
-								</div>
-								<div class="lk__data-item lk__data-itemSecond">
-									<p>{{ requizites_form.KPP.label }}</p>
-									{{ requizites_form.KPP.as_text }}
-								</div>
-								<div class="lk__data-item lk__data-item-file">
-									<p>Файл с реквезитами</p>
-									<div class="lk__data-file">
-										<p>Прикрепите файл</p>
-										{{ requizites_form.requisites_file }}
-										<label for="id_requisites_file">+</label>
-									</div>
-									<div class="lk__data-button lk__data-buttonMobile">
-										<button type="submit"><input type="submit" value="Сохранить данные"></button>
-									</div>
-								</div>
+							<div class="lk__data-item">
+								<p>Ваше имя</p>
+								{{ forms.profile_form.firstname }}
 							</div>
-						</form>
+							<div class="lk__data-item">
+								<p>Ваше отчество</p>
+								{{ forms.profile_form.middle_name }}
+							</div>
+						</div>
+						<div class="lk__data-button lk__data-buttonDesktop">
+							<button>Сохранить данные</button>
+						</div>
+					</div>
+					<div class="lk__data-bot">
+						<div class="lk__data-item">
+							<p>E-mail</p>
+							{{ forms.profile_form.email.as_text }}
+						</div>
+						<div class="lk__data-item">
+							<p>Телефон</p>
+							{{ forms.profile_form.phone }}
+						</div>
+						<div class="lk__data-button lk__data-buttonMobile">
+							<button>Сохранить данные</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</section>
-		{% endblock inner_content %}
+		</div>
+	</section>
+
+
+	<section class="lk__social">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Социальные сети</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+			<div class="row">
+				<p class="lk__social-miniTitle">Подключите аккаунт социальной сети для быстрого входа на наш сайт</p>
+			</div>
+			<div class="row">
+				<div class="lk__social-items">
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__facebook.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__twitter.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+				</div>
+				<div class="lk__social-items">
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__vk.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+					<div class="lk__social-item">
+						<img src="{% static "img/lk__instagram.svg" %}" alt="">
+						<a href="">Подключить</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="lk__rekvz">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Реквизиты Юр. Лица</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+			<div class="row">
+				<p class="lk__social-miniTitle">Тут тоже нужно описание или обьяснение для чего это </p>
+			</div>
+			<div class="row">
+				<div class="lk__profile-data">
+					<div class="lk__data-top">
+						<p>Заполните ваш профиль</p>
+					</div>
+					<div class="lk__data-mid">
+						<div class="lk__data-items">
+							<div class="lk__data-item">
+								<p>Название фирмы</p>
+								{{ forms.requizites_form.firm_name }}
+							</div>
+							<div class="lk__data-item lk__data-itemLong">
+								<p>Юридический адрес</p>
+								{{ forms.requizites_form.legal_adress }}
+							</div>
+						</div>
+						<div class="lk__data-button lk__data-buttonDesktop">
+							<button>Сохранить данные</button>
+						</div>
+					</div>
+					<div class="lk__data-bot lk__data-botLong">
+						<div class="lk__data-item">
+							<p>ИНН</p>
+							{{ forms.requizites_form.INN.as_text }}
+						</div>
+						<div class="lk__data-item lk__data-itemSecond">
+							<p>КПП</p>
+							{{ forms.requizites_form.KPP.as_text }}
+						</div>
+						<div class="lk__data-item lk__data-item-file">
+							<p>Файл с реквезитами</p>
+							<div class="lk__data-file">
+								{% if client.requisites_file %}
+									{{ client.requisites_file.name }}
+								{% else %}
+								<p>Прикрепите файл</p>
+
+								{% endif %}
+								
+								<div id="settings_form_file">
+									{{ forms.requizites_form.requisites_file }}
+								</div>
+								<label for="id_requisites_file">+</label>
+
+							</div>
+							<div class="lk__data-button lk__data-buttonMobile">
+								<button>Сохранить данные</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+{% endif %}
+{% endblock inner_content %}
