@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
-
+from personal_cabinet.views import RegisterFormView
 
 
 urlpatterns = [
@@ -11,6 +11,8 @@ urlpatterns = [
     path('lk/', include('personal_cabinet.urls', namespace='lk')),
     path('research/', include('products.urls', namespace='research')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('register', RegisterFormView.as_view(), name='register'),
+    path('order/', include('orders.urls', namespace='orders'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

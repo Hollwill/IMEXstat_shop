@@ -120,7 +120,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'lk:settings'
+
+LOGOUT_REDIRECT_URL = 'research:list'
 
 
 # Static files (CSS, JavaScript, Images)

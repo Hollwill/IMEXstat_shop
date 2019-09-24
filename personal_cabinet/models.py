@@ -17,7 +17,8 @@ class Client(models.Model):
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     KPP = models.IntegerField(blank=True, null=True, verbose_name='КПП')
     requisites_file = models.FileField(blank=True, null=True, verbose_name='Файл с реквизитами')
-    slug = models.SlugField(unique=True, blank=True, ) 
+    slug = models.SlugField(unique=True, blank=True, )
+
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username + ' ' + self.firstname + ' ' + self.lastname)

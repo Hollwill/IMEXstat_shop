@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="cart">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="section__title">
+				<h2>Корзина</h2>
+				<div class="section__title-line"></div>
+			</div>
+		</div>
+		<div class="row cart__items">
+			{% for research in research %}
+			<div class="cart__item">
+				<div class="cart__item-img">
+					<img class="cart__item-img" src="{{ research.image.url }}" alt="">
+				</div>
+				<div class="cart__item-content">
+					<div class="cart__item-left">
+						<div class="cart__item-left-top">
+							<h2>{{ research.title }}</h2>
+							<h2>{{ research.OM_cost}} Р</h2>
+						</div>
+						<div class="cart__item-left-text">
+							<p >{{ research.description}}</p>
+						</div>
+						<div class="cart__item-left-bot">
+							<a href="{% url 'orders:cart' %}?add_to_cart={{ research.slug }}">Убрать из корзины</a>
+						</div>
+					</div>
+					<div class="cart__item-right">
+						<h2>Детали подписки:</h2>
+						<p>Ежемесячно на срок 1 год</p>
+						<p><span>* - обновления первых трех месяцев бесплатно</span></p>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+			<div class="row cart__buy">
+				<div class="cart__buy-block">
+					<div class="cart__buy-top">
+						<p>Итого:</p>
+						<h2>750 Р</h2>
+					</div>
+					<div class="cart__buy-bot">
+						<a href="">Оформить покупку</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% endblock content %}

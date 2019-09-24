@@ -1,7 +1,7 @@
 from django.db import models
-from personal_cabinet.models import Client
-from products.models import Research
 
+from products.models import Research
+from personal_cabinet.models import Client
 
 class Order(models.Model):
     UPDATE_FREQUENCY_CHOICES = [
@@ -39,5 +39,12 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+
+class Cart(models.Model):
+    research = models.ManyToManyField(Research, verbose_name='Исследование', blank=True)
+    client = models.OneToOneField(Client, on_delete=models.CASCADE, verbose_name='Клиент')
+
+
+
 
 

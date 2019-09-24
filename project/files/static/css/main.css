@@ -2,6 +2,9 @@
 	display: none;
 }
 
+#research_description {
+	word-break: break-all;
+}
 
 body {
 	font-family: 'Open Sans', sans-serif;

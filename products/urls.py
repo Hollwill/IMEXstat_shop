@@ -3,7 +3,8 @@ from .views import (
     ResearchListView,
     ResearchDetailView,
     ResearchBuyView,
-    ResearchCategoryListView
+    ResearchCategoryListView,
+
 )
 
 app_name = 'research'
@@ -13,5 +14,5 @@ urlpatterns = [
     path('catalog/<str:type>', ResearchListView.as_view(), name='type'),
     path('category/<slug:slug>', ResearchCategoryListView.as_view(), name='category' ),
     path('buy/<slug:slug>', ResearchBuyView.as_view(), name='buy'),
-    path('detail/<slug:slug>', ResearchDetailView.as_view(), name='detail')
+    path('detail/<slug:slug>', ResearchDetailView.as_view(), name='detail'),
 ]
