@@ -217,7 +217,9 @@
         		
             <div class="products__item">
                 <div class="products__item-top">
+                    {% if research.image %}
                 	<img class="products__item-top" src="{{ research.image.url }}" alt="">
+                    {% endif %}
                 </div>
                 <div class="products__item-text">
                     <h2>{{ research.title }}</h2>
