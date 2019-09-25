@@ -46,7 +46,7 @@
     <header>
         <div class="container-fluid">
             <div class="row header__row">
-                <a href="" class="header__logo">
+                <a href="{% url 'index:index' %}" class="header__logo">
                     <div class="logo">
     
                     </div>
@@ -144,6 +144,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Контакты</a>
                                 </li>
+                                {% if user.is_staff %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin">Панель администратора</a>
+                                </li>                                
+                                {% endif %}
                             </ul>
                         </div>
                     </nav>
@@ -204,8 +209,6 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-    
-    
     </body>
     </html>
 </body>

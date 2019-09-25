@@ -1,11 +1,52 @@
+
+
 {% extends "base.html" %}
 
-
 {% block content %}
-<form action="" method="post">
-      {% csrf_token %}
-      <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
-      {{ form.as_p }}
-      <button type="submit">Зарегистрироваться</button>
-    </form>
-{% endblock content %}
+<section class="lk__profile">
+    <div class="row">
+
+        <div class="lk__data-mid">
+          <div class="lk__data-items">
+            
+
+            {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+            {% endif %}
+
+            <form action="" method="post">
+              {% csrf_token %}
+              <div class="lk__data-item">
+              {% if form.errors %}
+                <p>Имя пользователя или пароль недействительны. Попробуйте снова.</p>
+              {% endif %}
+              </div>
+              <div class="lk__data-item">
+                <p>Имя пользователя</p>
+                {{ form.username }}
+              </div>
+              <div class="lk__data-item">
+                <p>Пароль</p>
+                {{ form.password1 }}
+              </div>
+              <div class="lk__data-item">
+                <p>{{ form.password2.label }}</p>
+                {{ form.password2 }}
+              </div>
+
+              <div class="lk__data-button lk__data-buttonMobile">
+                <button type="submit" >Зарегестрироваться</button>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

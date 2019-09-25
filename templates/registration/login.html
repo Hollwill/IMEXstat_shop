@@ -1,40 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="lk__profile">
+    <div class="row">
 
-{% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+        <div class="lk__data-mid">
+          <div class="lk__data-items">
+            
 
-{% if next %}
-  {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-  {% else %}
-    <p>Please login to see this page.</p>
-  {% endif %}
-{% endif %}
+            {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+            {% endif %}
 
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
+            <form method="post" action="{% url 'login' %}">
+              {% csrf_token %}
+              <div class="lk__data-item">
+              {% if form.errors %}
+                <p>Имя пользователя или пароль недействительны. Попробуйте снова.</p>
+              {% endif %}
+              </div>
+              <div class="lk__data-item">
+                <p>Имя пользователя</p>
+                {{ form.username }}
+              </div>
+              <div class="lk__data-item">
+                <p>Пароль</p>
+                {{ form.password }}
+              </div>
+              <div class="lk__data-button lk__data-buttonMobile">
+                <button type="submit" >Войти</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
 
-<tr>
-  <td>{{ form.username.label_tag }}</td>
-  <td>{{ form.username }}</td>
-</tr>
-
-<tr>
-  <td>{{ form.password.label_tag }}</td>
-  <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+</section>
 
 {% endblock %}

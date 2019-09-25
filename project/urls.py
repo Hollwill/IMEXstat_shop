@@ -7,7 +7,8 @@ from personal_cabinet.views import RegisterFormView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
+    path('', include('index.urls', namespace='index')),
     path('lk/', include('personal_cabinet.urls', namespace='lk')),
     path('research/', include('products.urls', namespace='research')),
     path('accounts/', include('django.contrib.auth.urls')),

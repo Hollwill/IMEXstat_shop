@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'personal_cabinet',
     'products',
     'orders',
+    'index',
 ]
 
 MIDDLEWARE = [
