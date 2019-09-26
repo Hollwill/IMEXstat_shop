@@ -1,11 +1,10 @@
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 _PATH = os.path.abspath(os.path.dirname(__file__))
 ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -17,6 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
 # Application definition
 
@@ -79,6 +79,8 @@ DATABASES = {
 }
 
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -128,7 +130,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'files', 'media')
 MEDIA_URL = '/media/'
 
