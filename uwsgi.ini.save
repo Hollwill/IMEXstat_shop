@@ -1,14 +1,14 @@
 [uwsgi]
-	socket = /tmp/winwin.sock
-        home = /home/ubuntu/test
-        chdir = /home/ubuntu/test/IMEXstat_shop
+        home = ~/.conda_imex/IMEXstat_shop
+        chdir = ~/.Devel/dmitry_balaev_weblancer/project
+        pythonpath = .. 
         module = project.wsgi:application
         master = true
+        processes = 2 # equals numbers of cpu + 1
+        socket = /tmp/project.sock
         harakiri = 20
         max-requests = 1000
         env LANG='en_US.UTF-8'
         env LC_ALL='en_US.UTF-8'
         env DJANGO_SETTINGS_MODULE=project.settings
         vacuum = true
-	daemonize: /home/oleg/test/logs/uwsgi.log
-
