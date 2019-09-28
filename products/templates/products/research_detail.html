@@ -2,7 +2,9 @@
 
 {% load static %}
 {% block inner_content %}
+
 <div itemscope itemtype="https://schema.org/NewsArticle" class="readyMore__content">
+	{{ message }}
 	{% if research.image %}
 	<div itemprop="associatedMedia" class="readyMore__content-img">
 		<img class="readyMore__content-img" src="{{ research.image.url }}" alt="">
@@ -31,7 +33,7 @@
 			</div>
 		</div>-->
 		<div class="readyMore__content-bot">
-			<a href="" class="readyMore__content-cart">Добавить в корзину</a>
+			<a href="{% url 'research:detail' research.slug  %}?add_to_cart={{ research.slug }}" class="readyMore__content-cart">Добавить в корзину</a>
 			<a href="{% url 'research:buy' research.slug %}" class="readyMore__content-buy">Купить</a>
 		</div>
 	</div>

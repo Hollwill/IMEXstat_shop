@@ -13,7 +13,9 @@
 			{% for research in research %}
 			<div class="cart__item">
 				<div class="cart__item-img">
+				{% if research.image %}
 					<img class="cart__item-img" src="{{ research.image.url }}" alt="">
+				{% endif %}
 				</div>
 				<div class="cart__item-content">
 					<div class="cart__item-left">
@@ -25,7 +27,7 @@
 							<p >{{ research.description}}</p>
 						</div>
 						<div class="cart__item-left-bot">
-							<a href="{% url 'orders:cart' %}?add_to_cart={{ research.slug }}">Убрать из корзины</a>
+							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
 						</div>
 					</div>
 					<div class="cart__item-right">
@@ -41,7 +43,10 @@
 				<div class="cart__buy-block">
 					<div class="cart__buy-top">
 						<p>Итого:</p>
-						<h2>750 Р</h2>
+						{% if  cart.count == None %}
+						{% else %}
+						<h2>{{ cart.count }} Р</h2>
+						{% endif %}
 					</div>
 					<div class="cart__buy-bot">
 						<a href="">Оформить покупку</a>

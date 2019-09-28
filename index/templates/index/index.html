@@ -95,7 +95,7 @@
                                     <a class="nav-link" href="#">Таможенная статистика</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Заказные исследования</a>
+                                    <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Готовые исследования</a>
@@ -319,7 +319,7 @@
                                 <a class="nav-link" href="#">Таможенная статистика</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Заказные исследования</a>
+                                <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Готовые исследования</a>
@@ -330,6 +330,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Контакты</a>
                             </li>
+                            {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">Панель администратора</a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>

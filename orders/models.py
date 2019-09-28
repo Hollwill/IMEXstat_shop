@@ -2,6 +2,7 @@ from django.db import models
 
 from products.models import Research
 from personal_cabinet.models import Client
+from django.db.models import Sum
 
 class Order(models.Model):
     UPDATE_FREQUENCY_CHOICES = [
@@ -44,7 +45,12 @@ class Cart(models.Model):
     research = models.ManyToManyField(Research, verbose_name='Исследование', blank=True)
     client = models.OneToOneField(Client, on_delete=models.CASCADE, verbose_name='Клиент')
 
+    @property
+    def count(self):
+        research = Research.objects.filter(cart__client=self.client)
+        count = research.aggregate(Sum('OM_cost'))
+        return count.get('OM_cost__sum')
+    
 
-
-
-
+    
+        

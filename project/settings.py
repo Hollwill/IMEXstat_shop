@@ -3,7 +3,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-_PATH = os.path.abspath(os.path.dirname(__file__))
 ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 
 # Quick-start development settings - unsuitable for production
@@ -14,7 +13,8 @@ ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['imex.naminteresno.ru']
+#ALLOWED_HOSTS = ['imex.naminteresno.ru']
+ALLOWED_HOSTS = ['*']
 
 SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
@@ -134,3 +134,31 @@ MEDIA_ROOT = os.path.join(ROOT_PATH, 'files', 'media')
 MEDIA_URL = '/media/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+LOGGING = {
+   'version': 1,
+   'disable_existing_loggers': False,
+   'handlers': {
+       'file': {
+           'level': 'DEBUG',
+           'class': 'logging.FileHandler',
+           'filename': '/home/oleg/Devel/dmitry_balaev_weblancer/project/debug.log',
+       },
+       'mail_admins': {
+           'level': 'ERROR',
+           'class': 'django.utils.log.AdminEmailHandler',
+       },       
+   },
+   'loggers': {
+       'django': {
+           'handlers': ['file'],
+           'level': 'DEBUG',
+           'propagate': True,
+       },
+       'django.request': {
+           'handlers': ['mail_admins'],
+           'level': 'ERROR',
+           'propagate': True,
+       },              
+   },
+}

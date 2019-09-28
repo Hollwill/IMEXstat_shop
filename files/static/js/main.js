@@ -4,6 +4,9 @@ $(function ()    {
             $("#navbarTogglerDemo02").removeClass('show');
         });
     });
+
+    /*Нерабочий код*/
+    /*
     $(document).ready(function(){
         $("#header__menu, #header__menu-mobile, #welcome__arrow, #welcome__text, #footer").on("click","a", function (event) {
             event.preventDefault();
@@ -11,7 +14,7 @@ $(function ()    {
                 top = $(id).offset().top;
             $('body,html').animate({scrollTop: top-100}, 1500);
         });
-    });
+    });*/
     $(document).ready(function(){
         $(window).scroll(function(){
             if($(window).scrollTop()>250){

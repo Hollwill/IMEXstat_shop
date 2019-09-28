@@ -24,8 +24,6 @@ class Research(models.Model):
     OY_cost = models.IntegerField(blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True)
 
-    def get_absolute_url(self):
-        return reverse('settings', args=(self.slug,))
 
     def save(self):
         super(Research, self).save()

@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block inner_content %}
-	<div class="ready__property-row">
+<!--<div class="ready__property-row">
                         <div class="ready__property">
                             <div class="wrapper">
                                 <label for="button2" id="labelbutton2" onclick="changeText(labelbutton2)">Смотреть ещё</label>
@@ -49,7 +49,7 @@
                             </div>
                             <button class="ready__property-save">Применить</button>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div itemscope itemtype="https://schema.org/NewsArticle" class="readyInner__title">
                         <div class="section__title">
@@ -67,6 +67,7 @@
                     </div>
 
                     <div class="readyInner__content" itemscope itemtype="https://schema.org/NewsArticle">
+                        {{ message }}
                         {% if research.image %}
                         <div class="readyInner__content-img">
                             <img class="readyInner__content-img" src="{{ research.image.url }}" alt="">
@@ -113,7 +114,7 @@
                         </div>
                         {% endif %}
                         <div class="readyInner__btns-right">
-                            <a href="" class="readyInner__btns-add">Добавить в корзину</a>
+                            <a href="{% url 'research:buy' research.slug %}?add_to_cart={{ research.slug }}" class="readyInner__btns-add">Добавить в корзину</a>
                             <a href="" class="readyInner__btns-buy">Купить</a>
                         </div>
                     </div>
@@ -131,4 +132,4 @@
                     <div style="display:none" id="data_sources" class="readyInner__text">
                         <p>{{ research.data_sources }}</p>
                     </div>
-{% endblock inner_content %}
+                    {% endblock inner_content %}
