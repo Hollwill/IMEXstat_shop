@@ -23,8 +23,11 @@ class CategoryContextMixin(ContextMixin):
 					self.additional_context = 'Исследование успешно добавлено'
 			else:
 				cart = SessionCart(request)
-				cart.add(research, research.OM_cost)
-				self.additional_context = 'Исследование успешно добавлено'
+				if cart.have(research):
+					self.additional_context = ' Исследование уже добавлено в корзину'
+				else:
+					cart.add(research, research.OM_cost)
+					self.additional_context = 'Исследование успешно добавлено'
 
 
 

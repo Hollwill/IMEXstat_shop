@@ -17,11 +17,16 @@ class CartListView(generic.ListView):
 
 
 	def get_queryset(self):
+
 		if self.request.GET.get('remove_from_cart'):
+			research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
+
 			if self.request.user.is_authenticated:
-				research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
 				cart = Cart.objects.get(client_id=self.request.user.id)
 				cart.save()
 				cart.research.remove(research)
+			else:
+				cart = SessionCart(self.request)
+				cart.remove(research)
 		return Research.objects.filter(cart__client__user_id=self.request.user.id)
 

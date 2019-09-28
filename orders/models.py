@@ -47,7 +47,7 @@ class Cart(models.Model):
     client = models.OneToOneField(Client, on_delete=models.CASCADE, verbose_name='Клиент')
 
     @property
-    def count(self):
+    def summary(self):
         research = Research.objects.filter(cart__client=self.client)
         count = research.aggregate(Sum('OM_cost'))
         return count.get('OM_cost__sum')

@@ -76,6 +76,17 @@ class Cart:
                 item.quantity = int(quantity)
                 item.save()
 
+    def have(self, product):
+        try:
+
+            item = models.Item.objects.get(
+                    cart=self.cart,
+                    product=product,
+                )
+            return True
+        except:
+            return False
+
     def count(self):
         result = 0
         for item in self.cart.item_set.all():
