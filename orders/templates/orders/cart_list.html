@@ -10,7 +10,8 @@
 			</div>
 		</div>
 		<div class="row cart__items">
-			{% for research in research %}
+			{% if user.is_authenticated %}
+			{% for research in cart.research.all%}
 			<div class="cart__item">
 				<div class="cart__item-img">
 					{% if research.image %}
@@ -38,26 +39,60 @@
 				</div>
 			</div>
 			{% endfor %}
-
-			<div class="row cart__buy">
-				<div class="cart__buy-block">
-					{% if  cart.count == None %}
-					<div class="cart__buy-top">
-						<p>Ваша корзина пуста.</p>
-					</div>
-					<div class="cart__buy-bot">
-						<a href="{% url 'research:list' %}">Перейти в каталог</a>
-					</div>
-					{% else %}
-					<div class="cart__buy-top">
-						<h2>{{ cart.count }} Р</h2>
-					</div>
-					<div class="cart__buy-bot">
-						<a href="">Оформить покупку</a>
-					</div>
+			{% else %}
+			{% for item in cart %}
+			{% with item.product as research %}
+			    
+			<div class="cart__item">
+				<div class="cart__item-img">
+					{% if research.image %}
+					<img class="cart__item-img" src="{{ research.image.url }}" alt="">
 					{% endif %}
 				</div>
+				<div class="cart__item-content">
+					<div class="cart__item-left">
+						<div class="cart__item-left-top">
+							<h2>{{ research.title }}</h2>
+							<h2>{{ research.OM_cost}} Р</h2>
+						</div>
+						<div class="cart__item-left-text">
+							<p >{{ research.description}}</p>
+						</div>
+						<div class="cart__item-left-bot">
+							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
+						</div>
+					</div>
+					<div class="cart__item-right">
+						<h2>Детали подписки:</h2>
+						<p>Ежемесячно на срок 1 год</p>
+						<p><span>* - обновления первых трех месяцев бесплатно</span></p>
+					</div>
+				</div>
+			</div>
+			{% endwith %}
+			{% endfor %}
+			{% endif %}
+		</div>
+		<div class="row cart__buy">
+			<div class="cart__buy-block">
+				{% if  cart.count == None %}
+				<div class="cart__buy-top">
+					<p>Ваша корзина пуста.</p>
+				</div>
+				<div class="cart__buy-bot">
+					<a href="{% url 'research:list' %}">Перейти в каталог</a>
+				</div>
+				{% else %}
+				<div class="cart__buy-top">
+					<p>Итого:</p>	
+					<h2>{{ cart.price }} Р</h2>
+				</div>
+				<div class="cart__buy-bot">
+					<a href="">Оформить покупку</a>
+				</div>
+				{% endif %}
 			</div>
 		</div>
-	</section>
-	{% endblock content %}
+	</div>	
+</section>
+{% endblock content %}

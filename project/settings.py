@@ -11,7 +11,7 @@ ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 #ALLOWED_HOSTS = ['imex.naminteresno.ru']
 ALLOWED_HOSTS = ['*']
@@ -34,9 +34,12 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'index',
+    'cart',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -131,9 +134,17 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'files', 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/files/media/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
 
 LOGGING = {
    'version': 1,
