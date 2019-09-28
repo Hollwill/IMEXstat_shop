@@ -35,7 +35,6 @@ __pycache__/
 env/
 develop-eggs/
 downloads/
-lib/
 lib64/
 parts/
 sdist/
