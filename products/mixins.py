@@ -8,6 +8,8 @@ from cart.cart import Cart as SessionCart
 
 class CategoryContextMixin(ContextMixin):
 	additional_context = None
+	
+
 	def add_to_cart(self, request, **kwargs):
 		if self.request.GET.get('add_to_cart'):
 			research = Research.objects.get(slug=self.request.GET.get('add_to_cart'))

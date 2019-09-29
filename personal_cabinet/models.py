@@ -6,7 +6,7 @@ import os
 
 
 class Client(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT, verbose_name='Nickname')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Nickname')
     firstname = models.CharField(max_length=50, blank=True, verbose_name='Имя')
     lastname = models.CharField(max_length=50, blank=True, verbose_name='Фамилия')
     middle_name = models.CharField(max_length=50, blank=True, verbose_name='Отчество')
@@ -17,7 +17,7 @@ class Client(models.Model):
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     KPP = models.IntegerField(blank=True, null=True, verbose_name='КПП')
     requisites_file = models.FileField(blank=True, null=True, verbose_name='Файл с реквизитами')
-    slug = models.SlugField(unique=True, blank=True, )
+    slug = models.SlugField(unique=True, blank=True)
 
 
     def save(self, *args, **kwargs):

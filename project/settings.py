@@ -13,8 +13,8 @@ ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['imex.naminteresno.ru']
-#ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['imex.naminteresno.ru']
+ALLOWED_HOSTS = ['*']
 
 SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 

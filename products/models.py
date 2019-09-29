@@ -7,21 +7,21 @@ class Research(models.Model):
         ('export', 'Экспорт'),
         ('import', 'Импорт')
     ]
-    title = models.CharField(max_length=100)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT)
-    target = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    data_update = models.TextField(blank=True, null=True)
-    image = models.ImageField(blank=True, null=True)
-    demo = models.FileField(blank=True, null=True)
-    contents = models.TextField(blank=True, null=True)
-    using_methods = models.TextField(blank=True, null=True)
-    data_sources = models.TextField(blank=True, null=True)
-    research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE)
-    OM_cost = models.IntegerField()
-    OQ_cost = models.IntegerField(blank=True, null=True)
-    HY_cost = models.IntegerField(blank=True, null=True)
-    OY_cost = models.IntegerField(blank=True, null=True)
+    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    target = models.TextField(blank=True, null=True, verbose_name='Цель исследования')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание исследования')
+    data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
+    image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
+    demo = models.FileField(blank=True, null=True, verbose_name='Демо файл')
+    contents = models.TextField(blank=True, null=True, verbose_name='Оглавление')
+    using_methods = models.TextField(blank=True, null=True, verbose_name='Используемые методы')
+    data_sources = models.TextField(blank=True, null=True, verbose_name='Источники данных')
+    research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE, verbose_name='Тип исследования')
+    OM_cost = models.IntegerField(verbose_name='цена за месяц')
+    OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за квартал')
+    HY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за полгода')
+    OY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за год')
     slug = models.SlugField(unique=True, blank=True)
 
 
@@ -42,7 +42,7 @@ class Research(models.Model):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, verbose_name='Название категории')
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):

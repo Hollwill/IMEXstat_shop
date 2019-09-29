@@ -8,12 +8,12 @@
 	<div class="container-fluid">
 		<div class="row lk__menu-row">
 			<div class="lk__menu-content">
-				<a href="" class="lk__menu-item lk__menu-activeItem">Настройки профиля</a>
-				<a href="" class="lk__menu-item">Избранное</a>
-				<a href="" class="lk__menu-item">Сохранённые сегменты</a>
-				<a href="" class="lk__menu-item">Подписки</a>
-				<a href="" class="lk__menu-item">Отложенные покупки</a>
-				<a href="" class="lk__menu-item">История покупок</a>
+				<a href="{% url 'lk:settings' %}" class="lk__menu-item " id="lk_settings">Настройки профиля</a>
+				<a href="{% url 'lk:favorite_articles' %}" class="lk__menu-item" id="lk_favorite">Избранное</a>
+				<a href="" class="lk__menu-item" id="lk_segments">Сохранённые сегменты</a>
+				<a href="" class="lk__menu-item" id="lk_subscribes">Подписки</a>
+				<a href="" class="lk__menu-item" id="lk_deferred_purchases">Отложенные покупки</a>
+				<a href="" class="lk__menu-item" id="lk_purchases_story">История покупок</a>
 			</div>
 		</div>
 	</div>

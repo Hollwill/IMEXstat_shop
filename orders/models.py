@@ -51,6 +51,12 @@ class Cart(models.Model):
         research = Research.objects.filter(cart__client=self.client)
         count = research.aggregate(Sum('OM_cost'))
         return count.get('OM_cost__sum')
+
+    def __str__(self):
+        return 'корзина'
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзина'
     
 '''    
 class SessionCart(object):
