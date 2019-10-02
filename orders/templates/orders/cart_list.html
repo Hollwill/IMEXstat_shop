@@ -11,7 +11,7 @@
 		</div>
 		<div class="row cart__items">
 			{% if user.is_authenticated %}
-			{% for research in cart.research.all%}
+			{% for research in cart.research.all %}
 			<div class="cart__item">
 				<div class="cart__item-img">
 					{% if research.image %}
@@ -88,7 +88,7 @@
 					<h2>{{ cart.summary }} Р</h2>
 				</div>
 				<div class="cart__buy-bot">
-					<a href="">Оформить покупку</a>
+					<a href="{% url 'orders:cart_purchase' %}">Оформить покупку</a>
 				</div>
 				{% endif %}
 			</div>

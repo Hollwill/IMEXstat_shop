@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
+from cart.cart import Cart as SessionCart
+
+from products.models import Research
 
 @method_decorator(login_required, name='dispatch')
 class ProfileFormView(MultiModelFormView):
@@ -57,6 +60,12 @@ class RegisterFormView(generic.edit.FormView):
         return reverse_lazy('login')
 
     def form_valid(self, form):
+        SessionCart(self.request)
         form.save()
+        cart = Cart.objects.get(client__user__username=form.cleaned_data['username'])
+        #сохранение корзины из сессии в аккаунт
+        for item in SessionCart(self.request):
+        	id = item.product.id
+        	cart.research.add(Research.objects.get(id=id))
         return super(RegisterFormView, self).form_valid(form)
 

@@ -82,11 +82,9 @@ $(function ()    {
     });
 });
 
-function cartBuy(a,a1,b,b1) {
+function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";
-    document.getElementById(a1).style.display = "flex";
     document.getElementById(b).style.display = "none";
-    document.getElementById(b1).style.display = "none";
 }
 function lkExtend(a) {
     var elem = document.querySelector(a)

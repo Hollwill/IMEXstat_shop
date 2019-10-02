@@ -1,7 +1,13 @@
 from django.views import generic
+from personal_cabinet.models import Client
 from .models import Cart
 from cart.cart import Cart as SessionCart
 from products.models import Research
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from multi_form_view import MultiModelFormView
+from .forms import EntityForm, IndividualForm
+
 
 class CartListView(generic.ListView):
 	context_object_name = 'cart'
@@ -29,3 +35,34 @@ class CartListView(generic.ListView):
 				cart = SessionCart(self.request)
 				cart.remove(research)
 
+@method_decorator(login_required, name='dispatch')
+class CartPurchaseView(MultiModelFormView):
+	form_classes = {
+	'entity_form': EntityForm,
+	'individual_form': IndividualForm
+	}
+	template_name = 'orders/cart_purchase.html'
+
+
+
+	def get_objects(self):
+		self.client_slug = self.kwargs.get('slug', None)
+		client = Client.objects.get(user=self.request.user)
+		return {
+		'entity_form': client,
+		'individual_form': client
+		}
+		
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		return context
+
+	def get_success_url(self):
+		return reverse('/')
+
+	def forms_valid(self, forms):
+		profile = forms['entity_form'].save()
+		requizites = forms['individual_form'].save()
+		profile.save()
+		requizites.save()
+		return super(CartPurchaseView, self).forms_valid(forms)

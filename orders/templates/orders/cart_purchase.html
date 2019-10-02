@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div id="cartBuy">
+	<section class="cartBuy__bio">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="section__title">
+					<h2>Оформление заказа</h2>
+					<div class="section__title-line"></div>
+				</div>
+			</div>
+			<div class="row cartBuy__bio-types">
+				<div class="cartBuy__bio-type">
+					<label class="checkbox-transform">
+						<input type="radio" name="bio" class="checkbox__input" checked onchange="cartBuy('fizbioform','urbioform');">
+						<span class="checkbox__label">Физическое лицо</span>
+					</label>
+				</div>
+				<div class="cartBuy__bio-type">
+					<label class="checkbox-transform">
+						<input type="radio" name="bio" class="checkbox__input" onchange="cartBuy('urbioform','fizbioform');">
+						<span class="checkbox__label">Юридическое лицо</span>
+					</label>
+				</div>
+			</div>
+			<div class="row cartBuy__bio-forms" id="fizbioform">
+				<form action="">
+					<div class="cartBuy__bio-formItem">
+						<p>Как вас зовут?</p>
+						<p>Имя</p>
+						{{ forms.individual_form.firstname }}
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>Фамилия</p>
+						{{ forms.individual_form.lastname }}
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>Контактные данные:</p>
+						<p>Email</p>
+						{{ forms.individual_form.email }}
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>Phone</p>
+						{{ forms.individual_form.phone }}
+					</div>
+				</form>
+			</div>
+
+			<div class="row cartBuy__bio-forms" id="urbioform">
+				<form action="">
+
+					<div class="cartBuy__bio-formItem">
+						<p>Как вас зовут?</p>
+						<p>Имя</p>
+						{{ forms.entity_form.firstname }}
+						<p>Фамилия</p>
+						{{ forms.entity_form.lastname }}
+						<p>Название компании</p>
+						{{ forms.entity_form.firm_name }}
+
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>Контактные данные</p>
+						<p>Email</p>
+						{{ forms.entity_form.email }}
+						<p>Phone</p>
+						{{ forms.entity_form.phone }}
+
+
+						<div class="row">
+							<div class="cartBuy__bio-formItem cartBuy__bio-formItemBot">
+								<p>ИНН</p>
+								{{ forms.entity_form.INN }}
+							</div>
+							<div class="cartBuy__bio-formItem cartBuy__bio-formItemBot">
+								<p>КПП</p>
+								{{ forms.entity_form.KPP }}
+
+							</div>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</section>
+
+
+	<section class="cartBuy__list inn__point">
+		<div class="container-fluid">
+			<div class="row">
+				<h3>Перечень покупок</h3>
+			</div>
+			<div class="row cartBuy__items">
+				<div class="cartBuy__item">
+					<div class="cartBuy__item-name">
+						<h5>Отчёт номер 1</h5>
+					</div>
+					<div class="cartBuy__item-settings">
+						<div class="cartBuy__item-settingsLeft">
+							<label class="checkbox-transform">
+								<input type="radio" name="bio2" class="checkbox__input" checked>
+								<span class="checkbox__label">Ежемесячное обновление</span>
+							</label>
+							<label class="checkbox-transform">
+								<input type="radio" name="bio2" class="checkbox__input">
+								<span class="checkbox__label">Ежеквартальное обновление</span>
+							</label>
+						</div>
+
+							<form id="cart-purchase-radio-form" class="cartBuy__item-settingsRight">
+
+								<div class="radiobtn">
+									<input type="radio" id="OM" name="drone" value="OM">
+									<label for="OM">На один месяц</label>
+								</div>
+								<div class="radiobtn">
+									<input type="radio" id="HY" name="drone" value="HY">
+									<label for="HY">На пол года</label>
+								</div>
+								<div class="radiobtn">
+									<input type="radio" id="OQ" name="drone" value="OQ">
+									<label for="OQ">На один квартал</label>
+								</div>
+								<div class="radiobtn">
+									<input type="radio" id="OY" name="drone" value="OY">
+									<label for="OY">На один год</label>
+								</div>
+
+							</form>
+
+					</div>
+					<div class="cartBuy__item-price">
+						<div class="cartBuy__item-priceBlock">
+							<p>250 Р</p>
+							<a href="">Отменить заказ</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="cartBuy__pay inn__point">
+		<div class="container-fluid">
+			<div class="row cartBuy__pay-row">
+				<div class="cartBuy__pay-button">
+					<a href="">Оплатить</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+{% endblock content %}

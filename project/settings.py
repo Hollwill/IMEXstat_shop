@@ -1,58 +1,48 @@
+
+from configurations import Configuration
+
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+class Base(Configuration):
 
-ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+    ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-#ALLOWED_HOSTS = ['imex.naminteresno.ru']
-ALLOWED_HOSTS = ['*']
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'django_cleanup',
+        'multi_form_view',
+        'pytils',
+        'personal_cabinet',
+        'products',
+        'orders',
+        'index',
+        'cart',
+    ]
 
-SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'whitenoise.middleware.WhiteNoiseMiddleware',
+    ]
 
-# Application definition
+    ROOT_URLCONF = 'project.urls'
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_cleanup',
-    'multi_form_view',
-    'pytils',
-    'personal_cabinet',
-    'products',
-    'orders',
-    'index',
-    'cart',
-    'debug_toolbar',
-]
-
-MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-]
-
-ROOT_URLCONF = 'project.urls'
-
-TEMPLATES = [
+    TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(ROOT_PATH, "templates")],
@@ -63,113 +53,125 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+                ],
+            },
         },
-    },
-]
+    ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
+    WSGI_APPLICATION = 'project.wsgi.application'
+
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        },
+    ]
+
+    LANGUAGE_CODE = 'ru-ru'
+
+    TIME_ZONE = 'UTC'
+
+    USE_I18N = True
+
+    USE_L10N = True
+
+    USE_TZ = True
+
+    LOGIN_REDIRECT_URL = 'lk:settings'
+
+    LOGOUT_REDIRECT_URL = 'research:list'
+
+    STATIC_ROOT = os.path.join(ROOT_PATH, 'static')
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = (
+        os.path.join(ROOT_PATH, 'files',  "static"),
+    )
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    )
+    MEDIA_ROOT = os.path.join(ROOT_PATH, 'files', 'media')
+    MEDIA_URL = '/files/media/'
+
+    ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+class Dev(Base):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    DEBUG = True
+    
+    ALLOWED_HOSTS = [ ]
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
     }
-}
+
+    INTERNAL_IPS = [
+
+        '127.0.0.1',
+    ]
+
+    INSTALLED_APPS += 'debug_toolbar'
+    MIDDLEWARE += 'debug_toolbar.middleware.DebugToolbarMiddleware'
 
 
+class Prod(Base):
+    DEBUG = False
+    ALLOWED_HOSTS = ['imex.naminteresno.ru']
 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'imex',
+            'USER': 'ubuntu',
+            'PASSWORD': 'jmfMbcbm47',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
-LANGUAGE_CODE = 'ru-ru'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-LOGIN_REDIRECT_URL = 'lk:settings'
-
-LOGOUT_REDIRECT_URL = 'research:list'
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_ROOT = os.path.join(ROOT_PATH, 'static')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(ROOT_PATH, 'files',  "static"),
-)
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-MEDIA_ROOT = os.path.join(ROOT_PATH, 'files', 'media')
-MEDIA_URL = '/files/media/'
-
-ADMIN_MEDIA_PREFIX = '/static/admin/'
-
-
-
-INTERNAL_IPS = [
-    # ...
-    '127.0.0.1',
-    # ...
-]
-
-LOGGING = {
-   'version': 1,
-   'disable_existing_loggers': False,
-   'handlers': {
-       'file': {
-           'level': 'DEBUG',
-           'class': 'logging.FileHandler',
-           'filename': '/home/oleg/Devel/dmitry_balaev_weblancer/project/debug.log',
+    LOGGING = {
+       'version': 1,
+       'disable_existing_loggers': False,
+       'handlers': {
+           'file': {
+               'level': 'DEBUG',
+               'class': 'logging.FileHandler',
+               'filename': '/home/ubuntu/test/IMEXstat_shop/project/debug.log',
+           },
+           'mail_admins': {
+               'level': 'ERROR',
+               'class': 'django.utils.log.AdminEmailHandler',
+           },       
        },
-       'mail_admins': {
-           'level': 'ERROR',
-           'class': 'django.utils.log.AdminEmailHandler',
-       },       
-   },
-   'loggers': {
-       'django': {
-           'handlers': ['file'],
-           'level': 'DEBUG',
-           'propagate': True,
+       'loggers': {
+           'django': {
+               'handlers': ['file'],
+               'level': 'DEBUG',
+               'propagate': True,
+           },
+           'django.request': {
+               'handlers': ['mail_admins'],
+               'level': 'ERROR',
+               'propagate': True,
+           },              
        },
-       'django.request': {
-           'handlers': ['mail_admins'],
-           'level': 'ERROR',
-           'propagate': True,
-       },              
-   },
-}
+    }
+
+
+
+
+    
+
