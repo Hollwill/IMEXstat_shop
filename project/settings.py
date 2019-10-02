@@ -27,6 +27,7 @@ class Base(Configuration):
         'orders',
         'index',
         'cart',
+        'ckeditor',
     ]
 
     MIDDLEWARE = [
@@ -104,11 +105,15 @@ class Base(Configuration):
     ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 
-class Dev(Base):
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
+
+
+class Dev(Base):
+
+    BASE_DIR = Base.BASE_DIR
     DEBUG = True
-    
+
     ALLOWED_HOSTS = [ ]
 
     DATABASES = {
@@ -122,9 +127,13 @@ class Dev(Base):
 
         '127.0.0.1',
     ]
+    @property
+    def INSTALLED_APPS(self):
+        return list(Base.INSTALLED_APPS) + [('debug_toolbar'), ('django_extensions')]
 
-    INSTALLED_APPS += 'debug_toolbar'
-    MIDDLEWARE += 'debug_toolbar.middleware.DebugToolbarMiddleware'
+    @property
+    def MIDDLEWARE(self):
+        return list(Base.MIDDLEWARE) + [('debug_toolbar.middleware.DebugToolbarMiddleware')]
 
 
 class Prod(Base):

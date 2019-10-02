@@ -24,7 +24,9 @@ $(function ()    {
             }
         });
     });
-    /* На основе url меняет цвет нужного типа исследования */
+    /*-------------------------------------------------
+    На основе url меняет цвет нужного типа исследования 
+    -------------------------------------------------*/
     $(document).ready(function(){
         if (window.location.href.indexOf('research=') >= 0) {
             $('.ready__type-item').className = 'ready__type-item';
@@ -37,8 +39,27 @@ $(function ()    {
                 $('#import').addClass('ready__type-itemActive');
             }
         }
-        
     });
+    $(document).ready(function(){
+        if (window.location.href.indexOf('settings') >= 0) {
+            $('#lk_settings').addClass('lk__menu-activeItem')
+        } else if (window.location.href.indexOf('favorite') >= 0) {
+                $('#lk_favorite').addClass('lk__menu-activeItem');
+        } /*else if (window.location.href.indexOf('export') >= 0) {
+                $('#export').addClass('ready__type-itemActive');
+        } else if (window.location.href.indexOf('export') >= 0) {
+                $('#export').addClass('ready__type-itemActive');
+        } else if (window.location.href.indexOf('export') >= 0) {
+                $('#export').addClass('ready__type-itemActive');
+        } else if (window.location.href.indexOf('export') >= 0) {
+                $('#export').addClass('ready__type-itemActive');
+        }*/
+    });
+
+    /*----------------------------------------------------------------------------
+    На странице описания исследования показывать и скрывать контент в нижней части 
+    в зависимости от выбора.
+    ----------------------------------------------------------------------------*/
     $(document).ready(function(){
         $('#contents_button').on('click', function (event) {
             $('.ready__type-item').removeClass('ready__type-itemActive');
@@ -61,11 +82,9 @@ $(function ()    {
     });
 });
 
-function cartBuy(a,a1,b,b1) {
+function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";
-    document.getElementById(a1).style.display = "flex";
     document.getElementById(b).style.display = "none";
-    document.getElementById(b1).style.display = "none";
 }
 function lkExtend(a) {
     var elem = document.querySelector(a)

@@ -1,7 +1,7 @@
 from django import forms
 from personal_cabinet.models import Client
-
-
+from .models import OrderItem, Order, Cart
+from functools import partial, wraps
 
 class IndividualForm(forms.ModelForm):
 	class Meta:
@@ -19,3 +19,7 @@ class EntityForm(forms.ModelForm):
 
 
 
+class CartItemsFormSet(forms.BaseFormSet):
+	def add_fields(self, form, index):
+		super().add_fields(form, index)
+		form.fields['update_frequency'] = forms.ChoiceField()

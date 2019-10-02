@@ -1,22 +1,25 @@
 from django.db import models
 from personal_cabinet.models import Client
 from pytils.translit import slugify
+
+from ckeditor.fields import RichTextField
+
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
         ('industry', 'Отраслевое'),
         ('export', 'Экспорт'),
         ('import', 'Импорт')
     ]
-    title = models.CharField(max_length=100, verbose_name='Заголовок')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     target = models.TextField(blank=True, null=True, verbose_name='Цель исследования')
     description = models.TextField(blank=True, null=True, verbose_name='Описание исследования')
     data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
     image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
     demo = models.FileField(blank=True, null=True, verbose_name='Демо файл')
-    contents = models.TextField(blank=True, null=True, verbose_name='Оглавление')
-    using_methods = models.TextField(blank=True, null=True, verbose_name='Используемые методы')
-    data_sources = models.TextField(blank=True, null=True, verbose_name='Источники данных')
+    contents = RichTextField(blank=True, null=True, verbose_name='Оглавление')
+    using_methods = RichTextField(blank=True, null=True, verbose_name='Используемые методы')
+    data_sources = RichTextField(blank=True, null=True, verbose_name='Источники данных')
     research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE, verbose_name='Тип исследования')
     OM_cost = models.IntegerField(verbose_name='цена за месяц')
     OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за квартал')

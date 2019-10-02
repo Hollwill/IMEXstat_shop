@@ -1,6 +1,6 @@
 from django.views import generic
 from personal_cabinet.models import Client
-from .models import Cart
+from .models import Cart, Order, OrderItem
 from cart.cart import Cart as SessionCart
 from products.models import Research
 from django.utils.decorators import method_decorator
@@ -35,22 +35,23 @@ class CartListView(generic.ListView):
 				cart = SessionCart(self.request)
 				cart.remove(research)
 
+
 @method_decorator(login_required, name='dispatch')
 class CartPurchaseView(MultiModelFormView):
 	form_classes = {
 	'entity_form': EntityForm,
-	'individual_form': IndividualForm
+	'individual_form': IndividualForm,
 	}
 	template_name = 'orders/cart_purchase.html'
-
 
 
 	def get_objects(self):
 		self.client_slug = self.kwargs.get('slug', None)
 		client = Client.objects.get(user=self.request.user)
+		order = Order.objects.create(client=client)
 		return {
 		'entity_form': client,
-		'individual_form': client
+		'individual_form': client,
 		}
 		
 	def get_context_data(self, **kwargs):
@@ -63,6 +64,15 @@ class CartPurchaseView(MultiModelFormView):
 	def forms_valid(self, forms):
 		profile = forms['entity_form'].save()
 		requizites = forms['individual_form'].save()
+		'''order = forms['order_items'].save()
+								order.save()'''
 		profile.save()
 		requizites.save()
 		return super(CartPurchaseView, self).forms_valid(forms)
+'''
+@method_decorator(login_required, name='dispatch')
+class CartPurchaseView(generic.edit.CreateView):
+	model = Order
+	fields = ['client', ]
+	template_name = 'orders/cart_purchase.html'
+'''
