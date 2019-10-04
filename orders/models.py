@@ -16,6 +16,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+        get_latest_by = 'id'
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
@@ -78,6 +79,7 @@ class Cart(models.Model):
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзина'
+    
     
 '''    
 class SessionCart(object):

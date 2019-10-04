@@ -28,6 +28,7 @@ class Base(Configuration):
         'index',
         'cart',
         'ckeditor',
+        'extra_views',
     ]
 
     MIDDLEWARE = [

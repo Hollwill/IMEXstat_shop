@@ -82,10 +82,10 @@
 						</div>
 					</div>
 				</form>
-
 			</div>
 		</div>
 	</section>
+
 
 
 	<section class="cartBuy__list inn__point">
@@ -94,62 +94,60 @@
 				<h3>Перечень покупок</h3>
 			</div>
 			<div class="row cartBuy__items">
-				<div class="cartBuy__item">
-					<div class="cartBuy__item-name">
-						<h5>Отчёт номер 1</h5>
-					</div>
-					<div class="cartBuy__item-settings">
-						<div class="cartBuy__item-settingsLeft">
-							<label class="checkbox-transform">
-								<input type="radio" name="bio2" class="checkbox__input" checked>
-								<span class="checkbox__label">Ежемесячное обновление</span>
-							</label>
-							<label class="checkbox-transform">
-								<input type="radio" name="bio2" class="checkbox__input">
-								<span class="checkbox__label">Ежеквартальное обновление</span>
-							</label>
+				<form method="post">
+				{{ forms.order_form.management_form }}
+					{% csrf_token %}
+				{% for item in forms.order_form %}
+					<div class="cartBuy__item">
+						<div class="cartBuy__item-name">
+							<h5>Отчёт номер 1</h5>
 						</div>
-
-							<form id="cart-purchase-radio-form" class="cartBuy__item-settingsRight">
-
+						<div class="cartBuy__item-settings">
+							{{ item.research }}
+							<div class="cartBuy__item-settingsLeft">
+								<label class="checkbox-transform">
+									<input type="radio" name="{{ item.update_frequency.html_name }}" id="{{ item.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
+									<span class="checkbox__label">Ежемесячное обновление</span>
+								</label>
+								<label class="checkbox-transform">
+									<input type="radio" name="{{ item.update_frequency.html_name }}"  id="{{ item.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
+                            		<span class="checkbox__label">Ежеквартальное обновление</span>
+								</label>
+							</div>
+							<div class="cartBuy__item-settingsRight">
 								<div class="radiobtn">
-									<input type="radio" id="OM" name="drone" value="OM">
-									<label for="OM">На один месяц</label>
+									{{ item.duration.1 }}
 								</div>
 								<div class="radiobtn">
-									<input type="radio" id="HY" name="drone" value="HY">
-									<label for="HY">На пол года</label>
+									{{ item.duration.2 }}
 								</div>
 								<div class="radiobtn">
-									<input type="radio" id="OQ" name="drone" value="OQ">
-									<label for="OQ">На один квартал</label>
+									{{ item.duration.3 }}
 								</div>
 								<div class="radiobtn">
-									<input type="radio" id="OY" name="drone" value="OY">
-									<label for="OY">На один год</label>
+									{{ item.duration.4 }}
 								</div>
-
-							</form>
-
-					</div>
-					<div class="cartBuy__item-price">
-						<div class="cartBuy__item-priceBlock">
-							<p>250 Р</p>
-							<a href="">Отменить заказ</a>
+							</div>
+						</div>
+						<div class="cartBuy__item-price">
+							<div class="cartBuy__item-priceBlock">
+								<p>250 Р</p>
+								<a href="">Отменить заказ</a>
+							</div>
 						</div>
 					</div>
+
+					{% endfor %}
 				</div>
 			</div>
-		</div>
-	</section>
-{{form.as_p}}
-
-	<section class="cartBuy__pay inn__point">
-		<div class="container-fluid">
-			<div class="row cartBuy__pay-row">
-				<div class="cartBuy__pay-button">
-					<a href="">Оплатить</a>
-				</div>
+		</section>
+		<section class="cartBuy__pay inn__point">
+			<div class="container-fluid">
+				<div class="row cartBuy__pay-row">
+					<div class="cartBuy__pay-button">
+						<input type="submit" value="Оплатить">
+					</div>
+				</form>
 			</div>
 		</div>
 	</section>

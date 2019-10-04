@@ -40,6 +40,7 @@ $(function ()    {
             }
         }
     });
+
     $(document).ready(function(){
         if (window.location.href.indexOf('settings') >= 0) {
             $('#lk_settings').addClass('lk__menu-activeItem')
