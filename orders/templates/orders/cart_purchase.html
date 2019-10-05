@@ -2,31 +2,31 @@
 {% block content %}
 
 
-<div id="cartBuy">
-	<section class="cartBuy__bio">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="section__title">
-					<h2>Оформление заказа</h2>
-					<div class="section__title-line"></div>
+<form method="post">
+	<div id="cartBuy">
+		<section class="cartBuy__bio">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="section__title">
+						<h2>Оформление заказа</h2>
+						<div class="section__title-line"></div>
+					</div>
 				</div>
-			</div>
-			<div class="row cartBuy__bio-types">
-				<div class="cartBuy__bio-type">
-					<label class="checkbox-transform">
-						<input type="radio" name="bio" class="checkbox__input" checked onchange="cartBuy('fizbioform','urbioform');">
-						<span class="checkbox__label">Физическое лицо</span>
-					</label>
+				<div class="row cartBuy__bio-types">
+					<div class="cartBuy__bio-type">
+						<label class="checkbox-transform">
+							<input type="radio" name="bio" class="checkbox__input" checked onchange="cartBuy('fizbioform','urbioform');">
+							<span class="checkbox__label">Физическое лицо</span>
+						</label>
+					</div>
+					<div class="cartBuy__bio-type">
+						<label class="checkbox-transform">
+							<input type="radio" name="bio" class="checkbox__input" onchange="cartBuy('urbioform','fizbioform');">
+							<span class="checkbox__label">Юридическое лицо</span>
+						</label>
+					</div>
 				</div>
-				<div class="cartBuy__bio-type">
-					<label class="checkbox-transform">
-						<input type="radio" name="bio" class="checkbox__input" onchange="cartBuy('urbioform','fizbioform');">
-						<span class="checkbox__label">Юридическое лицо</span>
-					</label>
-				</div>
-			</div>
-			<div class="row cartBuy__bio-forms" id="fizbioform">
-				<form action="">
+				<div class="row cartBuy__bio-forms" id="fizbioform">
 					<div class="cartBuy__bio-formItem">
 						<p>Как вас зовут?</p>
 						<p>Имя</p>
@@ -45,11 +45,11 @@
 						<p>Phone</p>
 						{{ forms.individual_form.phone }}
 					</div>
-				</form>
-			</div>
 
-			<div class="row cartBuy__bio-forms" id="urbioform">
-				<form action="">
+				</div>
+
+				<div class="row cartBuy__bio-forms" id="urbioform">
+
 
 					<div class="cartBuy__bio-formItem">
 						<p>Как вас зовут?</p>
@@ -81,23 +81,27 @@
 							</div>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
 
 
-	<section class="cartBuy__list inn__point">
-		<div class="container-fluid">
-			<div class="row">
-				<h3>Перечень покупок</h3>
-			</div>
-			<div class="row cartBuy__items">
-				<form method="post">
-				{{ forms.order_form.management_form }}
+		<section class="cartBuy__list inn__point">
+			<div class="container-fluid">
+				<div class="row">
+					<h3>Перечень покупок</h3>
+					{% for research in researchs %}
+						{{ research.title }}						
+					{% endfor %}
+
+				</div>
+				<div class="row cartBuy__items">
+					{{ cart.management_form }}
+					
 					{% csrf_token %}
-				{% for item in forms.order_form %}
+					{% for item in cart %}
+					{{ item.errors }}
 					<div class="cartBuy__item">
 						<div class="cartBuy__item-name">
 							<h5>Отчёт номер 1</h5>
@@ -111,7 +115,7 @@
 								</label>
 								<label class="checkbox-transform">
 									<input type="radio" name="{{ item.update_frequency.html_name }}"  id="{{ item.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
-                            		<span class="checkbox__label">Ежеквартальное обновление</span>
+									<span class="checkbox__label">Ежеквартальное обновление</span>
 								</label>
 							</div>
 							<div class="cartBuy__item-settingsRight">
@@ -147,9 +151,9 @@
 					<div class="cartBuy__pay-button">
 						<input type="submit" value="Оплатить">
 					</div>
-				</form>
+				</div>
 			</div>
-		</div>
-	</section>
-</div>
+		</section>
+	</div>
+</form>
 {% endblock content %}

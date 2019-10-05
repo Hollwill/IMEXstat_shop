@@ -1,4 +1,4 @@
-from .models import Client
+from .models import Client, Favorite
 from django.contrib.auth.models import User
 from orders.models import Cart
 from .forms import ProfileForm, RequizitesForm
@@ -9,7 +9,6 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from cart.cart import Cart as SessionCart
-
 from products.models import Research
 
 @method_decorator(login_required, name='dispatch')
@@ -41,8 +40,7 @@ class ProfileFormView(MultiModelFormView):
 	def forms_valid(self, forms):
 		profile = forms['profile_form'].save()
 		requizites = forms['requizites_form'].save()
-		profile.save()
-		requizites.save()
+
 		return super(ProfileFormView, self).forms_valid(forms)
 
 class FavoriteArticles(generic.TemplateView):
@@ -50,6 +48,16 @@ class FavoriteArticles(generic.TemplateView):
 
 class FavoriteReports(generic.TemplateView):
 	template_name = 'personal_cabinet/favorite_reports.html'
+
+class FavoriteResearchs(generic.ListView):
+	model = Favorite
+	template_name = 'personal_cabinet/favorite_research.html'
+	context_object_name = 'research'
+
+	def get_queryset(self):
+		favorite = Favorite.objects.get(client__user=self.request.user)
+		return Research.objects.filter(favorite=favorite)
+
 
 class RegisterFormView(generic.edit.FormView):
     form_class = UserCreationForm

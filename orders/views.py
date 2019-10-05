@@ -5,13 +5,15 @@ from cart.cart import Cart as SessionCart
 from products.models import Research
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from multi_form_view import MultiFormView
-from .forms import EntityForm, IndividualForm, Formset
+from multi_form_view import MultiModelFormView
+from .forms import EntityForm, IndividualForm, Formset, CartResearchForm
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django import forms
 
 
 import datetime
+
 class CartListView(generic.ListView):
 	context_object_name = 'cart'
 	template_name = 'orders/cart_list.html'
@@ -40,45 +42,71 @@ class CartListView(generic.ListView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CartPurchaseView(MultiFormView):
+class CartPurchaseView(MultiModelFormView):
 	form_classes = {
 			'entity_form': EntityForm,
 			'individual_form': IndividualForm,
-			'order_form': Formset
 	}
 	template_name = 'orders/cart_purchase.html'
 
+	def get_context_data(self, **kwargs):
+		data = super(CartPurchaseView, self).get_context_data(**kwargs)
+		cart = Cart.objects.get(client__user=self.request.user)
+		research = cart.research.all()
+		FormSet = forms.formset_factory(CartResearchForm, max_num=len(research), min_num=len(research))
+		formset = FormSet(initial=[{'research': x.id} for x in research])
+		data['researchs'] = research
+		try:
+			data['cart'] = kwargs['form']
+		except:
+			data['cart'] = formset
+		finally:
+
+			return data
+
+	def post(self, request, *args, **kwargs):
+		cart = Cart.objects.get(client__user=self.request.user)
+		research = cart.research.all()
+		FormSet = forms.formset_factory(CartResearchForm, max_num=len(research))
+		formset = FormSet(request.POST or None)
+		form = formset
+		if formset.is_valid():
+			self.form_valid(form)
+		else:
+			return self.form_invalid(form)
+		get_forms = self.get_forms()
+		if self.are_forms_valid(get_forms):
+			return self.forms_valid(get_forms)
+		else:
+			return self.forms_invalid(get_forms)
 
 
-	def get_initial(self):
-		initial = super(CartPurchaseView, self).get_initial()
+	def form_valid(self, form):
 		client = Client.objects.get(user=self.request.user)
-		c = client
-
-		initial['entity_form'] = {
-			'lastname': c.lastname, 
-			'firstname': c.firstname,
-			'firm_name': c.firm_name,
-			'email': c.email,
-			'phone': c.phone,
-			'INN': c.INN,
-			'KPP': c.KPP
+		Order.objects.create(client=client)
+		order = Order.objects.latest()
+		for item in form:
+			order_cart = item.save(commit=False)
+			order_cart.order = order
+			order_cart.save()
+		Cart.objects.get(client__user=self.request.user).delete()
+		Cart.objects.create(client=client)
+		return super().form_valid(form)
+			
+	def get_objects(self):
+		self.client_slug = self.kwargs.get('slug', None)
+		client = Client.objects.get(user=self.request.user)
+		return {
+			'entity_form': client,
+			'individual_form': client
 		}
-		initial['individual_form'] = {
-			'lastname': c.lastname, 
-			'firstname': c.firstname,
-			'email': c.email,
-			'phone': c.phone,
-		}
-		return initial
 		
 	def get_success_url(self):
-		return reverse('/')
+		return reverse('lk:settings')
 
 	def forms_valid(self, forms):
 		profile = forms['entity_form'].save()
 		requizites = forms['individual_form'].save()
-		requizites.save()
 		return super(CartPurchaseView, self).forms_valid(forms)
 
 

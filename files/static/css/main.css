@@ -1,3 +1,6 @@
+.settings_form_error {
+	color: red !important;
+}
 
 .radiobtn label:hover {
 	background: #FFED00;
@@ -27,16 +30,14 @@
   position: absolute;
   width: 100%;
 }
-  
+
+
+
 .radiobtn input[type=radio]:checked + label {
   background: #FFED00;
 }
 
 
-
-.lk__best-item {
-	justify-content: center !important;
-}
 #settings_form_file {
 	display: none;
 }
@@ -1870,6 +1871,7 @@ footer {
 }
 .lk__item-mid {
 	padding-top: 15px;
+	height: 78px;
 }
 .lk__item-mid p{
 	font-family: Open Sans;

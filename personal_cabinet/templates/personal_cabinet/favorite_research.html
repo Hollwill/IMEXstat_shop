@@ -1,0 +1,48 @@
+{% extends "personal_cabinet/pk_base.html" %}
+
+
+{% block inner_content %}
+
+<section class="lk__best-type">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="lk__bestType-items">
+				<a href="{% url 'lk:favorite_research' %}" class="lk__bestType-active">Исследования</a>
+				<a href="{% url 'lk:favorite_articles' %}">Статьи</a>
+				<a href="{% url 'lk:favorite_reports' %}">Отчёты</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section itemscope itemtype="https://schema.org/NewsArticle" class="lk__best-items">
+    <div class="container-fluid">
+        <div class="row lk__best-itemsRow">
+            
+            {% for research in research %}
+            <div class="lk__best-item">
+                <div itemprop="associatedMedia" class="lk__item-img">
+                    {% if research.image %}
+                        <img class="lk__item-img" src="{{ research.image.url }}" alt="">
+                    {% endif %}
+                </div>
+                <div class="lk__item-content">
+                    <div class="lk__item-top">
+                        <h2 itemprop="headline">{{ research.title }}</h2>
+                    </div>
+                    <div class="lk__item-mid">
+                        <p itemprop="description">{{ research.description | slice:":220" }}</p>
+                    </div>
+                    <div class="lk__item-bot">
+                        <a href="" class="lk__item-botMore">Подробнее</a>
+                        <a href="" class="lk__item-botDelete">Удалить</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock inner_content %}

@@ -26,7 +26,7 @@ class CartResearchForm(forms.ModelForm):
 		exclude = ['price', 'order']
 		widgets = {
 			'update_frequency': forms.RadioSelect(attrs={'class': 'checkbox__input'}),
-			'duration': forms.RadioSelect()
+			'duration': forms.RadioSelect(attrs={'class': 'Duration_choice'})
 		}
 
 

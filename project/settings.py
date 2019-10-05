@@ -28,7 +28,7 @@ class Base(Configuration):
         'index',
         'cart',
         'ckeditor',
-        'extra_views',
+        'phonenumber_field',
     ]
 
     MIDDLEWARE = [

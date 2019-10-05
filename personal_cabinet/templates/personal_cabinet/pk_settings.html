@@ -21,17 +21,26 @@
 					</div>
 					<div class="lk__data-mid">
 						<div class="lk__data-items">
+							{% with forms.profile_form as form %}
+							{% if form.errors %}
+								{% for field in form %}
+									{% for error in field.errors %}
+										<p> {{ error }} </p>
+									{% endfor %}
+								{% endfor %}
+							{% endif %}
+							    
 							<div class="lk__data-item">
 								<p>Ваша фамилия</p>
-								{{ forms.profile_form.lastname }}
+								{{ form.lastname }}
 							</div>
 							<div class="lk__data-item">
 								<p>Ваше имя</p>
-								{{ forms.profile_form.firstname }}
+								{{ form.firstname }}
 							</div>
 							<div class="lk__data-item">
 								<p>Ваше отчество</p>
-								{{ forms.profile_form.middle_name }}
+								{{ form.middle_name }}
 							</div>
 						</div>
 						<div class="lk__data-button lk__data-buttonDesktop">
@@ -40,13 +49,19 @@
 					</div>
 					<div class="lk__data-bot">
 						<div class="lk__data-item">
-							<p>E-mail</p>
-							{{ forms.profile_form.email.as_text }}
+							<p>E-mail</p>			
+							{% for error in form.email.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}				
+							{{ form.email.as_text }}
 						</div>
 						<div class="lk__data-item">
 							<p>Телефон</p>
-							{{ forms.profile_form.phone }}
+							{{ form.phone.as_text }}
 						</div>
+							{% endwith %}
 						<div class="lk__data-button lk__data-buttonMobile">
 							<button>Сохранить данные</button>
 						</div>
@@ -112,13 +127,15 @@
 					</div>
 					<div class="lk__data-mid">
 						<div class="lk__data-items">
+							{% with forms.requizites_form as form %}
+							    
 							<div class="lk__data-item">
 								<p>Название фирмы</p>
-								{{ forms.requizites_form.firm_name }}
+								{{ form.firm_name }}
 							</div>
 							<div class="lk__data-item lk__data-itemLong">
 								<p>Юридический адрес</p>
-								{{ forms.requizites_form.legal_adress }}
+								{{ form.legal_adress }}
 							</div>
 						</div>
 						<div class="lk__data-button lk__data-buttonDesktop">
@@ -128,11 +145,11 @@
 					<div class="lk__data-bot lk__data-botLong">
 						<div class="lk__data-item">
 							<p>ИНН</p>
-							{{ forms.requizites_form.INN.as_text }}
+							{{ form.INN.as_text }}
 						</div>
 						<div class="lk__data-item lk__data-itemSecond">
 							<p>КПП</p>
-							{{ forms.requizites_form.KPP.as_text }}
+							{{ form.KPP.as_text }}
 						</div>
 						<div class="lk__data-item lk__data-item-file">
 							<p>Файл с реквезитами</p>
@@ -145,11 +162,12 @@
 								{% endif %}
 								
 								<div id="settings_form_file">
-									{{ forms.requizites_form.requisites_file }}
+									{{ form.requisites_file }}
 								</div>
 								<label for="id_requisites_file">+</label>
 
 							</div>
+							{% endwith %}
 							<div class="lk__data-button lk__data-buttonMobile">
 								<button>Сохранить данные</button>
 							</div>

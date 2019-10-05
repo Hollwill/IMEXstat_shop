@@ -9,6 +9,8 @@ class ProfileForm(forms.ModelForm):
 		model = Client
 		fields = ['lastname', 'firstname', 'middle_name', 'email', 'phone']
 		exclude = ['user',]
+		
+
 
 
 

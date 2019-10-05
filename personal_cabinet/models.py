@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from pytils.translit import slugify
+from phonenumber_field.modelfields import PhoneNumberField
+
 import os
 
 
@@ -11,7 +13,7 @@ class Client(models.Model):
     lastname = models.CharField(max_length=50, blank=True, verbose_name='Фамилия')
     middle_name = models.CharField(max_length=50, blank=True, verbose_name='Отчество')
     email = models.EmailField(blank=True, verbose_name='Email')
-    phone = models.CharField(max_length=50, blank=True, verbose_name='Мобильный телефон')
+    phone = PhoneNumberField(blank=True, null=True, verbose_name='Мобильный телефон')
     firm_name = models.CharField(max_length=100, blank=True, verbose_name='Название фирмы')
     legal_adress = models.CharField(max_length=100, blank=True, verbose_name='Юридический адрес')
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
@@ -33,3 +35,10 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+
+
+from products.models import Research
+
+class Favorite(models.Model):
+    client = models.OneToOneField(Client, on_delete=models.CASCADE)
+    research = models.ManyToManyField(Research, blank=True)
