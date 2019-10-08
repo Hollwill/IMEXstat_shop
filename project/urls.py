@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from personal_cabinet.views import RegisterFormView
+from django.contrib import flatpages 
 
 
 urlpatterns = [
@@ -11,9 +12,12 @@ urlpatterns = [
     path('', include('index.urls', namespace='index')),
     path('lk/', include('personal_cabinet.urls', namespace='lk')),
     path('research/', include('products.urls', namespace='research')),
+    path('article/', include('articles.urls', namespace='article')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register', RegisterFormView.as_view(), name='register'),
-    path('order/', include('orders.urls', namespace='orders'))
+    path('order/', include('orders.urls', namespace='orders')),
+    path('pages/', include('django.contrib.flatpages.urls')),
+
 ]
 
 if settings.DEBUG:

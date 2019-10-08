@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Статьи{% endblock title %}
+
+
+{% block content %}
+	<section class="popular">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="popular__content">
+                <p>Популярное:</p>
+                {% for category in categories %}
+                <a href="{% url 'article:category' category.slug %}">#{{ category.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section itemscope itemtype="https://schema.org/NewsArticle" class="articles">
+    <div class="container-fluid">
+        <div class="row articles__items">
+        	{% for article in articles %}
+        		
+            <div class="articles__item">
+            	<div itemprop="associatedMedia" class="articles__item-left">
+            		{% if article.image %}
+            			<img class="articles__item-left" src="{{ article.image.url }}" alt="">
+            		{% endif %}
+                </div>
+                <div class="articles__item-right">
+                    <div class="articles__item-title">
+                        <h2 itemprop="headline">{{ article.title }}</h2>
+                    </div>
+                    <div class="articles__item-text">
+                        <p itemprop="description">{{ article.description|safe }}</p>
+                    </div>
+                    <div class="articles__item-btn">
+                        <a href="{% url 'article:detail' article.slug %}">Читать полностью</a>
+                    </div>
+                </div>
+            </div>
+        	{% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

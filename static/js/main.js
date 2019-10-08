@@ -40,6 +40,7 @@ $(function ()    {
             }
         }
     });
+
     $(document).ready(function(){
         if (window.location.href.indexOf('settings') >= 0) {
             $('#lk_settings').addClass('lk__menu-activeItem')
@@ -81,6 +82,15 @@ $(function ()    {
         });
     });
 });
+
+function showCost(a, b, c, d) {
+    document.getElementById(a).style.display = "block";
+    document.getElementById(b).style.display = "none";
+    document.getElementById(c).style.display = "none";
+    document.getElementById(d).style.display = "none";
+
+}
+
 
 function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";

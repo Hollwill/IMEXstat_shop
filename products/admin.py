@@ -1,7 +1,10 @@
 from django.contrib import admin
 from .models import Category, Research
 
+from seo.admin import ModelInstanceSeoInline
+
 class ResearchAdmin(admin.ModelAdmin):
+	inlines = [ModelInstanceSeoInline]
 	prepopulated_fields = {'slug': ('title',)}
 
 class CategoryAdmin(admin.ModelAdmin):

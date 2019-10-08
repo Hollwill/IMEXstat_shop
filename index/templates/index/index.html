@@ -1,13 +1,15 @@
 
 
 {% load static %}
-
+{% load seo %}
 <!doctype html>
 <html lang="ru">
-<head> 
-    {% load static %}
+<head>
+    
+    {% get_seo_data seo %}
+    {% get_seo_data request.seo %}
     <title>
-        {% block title %}{% endblock title %}
+        {% block title %}Главная{% endblock title %}
     </title>	
     <meta charset="utf-8" />   
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -30,7 +32,7 @@
                     <a href="mailto:mail@imexstat.ru" class="header__top-links">mail@imexstat.ru</a>
                 </div>
                 <div class="header__top-right">
-                    <a href="" class="header__top-links">Статьи</a>
+                    <a href="{% url 'article:list' %}" class="header__top-links">Статьи</a>
                     <a href="" class="header__top-links">Справочник</a>
                     <a href="{% url 'orders:cart' %}" class="header__top-links">Корзина</a>
                     {% if user.is_authenticated %}
@@ -63,21 +65,11 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Таможенная статистика</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Готовые исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">По ИНН</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Контакты</a>
-                                </li>
+                                {% for menu in menu %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'index:index' %}{{menu.url}}">{{ menu.title }}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </nav>
@@ -113,6 +105,13 @@
             </div>
         </div>
     </header>
+    {% if messages %}
+
+            {% for message in messages %}
+                <h2 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h2>
+            {% endfor %}
+
+    {% endif %}
     
     <section class="search">
 	<div class="container">
@@ -139,66 +138,25 @@
 <section class="why">
     <div class="container">
         <div class="row why__items">
+            {% for task in tasks %}
             <div class="why__item">
                 <div class="why__item-top">
                     <div class="why__item-img">
-
+                        {% if task.image %}
+                            <img class="why__item-img" src="{{ task.image.url }}" alt="">
+                        {% endif %}
                     </div>
                     <div class="why__item-text">
-                        <h2>Анализ конкурентов</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempore.</p>
+                        <h2>{{ task.title }}</h2>
+                        <p>{{ task.description }}</p>
                     </div>
                 </div>
-                <a href="" class="why__item-btn">
+                <a href="{{ task.url }}" class="why__item-btn">
                     <p>Узнать больше</p>
                     <p>&rang;</p>
                 </a>
             </div>
-            <div class="why__item">
-                <div class="why__item-top">
-                    <div class="why__item-img">
-
-                    </div>
-                    <div class="why__item-text">
-                        <h2>Анализ конкурентов</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempore.</p>
-                    </div>
-                </div>
-                <a href="" class="why__item-btn">
-                    <p>Узнать больше</p>
-                    <p>&rang;</p>
-                </a>
-            </div>
-            <div class="why__item">
-                <div class="why__item-top">
-                    <div class="why__item-img">
-
-                    </div>
-                    <div class="why__item-text">
-                        <h2>Анализ конкурентов</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempore.</p>
-                    </div>
-                </div>
-                <a href="" class="why__item-btn">
-                    <p>Узнать больше</p>
-                    <p>&rang;</p>
-                </a>
-            </div>
-            <div class="why__item">
-                <div class="why__item-top">
-                    <div class="why__item-img">
-
-                    </div>
-                    <div class="why__item-text">
-                        <h2>Анализ конкурентов</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempore.</p>
-                    </div>
-                </div>
-                <a href="" class="why__item-btn">
-                    <p>Узнать больше</p>
-                    <p>&rang;</p>
-                </a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -218,12 +176,12 @@
             <div class="products__item">
                 <div class="products__item-top">
                     {% if research.image %}
-                	<img class="products__item-top" src="{{ research.image.url }}" alt="">
+                	<img class="products__item-top" src="{{ research.image.url }}">
                     {% endif %}
                 </div>
                 <div class="products__item-text">
                     <h2>{{ research.title }}</h2>
-                    <p id="research_description">{{ research.description }}</p>
+                    <p id="research_description">{{ research.description|slice:":111"|add:"..." }}</p>
                     <p><span>{{ research.OM_cost }} Р</span></p>
                 </div>
                 <a href="{% url 'research:detail' research.slug %}" class="products__item-btn">
@@ -247,30 +205,13 @@
             </div>
         </div>
         <div class="row partners__items">
+            {% for image in clients_images %}
             <div class="partners__item">
-                <img src="{% static "img/uber.png" %}" alt="">
+                {% if image.image %}
+                    <img class="partners__item" src="{{ image.image.url }}" alt="{{ image.name }}">
+                    {% endif %}
             </div>
-            <div class="partners__item">
-                <img src="{% static "img/amazon.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/dominos.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/amazon.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/uber.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/amazon.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/dominos.png" %}" alt="">
-            </div>
-            <div class="partners__item">
-                <img src="{% static "img/amazon.png" %}" alt="">
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -288,16 +229,19 @@
     <div class="container">
         
 </section>
-    
+
 <footer>
     <div class="container">
         <div class="row">
             <div class="footer__form">
-                <form action="">
-                    <input type="text" placeholder="Введите ваше имя">
-                    <input type="text" placeholder="Введите номер телефона или E-mail">
-                    <button>получить консультацию специалиста</button>
+                <form action="{% url 'index:form' %}" method="post">
+                    {% csrf_token %}
+                    {{form.name}}
+                    {{ form.contact_details }}
+                    <button type="submit" >получить консультацию специалиста</button>
+                    {% comment %}
                     <p><input type="checkbox" checked name="option2" value="a2">согласен на обработку персональных данных</p>
+                    {% endcomment %}
                 </form>
             </div>
         </div>

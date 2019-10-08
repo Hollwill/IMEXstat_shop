@@ -34,8 +34,8 @@
                         <p itemprop="description">{{ research.description | slice:":220" }}</p>
                     </div>
                     <div class="lk__item-bot">
-                        <a href="" class="lk__item-botMore">Подробнее</a>
-                        <a href="" class="lk__item-botDelete">Удалить</a>
+                        <a href="{% url 'research:detail' research.slug %}" class="lk__item-botMore">Подробнее</a>
+                        <a href="{% url 'lk:favorite_research' %}?delete_from_favorite={{ research.slug }}" class="lk__item-botDelete">Удалить</a>
                     </div>
                 </div>
             </div>

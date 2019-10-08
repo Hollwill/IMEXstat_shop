@@ -49,19 +49,30 @@ class CartPurchaseView(MultiModelFormView):
 	}
 	template_name = 'orders/cart_purchase.html'
 
+	def dispatch(self, request, *args, **kwargs):
+		self.remove_from_cart(request)
+		return super(CartPurchaseView, self).dispatch(request, *args, **kwargs)
+
+	def remove_from_cart(self, request, **kwargs):
+		if self.request.GET.get('remove_from_order'):
+			research = Research.objects.get(slug=self.request.GET.get('remove_from_order'))
+
+			cart = Cart.objects.get(client_id=self.request.user.id)
+			cart.save()
+			cart.research.remove(research)
+
 	def get_context_data(self, **kwargs):
 		data = super(CartPurchaseView, self).get_context_data(**kwargs)
 		cart = Cart.objects.get(client__user=self.request.user)
 		research = cart.research.all()
 		FormSet = forms.formset_factory(CartResearchForm, max_num=len(research), min_num=len(research))
-		formset = FormSet(initial=[{'research': x.id} for x in research])
+		formset = FormSet(initial=[{'research': x} for x in research])
 		data['researchs'] = research
 		try:
 			data['cart'] = kwargs['form']
 		except:
 			data['cart'] = formset
 		finally:
-
 			return data
 
 	def post(self, request, *args, **kwargs):
@@ -69,16 +80,14 @@ class CartPurchaseView(MultiModelFormView):
 		research = cart.research.all()
 		FormSet = forms.formset_factory(CartResearchForm, max_num=len(research))
 		formset = FormSet(request.POST or None)
-		form = formset
-		if formset.is_valid():
-			self.form_valid(form)
-		else:
-			return self.form_invalid(form)
 		get_forms = self.get_forms()
-		if self.are_forms_valid(get_forms):
+		if formset.is_valid() and self.are_forms_valid(get_forms):
+			self.form_valid(formset)
 			return self.forms_valid(get_forms)
-		else:
+		elif not self.are_forms_valid(get_forms):
 			return self.forms_invalid(get_forms)
+		else:
+			return self.form_invalid(formset)
 
 
 	def form_valid(self, form):

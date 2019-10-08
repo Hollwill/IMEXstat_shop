@@ -1,7 +1,12 @@
+{% load seo %}
+{% load static %}
 <!doctype html>
 <html lang="ru">
-<head> 
-    {% load static %}
+<head>
+
+    {% get_seo_data seo %}
+    {% get_seo_data request.seo %}
+
     <title>
         {% block title %}{% endblock title %}
     </title>	
@@ -12,8 +17,8 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
-<body >
 
+<body>
     <section class="header__top">
         <div class="container-fluid">
             <div class="row header__top-row">
@@ -23,7 +28,7 @@
                     <a href="mailto:mail@imexstat.ru" class="header__top-links">mail@imexstat.ru</a>
                 </div>
                 <div class="header__top-right">
-                    <a href="" class="header__top-links">Статьи</a>
+                    <a href="{% url 'article:list' %}" class="header__top-links">Статьи</a>
                     <a href="" class="header__top-links">Справочник</a>
                     <a href="{% url 'orders:cart' %}" class="header__top-links">Корзина</a>
                     {% if user.is_authenticated %}
@@ -56,21 +61,11 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Таможенная статистика</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Готовые исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">По ИНН</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Контакты</a>
-                                </li>
+                                {% for menu in menu %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'index:index' %}{{menu.url}}">{{ menu.title }}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </nav>

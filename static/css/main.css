@@ -1,7 +1,16 @@
 
+#research-list-star {
+	margin-top: 0px !important;
+}
+
+.settings_form_error {
+	color: red !important;
+}
+
 .radiobtn label:hover {
 	background: #FFED00;
 }
+
 .radiobtn {
 
   width: 245px;
@@ -10,6 +19,9 @@
   font-weight: bold;
   margin-bottom: 55px;
 }
+
+
+
 .radiobtn label {
   display: block;
   background: #fff;
@@ -23,14 +35,14 @@
   position: absolute;
   width: 100%;
 }
+
+
+
 .radiobtn input[type=radio]:checked + label {
   background: #FFED00;
 }
 
 
-.lk__best-item {
-	justify-content: center !important;
-}
 #settings_form_file {
 	display: none;
 }
@@ -1517,12 +1529,13 @@ footer {
 .cartBuy__pays label {
 	margin-right: 30px;
 }
-.cartBuy__pay-button a {
+.cartBuy__pay-button input{
 	display: block;
 	width: 245px;
 	height: 40px;
 	background: #FFED00;
-	box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.15);
+	border: none;
+	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.15);
 	font-family: Open Sans;
 	font-style: normal;
 	font-weight: bold;
@@ -1530,9 +1543,9 @@ footer {
 	line-height: 22px;
 	color: #333333;
 	text-align: center;
-	padding-top: 9px;
+	outline: none;
 }
-.cartBuy__pay-button a:hover {
+.cartBuy__pay-button input:hover {
 	text-decoration: none;
 	background: #FFFFFF;
 }
@@ -1863,6 +1876,7 @@ footer {
 }
 .lk__item-mid {
 	padding-top: 15px;
+	height: 78px;
 }
 .lk__item-mid p{
 	font-family: Open Sans;

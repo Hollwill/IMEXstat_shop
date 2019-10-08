@@ -21,25 +21,35 @@
 					</div>
 					<div class="lk__data-mid">
 						<div class="lk__data-items">
-							{% with forms.profile_form as form %}
-							{% if form.errors %}
-								{% for field in form %}
-									{% for error in field.errors %}
-										<p> {{ error }} </p>
-									{% endfor %}
-								{% endfor %}
+							{% if forms.profile_form.errors or forms.requizites_form.errors %}
+								<p class="settings_form_error">В введенных данных содержится ошибка</p>
 							{% endif %}
-							    
+							{% with forms.profile_form as form %}							    
 							<div class="lk__data-item">
 								<p>Ваша фамилия</p>
+								{% for error in form.lastname.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
 								{{ form.lastname }}
 							</div>
 							<div class="lk__data-item">
 								<p>Ваше имя</p>
+								{% for error in form.firstname.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
 								{{ form.firstname }}
 							</div>
 							<div class="lk__data-item">
 								<p>Ваше отчество</p>
+								{% for error in form.middle_name.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
 								{{ form.middle_name }}
 							</div>
 						</div>
@@ -54,11 +64,15 @@
 								<p class="settings_form_error">
 									{{ error }}
 								</p>
-							{% endfor %}				
+							{% endfor %}
 							{{ form.email.as_text }}
 						</div>
 						<div class="lk__data-item">
 							<p>Телефон</p>
+							{% if form.phone.errors %}
+								<p class="settings_form_error">Введите действительный номер телефона</p>
+								<p class="settings_form_error">Например: +72125552368</p>
+							{% endif %}
 							{{ form.phone.as_text }}
 						</div>
 							{% endwith %}
@@ -131,10 +145,20 @@
 							    
 							<div class="lk__data-item">
 								<p>Название фирмы</p>
+								{% for error in form.firm_name.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
 								{{ form.firm_name }}
 							</div>
 							<div class="lk__data-item lk__data-itemLong">
 								<p>Юридический адрес</p>
+								{% for error in form.legal_adress.errors %}
+									<p class="settings_form_error">
+										{{ error }}
+									</p>
+								{% endfor %}
 								{{ form.legal_adress }}
 							</div>
 						</div>
@@ -145,10 +169,20 @@
 					<div class="lk__data-bot lk__data-botLong">
 						<div class="lk__data-item">
 							<p>ИНН</p>
+							{% for error in form.INN.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}
 							{{ form.INN.as_text }}
 						</div>
 						<div class="lk__data-item lk__data-itemSecond">
 							<p>КПП</p>
+							{% for error in form.KPP.errors %}
+								<p class="settings_form_error">
+									{{ error }}
+								</p>
+							{% endfor %}
 							{{ form.KPP.as_text }}
 						</div>
 						<div class="lk__data-item lk__data-item-file">

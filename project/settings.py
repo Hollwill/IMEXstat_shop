@@ -11,6 +11,8 @@ class Base(Configuration):
 
     SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
+    SITE_ID = 1
+
 
     INSTALLED_APPS = [
         'django.contrib.admin',
@@ -27,8 +29,17 @@ class Base(Configuration):
         'orders',
         'index',
         'cart',
+        'articles',
         'ckeditor',
         'phonenumber_field',
+        'django.contrib.sites',
+        'django.contrib.flatpages',
+        'flatpage',
+        'seo',
+
+
+
+
     ]
 
     MIDDLEWARE = [
@@ -40,6 +51,8 @@ class Base(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'whitenoise.middleware.WhiteNoiseMiddleware',
+        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+        'seo.middleware.url_seo_middleware',
     ]
 
     ROOT_URLCONF = 'project.urls'
@@ -55,7 +68,11 @@ class Base(Configuration):
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'index.context_processors.menu.menu',
                 ],
+                'libraries':{
+                    'zip': 'orders.templatetags.zip',
+                    }
             },
         },
     ]
@@ -107,6 +124,17 @@ class Base(Configuration):
 
 
     CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
+    SEO_MODELS = [
+        'products.research',
+        'articles.article'
+    ]   
+
+
+
+
+
+
 
 
 

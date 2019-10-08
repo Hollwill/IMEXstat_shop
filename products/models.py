@@ -4,6 +4,9 @@ from pytils.translit import slugify
 
 from ckeditor.fields import RichTextField
 
+
+
+
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
         ('industry', 'Отраслевое'),
@@ -26,7 +29,6 @@ class Research(models.Model):
     HY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за полгода')
     OY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за год')
     slug = models.SlugField(unique=True, blank=True)
-
 
     def save(self):
         super(Research, self).save()

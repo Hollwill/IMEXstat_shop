@@ -14,7 +14,12 @@ class EntityForm(forms.ModelForm):
 	class Meta:
 
 		model = Client
-		fields = ['firstname', 'lastname', 'firm_name', 'email', 'phone', 'INN', 'KPP']
+		fields = ['firm_name','INN', 'KPP']
+		'''error_messages = {
+									'phone': {
+										''
+									}
+								}'''
 
 class CartResearchForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
@@ -27,6 +32,14 @@ class CartResearchForm(forms.ModelForm):
 		widgets = {
 			'update_frequency': forms.RadioSelect(attrs={'class': 'checkbox__input'}),
 			'duration': forms.RadioSelect(attrs={'class': 'Duration_choice'})
+		}
+		error_messages = {
+			'update_frequency': {
+				'required': ('Выберите частоту исследования')
+			},
+			'duration': {
+				'required': ('Выберите срок подписки')
+			}
 		}
 
 

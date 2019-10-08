@@ -42,17 +42,33 @@ class ProfileFormView(MultiModelFormView):
 		requizites = forms['requizites_form'].save()
 
 		return super(ProfileFormView, self).forms_valid(forms)
-
+@method_decorator(login_required, name='dispatch')
 class FavoriteArticles(generic.TemplateView):
 	template_name = 'personal_cabinet/favorite_articles.html'
 
+
+@method_decorator(login_required, name='dispatch')
 class FavoriteReports(generic.TemplateView):
 	template_name = 'personal_cabinet/favorite_reports.html'
 
+
+@method_decorator(login_required, name='dispatch')
 class FavoriteResearchs(generic.ListView):
 	model = Favorite
 	template_name = 'personal_cabinet/favorite_research.html'
 	context_object_name = 'research'
+
+	def delete_from_favorite(self, request, *args, **kwargs):
+		if self.request.GET.get('delete_from_favorite'):
+			research = Research.objects.get(slug=self.request.GET.get('delete_from_favorite'))
+
+			favorite = Favorite.objects.get(client__user=self.request.user)
+			favorite.save()
+			favorite.research.remove(research)
+
+	def dispatch(self, request, *args, **kwargs):
+		self.delete_from_favorite(request)
+		return super(FavoriteResearchs, self).dispatch(request, *args, **kwargs)
 
 	def get_queryset(self):
 		favorite = Favorite.objects.get(client__user=self.request.user)

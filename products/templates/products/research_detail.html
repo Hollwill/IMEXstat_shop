@@ -14,7 +14,7 @@
 		<div class="readyMore__content-title">
 			<div class="readyMore__content-titleLeft">
 				<h2 itemprop="headline">{{ research.title }}</h2>
-				<img src="{% static "img/star.svg" %}" alt="">
+				<span><a href="{% url 'research:detail' research.slug %}?add_to_favorite={{ research.slug }}"><img src="{% static "img/star.svg" %}"  id="product-star"></a></span>
 			</div>
 			<div class="readyMore__content-titleRight">
 				<h2>{{ research.OM_cost}} Р</h2>
