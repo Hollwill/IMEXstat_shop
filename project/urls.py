@@ -8,6 +8,7 @@ from django.contrib import flatpages
 
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('', include('index.urls', namespace='index')),
     path('lk/', include('personal_cabinet.urls', namespace='lk')),

@@ -9,7 +9,11 @@ from django.contrib import messages
 
 class IndexFormView(generic.FormView):
 	form_class = ProfileForm
-	success_url = "/"
+
+
+	def get_success_url(self):
+		return self.request.GET['next']
+
 
 	def form_valid(self, form):
 		form.save()
@@ -31,6 +35,8 @@ class IndexList( generic.ListView, IndexFormView ):
 		context['clients_images'] = ClientsImages.objects.all()
 		return context
 
+class ContactsList(generic.TemplateView):
+	template_name = 'index/contacts.html'
 
-
-
+class InnView(generic.TemplateView, IndexFormView):
+	template_name = 'index/inn.html'

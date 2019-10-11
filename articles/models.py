@@ -6,7 +6,7 @@ class Article(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Заголовок')
 	description = RichTextField(verbose_name='Текст статьи')
 	time_for_read = models.IntegerField(verbose_name='Время на чтение')
-	category = models.ForeignKey('ArticleCategory', on_delete=models.PROTECT, verbose_name='Категория')
+	category = models.ManyToManyField('ArticleCategory', verbose_name='Категория')
 	slug = models.SlugField(unique=True, blank=True)
 	image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
 

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if messages %}
+	{% for message in messages %}
+		<h2 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h2>
+	{% endfor %}
+{% endif %}
+<section class="inn__why">
+	<div class="container">
+		<div class="row">
+			<div class="section__title">
+				<h2>Какие задачи мы решаем?</h2>
+				<div class="section__title-line"></div>
+			</div>
+		</div>
+		<div class="row inn__why-items">
+			<div class="inn__why-item">
+				<p class="inn__why-number">1</p>
+				<div class="inn__why-line"></div>
+				<p class="inn__why-text">Увеличение объёма продаж</p>
+			</div>
+			<div class="inn__why-item">
+				<p class="inn__why-number">2</p>
+				<div class="inn__why-line"></div>
+				<p class="inn__why-text">Сокращение издержек</p>
+			</div>
+			<div class="inn__why-item">
+				<p class="inn__why-number">3</p>
+				<div class="inn__why-line"></div>
+				<p class="inn__why-text">Увеличение марженальности</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="inn__point">
+	<div class="container">
+		<div class="row">
+			<h3>Все эти цели достижимы путем решения двух фундаментальных задач</h3>
+		</div>
+	</div>
+</section>
+
+
+<section class="inn__analise inn__analise-desktop">
+	<div class="container">
+		<div class="row inn__analise-text">
+			<p>Анализ партнёров</p>
+			<p>Анализ конкурентов</p>
+		</div>
+	</div>
+</section>
+
+<section class="inn__analise-uls inn__analise-desktop">
+	<div class="container">
+		<div class="row inn__analise-items">
+			<div class="inn__analise-item">
+				<ul>
+					<li><span>Проверка надежности партера</span></li>
+					<li><span>Анализ объемов поставок</span></li>
+					<li><span>Данные конторагентов</span></li>
+				</ul>
+			</div>
+			<div class="inn__analise-item">
+				<ul>
+					<li><span>Перечень товаров</span></li>
+					<li><span>Условия поставок</span></li>
+					<li><span>Перечень товаров</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="inn__analise-mobile">
+	<div class="container">
+		<div class="row inn__analise-items">
+			<div class="inn__analise-item inn__analise-text">
+				<p>Анализ партнёров</p>
+				<ul>
+					<li><span>Проверка надежности партера</span></li>
+					<li><span>Анализ объемов поставок</span></li>
+					<li><span>Данные конторагентов</span></li>
+				</ul>
+			</div>
+			<div class="inn__analise-item inn__analise-text">
+				<p>Анализ конкурентов</p>
+				<ul>
+					<li><span>Перечень товаров</span></li>
+					<li><span>Условия поставок</span></li>
+					<li><span>Перечень товаров</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="inn__point inn__point2">
+	<div class="container">
+		<div class="row">
+			<h3>Отчет по ИНН позволяет прицельно, а значит более точно решить все ключевые задачи современного бизнеса. А значит сделать ваш бизнес защищенным</h3>
+		</div>
+	</div>
+</section>
+
+<section class="contacts__q">
+	<div class="container">
+		<div class="row">
+			<div class="contacts__text">
+				<h2>Для консультации в приобретении точечного отчета</h2>
+				<p>Оставьте данные для связи в форме ниже и мы обязательно свяжемся с вами в течении 15 минут</p>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+        <div class="row">
+            <div class="footer__form">
+                <form action="{% url 'index:form' %}?next={% url 'index:inn' %}" method="post">
+                    {% csrf_token %}
+                    {{form.name}}
+                    {{ form.contact_details }}
+                    <button type="submit" >получить консультацию специалиста</button>
+                    {% comment %}
+                    <p><input type="checkbox" checked name="option2" value="a2">согласен на обработку персональных данных</p>
+                    {% endcomment %}
+                </form>
+            </div>
+        </div>
+</section>
+{% endblock content %}

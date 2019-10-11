@@ -1,22 +1,22 @@
 from django.views import generic
 from .models import(
     Research,
-    Category
 )
-from orders.models import Cart
+
 from personal_cabinet.models import Client
-from orders.models import Order, OrderItem
+from orders.models import Order
 from .mixins import CategoryContextMixin
-from django.views import View
-from django.http import HttpResponseRedirect
+
 from django.urls import reverse
 from .forms import ResearchBuyForm
 from seo.mixins.views import (
-    ModelInstanceViewSeoMixin,
-    UrlSeoMixin
+    ModelInstanceViewSeoMixin
 )
+
+
 class ResearchListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
+
     def get_queryset(self):
         if self.request.GET.get('research'):
             return Research.objects.filter(title__icontains=self.request.GET.get('research'))
@@ -26,14 +26,17 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
             except KeyError:
                 return Research.objects.all()
 
+
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
     def get_queryset(self):
         return Research.objects.filter(category__slug=self.kwargs['slug'])
 
+
 class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
     model = Research
+
 
 '''class ResearchFormBuyView(generic.FormView):
     form_class = ResearchBuyForm
@@ -54,11 +57,10 @@ class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, Category
 '''
 
 
-
-
-class ResearchBuyView(generic.edit.FormMixin,ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
+class ResearchBuyView(generic.edit.FormMixin, ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
     model = Research
     form_class = ResearchBuyForm
+    template_name = 'products/research_buy.html'
 
     def get_success_url(self):
         return reverse('research:list')
@@ -69,7 +71,6 @@ class ResearchBuyView(generic.edit.FormMixin,ModelInstanceViewSeoMixin, generic.
         return context
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -87,7 +88,4 @@ class ResearchBuyView(generic.edit.FormMixin,ModelInstanceViewSeoMixin, generic.
         return super().form_valid(form)
 
 
- 
-
-    template_name = 'products/research_buy.html'
 

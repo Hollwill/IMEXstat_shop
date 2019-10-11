@@ -20,7 +20,7 @@ class ArticleCategoryListView(generic.ListView):
 	context_object_name = 'articles'
 
 	def get_queryset(self):
-		return Article.objects.filter()
+		return Article.objects.filter(category__slug=self.kwargs['slug'])
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -33,5 +33,5 @@ class ArticleDetailView(ModelInstanceViewSeoMixin, generic.DetailView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		article = self.get_object()
-		context["articles"] = Article.objects.filter(category=article.category)
+		context["articles"] = Article.objects.exclude(id=article.id).filter(category__in=article.category.all()).distinct()
 		return context

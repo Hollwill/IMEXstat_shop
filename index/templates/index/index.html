@@ -39,8 +39,8 @@
                     <a href="{% url 'lk:settings' %}" class="header__top-login">Личный кабинет</a>
                     <p><a href="{% url 'logout' %}"><img src="{% static 'img/sign-out-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
                     {% else %}
-                    <a href="{% url 'login' %}" class="header__top-login">Войти</a>
                     <a href="{% url 'register' %}" class="header__top-login">Зарегестрироваться</a>
+                    <p><a href="{% url 'login' %}"><img src="{% static 'img/sign-in-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
                     {% endif %}
                     
                 </div>
@@ -96,7 +96,7 @@
                                     <a class="nav-link" href="#">По ИНН</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Контакты</a>
+                                    <a class="nav-link" href="{% url 'index:contacts' %}">Контакты</a>
                                 </li>
                             </ul>
                         </div>
@@ -234,7 +234,7 @@
     <div class="container">
         <div class="row">
             <div class="footer__form">
-                <form action="{% url 'index:form' %}" method="post">
+                <form action="{% url 'index:form' %}?next={% url 'index:index' %}" method="post">
                     {% csrf_token %}
                     {{form.name}}
                     {{ form.contact_details }}
