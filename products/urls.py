@@ -4,12 +4,14 @@ from .views import (
     ResearchDetailView,
     ResearchBuyView,
     ResearchCategoryListView,
+    autocomplete
 
 )
 
 app_name = 'research'
 
 urlpatterns = [
+    path('list/autocomplete', autocomplete, name='autocomplete'),
 	path('list/', ResearchListView.as_view(), name='list'),
     path('catalog/<str:type>', ResearchListView.as_view(), name='type'),
     path('category/<slug:slug>', ResearchCategoryListView.as_view(), name='category' ),

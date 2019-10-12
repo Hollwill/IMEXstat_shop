@@ -118,6 +118,9 @@
             <div class="footer__form">
                 <form action="{% url 'index:form' %}?next={% url 'index:inn' %}" method="post">
                     {% csrf_token %}
+                    {% for value in form.errors.values %}
+                        {{ value }}
+                    {% endfor %}
                     {{form.name}}
                     {{ form.contact_details }}
                     <button type="submit" >получить консультацию специалиста</button>

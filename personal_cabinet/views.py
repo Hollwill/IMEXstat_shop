@@ -1,5 +1,4 @@
 from .models import Client, Favorite
-from django.contrib.auth.models import User
 from orders.models import Cart
 from .forms import ProfileForm, RequizitesForm
 from multi_form_view import MultiModelFormView
@@ -11,22 +10,21 @@ from django.contrib.auth.forms import UserCreationForm
 from cart.cart import Cart as SessionCart
 from products.models import Research
 
+
 @method_decorator(login_required, name='dispatch')
 class ProfileFormView(MultiModelFormView):
 	form_classes = {
-	'requizites_form': RequizitesForm,
-	'profile_form': ProfileForm
+		'requizites_form': RequizitesForm,
+		'profile_form': ProfileForm
 	}
 	template_name = 'personal_cabinet/pk_settings.html'
-
-
 
 	def get_objects(self):
 		self.client_slug = self.kwargs.get('slug', None)
 		client = Client.objects.get(user=self.request.user)
 		return {
-		'requizites_form': client,
-		'profile_form': client
+			'requizites_form': client,
+			'profile_form': client
 		}
 		
 	def get_context_data(self, **kwargs):
@@ -40,8 +38,9 @@ class ProfileFormView(MultiModelFormView):
 	def forms_valid(self, forms):
 		profile = forms['profile_form'].save()
 		requizites = forms['requizites_form'].save()
-
 		return super(ProfileFormView, self).forms_valid(forms)
+
+
 @method_decorator(login_required, name='dispatch')
 class FavoriteArticles(generic.TemplateView):
 	template_name = 'personal_cabinet/favorite_articles.html'
@@ -58,7 +57,7 @@ class FavoriteResearchs(generic.ListView):
 	template_name = 'personal_cabinet/favorite_research.html'
 	context_object_name = 'research'
 
-	def delete_from_favorite(self, request, *args, **kwargs):
+	def delete_from_favorite(self):
 		if self.request.GET.get('delete_from_favorite'):
 			research = Research.objects.get(slug=self.request.GET.get('delete_from_favorite'))
 
@@ -76,20 +75,19 @@ class FavoriteResearchs(generic.ListView):
 
 
 class RegisterFormView(generic.edit.FormView):
-    form_class = UserCreationForm
+	form_class = UserCreationForm
 
-    template_name = "registration/register.html"
+	template_name = "registration/register.html"
 
-    def get_success_url(self):
-        return reverse_lazy('login')
+	def get_success_url(self):
+		return reverse_lazy('login')
 
-    def form_valid(self, form):
-        SessionCart(self.request)
-        form.save()
-        cart = Cart.objects.get(client__user__username=form.cleaned_data['username'])
-        #сохранение корзины из сессии в аккаунт
-        for item in SessionCart(self.request):
-        	id = item.product.id
-        	cart.research.add(Research.objects.get(id=id))
-        return super(RegisterFormView, self).form_valid(form)
-
+	def form_valid(self, form):
+		SessionCart(self.request)
+		form.save()
+		cart = Cart.objects.get(client__user__username=form.cleaned_data['username'])
+		# сохранение корзины из сессии в аккаунт
+		for item in SessionCart(self.request):
+			id = item.product.id
+			cart.research.add(Research.objects.get(id=id))
+		return super(RegisterFormView, self).form_valid(form)

@@ -10,6 +10,7 @@ django-debug-toolbar==2.0
 django-extensions==2.2.2
 django-extra-views==0.12.0
 django-filter==2.2.0
+django-grappelli==2.13.1
 django-heroku==0.3.1
 django-js-asset==1.2.2
 django-modeltranslation==0.13.3
@@ -19,6 +20,7 @@ django-ok-seo==0.8.2
 django-phonenumber-field==3.0.1
 django-seo2==1.0.1
 django-tinymce==2.8.0
+django-treebeard==4.3
 django-unused-media==0.1.13
 django-widget-tweaks==1.4.5
 DjangoSEO==1.0
@@ -33,5 +35,6 @@ six==1.12.0
 sqlparse==0.3.0
 URLObject==2.4.3
 uWSGI==2.0.18
+validate-email==1.3
 Werkzeug==0.16.0
 whitenoise==4.1.4

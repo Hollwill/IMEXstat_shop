@@ -1,5 +1,5 @@
 from django.views import generic
-from .models import Article, ArticleCategory
+from .models import Article, ArticleCategory, ArticleAuthor
 
 from seo.mixins.views import (
     ModelInstanceViewSeoMixin,
@@ -34,4 +34,5 @@ class ArticleDetailView(ModelInstanceViewSeoMixin, generic.DetailView):
 		context = super().get_context_data(**kwargs)
 		article = self.get_object()
 		context["articles"] = Article.objects.exclude(id=article.id).filter(category__in=article.category.all()).distinct()
+		context["author"] = ArticleAuthor.objects.get(article=article)
 		return context

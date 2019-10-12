@@ -11,7 +11,7 @@ class Base(Configuration):
 
     SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
-    SITE_ID = 1
+
 
 
     INSTALLED_APPS = [
@@ -31,12 +31,14 @@ class Base(Configuration):
         'index',
         'cart',
         'articles',
+        'handbook',
         'ckeditor',
         'phonenumber_field',
         'django.contrib.sites',
         'django.contrib.flatpages',
         'flatpage',
         'seo',
+        'treebeard',
 
 
 
@@ -71,9 +73,9 @@ class Base(Configuration):
                 'django.contrib.messages.context_processors.messages',
                 'index.context_processors.menu.menu',
                 ],
-                'libraries':{
-                    'zip': 'orders.templatetags.zip',
-                    }
+            'libraries':{
+                'zip': 'orders.templatetags.zip',
+                }
             },
         },
     ]
@@ -123,7 +125,6 @@ class Base(Configuration):
 
     ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-
     CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
     SEO_MODELS = [
@@ -144,6 +145,8 @@ class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
+    SITE_ID = 1
+    
     ALLOWED_HOSTS = [ ]
 
     DATABASES = {
@@ -169,6 +172,8 @@ class Dev(Base):
 class Prod(Base):
     DEBUG = False
     ALLOWED_HOSTS = ['imex.naminteresno.ru']
+
+    SITE_ID = 7
 
     DATABASES = {
         'default': {

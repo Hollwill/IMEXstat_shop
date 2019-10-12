@@ -1,17 +1,24 @@
 from django.views import generic
-from .models import(
-    Research,
-)
-
+from .models import Research
 from personal_cabinet.models import Client
 from orders.models import Order
 from .mixins import CategoryContextMixin
-
 from django.urls import reverse
 from .forms import ResearchBuyForm
-from seo.mixins.views import (
-    ModelInstanceViewSeoMixin
-)
+from seo.mixins.views import ModelInstanceViewSeoMixin
+from django.http import JsonResponse
+
+
+def autocomplete(request):
+    if request.is_ajax():
+        queryset = Research.objects.filter(title__icontains=request.GET.get('search'))
+        research_list = []
+        for i in queryset:
+            research_list.append(i.title)
+        data = {
+            'list': research_list
+        }
+        return JsonResponse(data)
 
 
 class ResearchListView(generic.ListView, CategoryContextMixin):
@@ -25,6 +32,7 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
                 return Research.objects.filter(research_type=self.kwargs['type'])
             except KeyError:
                 return Research.objects.all()
+
 
 
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
@@ -66,11 +74,11 @@ class ResearchBuyView(generic.edit.FormMixin, ModelInstanceViewSeoMixin, generic
         return reverse('research:list')
 
     def get_context_data(self, *args, **kwargs):
-        context = super(ResearchBuyView, self).get_context_data(*args, **kwargs)
+        context = super(ResearchBuyView, self).get_context_data(**kwargs)
         context['form'] = self.get_form()
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -86,6 +94,5 @@ class ResearchBuyView(generic.edit.FormMixin, ModelInstanceViewSeoMixin, generic
         order_cart.research = Research.objects.get(slug=self.kwargs['slug'])
         order_cart.save()
         return super().form_valid(form)
-
 
 

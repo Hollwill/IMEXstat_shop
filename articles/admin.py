@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ArticleCategory, Article
+from .models import ArticleCategory, Article, ArticleAuthor
 from seo.admin import ModelInstanceSeoInline
 
 
@@ -13,3 +13,4 @@ class ArticleCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)
+admin.site.register(ArticleAuthor)

@@ -5,8 +5,6 @@ from pytils.translit import slugify
 from ckeditor.fields import RichTextField
 
 
-
-
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
         ('industry', 'Отраслевое'),

@@ -110,3 +110,23 @@ function changeText (a) {
         a.innerText="Смотреть ещё";
     }
 }
+
+jQuery(function() {
+    $(".search__input").on('keyup', function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "autocomplete",
+            data: {
+              'search': value
+            },
+            dataType: 'json',
+            success: function (data) {
+                list = data.list;
+                $(".search__input").autocomplete({
+                source: list,
+                minLength: 3
+                });
+            }
+        });
+    });
+  });
