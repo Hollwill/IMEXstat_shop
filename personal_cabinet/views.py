@@ -72,6 +72,7 @@ class FavoriteResearchs(generic.ListView):
 		favorite = Favorite.objects.get(client__user=self.request.user)
 		return Research.objects.filter(favorite=favorite)
 
+# TODO: Правильно разместить кнопку смены пароля
 
 class RegisterFormView(generic.edit.FormView):
 	form_class = UserCreationWithEmailForm

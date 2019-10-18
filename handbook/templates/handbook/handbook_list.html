@@ -5,17 +5,39 @@
 {% endblock title %}
 
 {% block content %}
-	{% load mptt_tags %}
-	<ul>
-		{% recursetree handbook_list %}
-		<li>
-			{{ node.name }}
-			{% if not node.is_leaf_node %}
-			<ul class="children">
-				{{ children }}
-			</ul>
-			{% endif %}
-		</li>
-		{% endrecursetree %}
-	</ul>
+{% load mptt_tags %}
+<section class="article__other mb-5">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="section__title mb-4">
+				<h2>Справочник</h2>
+				<div class="section__title-line"></div>
+			</div>
+
+			<div class="col-12 px-0">
+				<div class="accordion">
+					{% recursetree handbook_list %}
+					<div class="accordion__item accordion__item_level-{{ node.level|add:1 }}">
+						{% if node.is_link == True %}
+						<a href="#" class="font-weight-bold d-block mb-2">{{ node.name }}</a>
+						<div class="accordion__title-index">{{ node.group }}</div>
+
+						{% else %}
+						<div class="accordion__title">
+							<span class="accordion__title-inner">{{ node.name }}</span>
+							<div class="accordion__title-index">{{ node.group }}</div>
+						</div>
+						
+						{% endif %}
+						{% if not node.is_leaf_node %}
+						{{ children }}
+						{% endif %}
+					</div>	<!-- /.accordion__item -->
+					{% endrecursetree %}<!-- /.accordion__item -->
+				</div>	<!-- /.accordion -->
+			</div>
+		</div>		
+	</div>
+</section>
+
 {% endblock content %}

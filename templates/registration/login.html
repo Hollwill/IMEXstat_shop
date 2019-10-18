@@ -29,9 +29,10 @@
         </div>
       </div>
 
-      <div class="row cartBuy__bio-forms mt-0 mb-5">
+      <div class="row cartBuy__bio-forms  mt-0 mb-5">
         <button class="btn cartBuy__pay-button" type="submit" >Войти</button>
-                <input type="hidden" name="next" value="{{ next }}" />
+        <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+        <input type="hidden" name="next" value="{{ next }}" />
       </div>
     </form>
   </div>

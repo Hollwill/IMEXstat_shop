@@ -161,6 +161,9 @@ class Dev(Base):
 
         '127.0.0.1',
     ]
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
     @property
     def INSTALLED_APPS(self):
         return list(Base.INSTALLED_APPS) + [('debug_toolbar'), ('django_extensions')]

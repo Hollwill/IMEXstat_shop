@@ -1,12 +1,15 @@
 $(function ()    {
     $(document).ready(function(){
-
-
-
         $("#navbarTogglerDemo02").on("click","a", function (event) {
             $("#navbarTogglerDemo02").removeClass('show');
         });
     });
+
+    $('.accordion__title').each(function(){
+            $(this).click(function(){
+                $(this).toggleClass('active');
+            });
+        });
 
     $(document).ready(function(){
         $('#modal-thanx').modal('show');

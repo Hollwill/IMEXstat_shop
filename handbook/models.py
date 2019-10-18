@@ -16,8 +16,9 @@ class HandbookNode(MP_Node):
 
 class Handbook(MPTTModel):
 	name = models.CharField(max_length=200)
+	group = models.IntegerField(blank=True, null=True)
 	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.CASCADE)
-
+	is_link = models.BooleanField(default=False)
 	def __str__(self):
 		return self.name
 
