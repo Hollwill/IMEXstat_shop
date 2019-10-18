@@ -38,7 +38,7 @@ class Base(Configuration):
         'django.contrib.flatpages',
         'flatpage',
         'seo',
-        'treebeard',
+        'mptt',
 
 
 
@@ -133,6 +133,7 @@ class Base(Configuration):
     ]   
 
 
+    MPTT_ADMIN_LEVEL_INDENT = 20
 
 
 

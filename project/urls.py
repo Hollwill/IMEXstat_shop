@@ -18,6 +18,7 @@ urlpatterns = [
     path('register', RegisterFormView.as_view(), name='register'),
     path('order/', include('orders.urls', namespace='orders')),
     path('pages/', include('django.contrib.flatpages.urls')),
+    path('handbook/', include('handbook.urls', namespace='handbook') )
 
 ]
 

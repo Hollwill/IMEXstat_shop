@@ -11,3 +11,5 @@ def create_user_client(sender, instance, created, **kwargs):
 		client = Client.objects.get(user=instance)
 		Cart.objects.create(client=client)
 		Favorite.objects.create(client=client)
+		client.email = instance.email
+		client.save()

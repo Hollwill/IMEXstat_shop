@@ -4,7 +4,7 @@ from personal_cabinet.models import Client, Favorite
 from .models import Research
 from orders.models import Cart
 from cart.cart import Cart as SessionCart
-
+from django.contrib import messages
 
 class CategoryContextMixin(ContextMixin):
 	additional_context = None
@@ -13,22 +13,24 @@ class CategoryContextMixin(ContextMixin):
 	def add_to_cart(self, request, **kwargs):
 		if self.request.GET.get('add_to_cart'):
 			research = Research.objects.get(slug=self.request.GET.get('add_to_cart'))
+			success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (research.title, research.OM_cost)
 			if self.request.user.is_authenticated:
 				cart = Cart.objects.get(client__user=self.request.user)
 				try:
 					Cart.objects.get(research__slug=self.request.GET.get('add_to_cart'), client__user=self.request.user)
-					self.additional_context = 'Исследование уже в корзине'
+					messages.add_message(request, messages.ERROR, 'Исследование уже в корзине')
 				except:
 					cart.save()
 					cart.research.add(research)
-					self.additional_context = 'Исследование успешно добавлено'
+					messages.add_message(request, messages.INFO, success_message)
+
 			else:
 				cart = SessionCart(request)
 				if cart.have(research):
-					self.additional_context = ' Исследование уже добавлено в корзину'
+					messages.add_message(request, messages.ERROR, 'Исследование уже в корзине')
 				else:
 					cart.add(research, research.OM_cost)
-					self.additional_context = 'Исследование успешно добавлено'
+					messages.add_message(request, messages.INFO, success_message)
 
 
 	def add_to_favorite(self, request, **kwargs):

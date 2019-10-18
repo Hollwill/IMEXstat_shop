@@ -38,7 +38,7 @@ class IndexFormView(generic.FormView):
 
 	def form_valid(self, form):
 		form.save()
-		messages.add_message(self.request, messages.INFO, 'Запрос успешно отправлен, скоро мы вам ответим.')
+		messages.add_message(self.request, messages.INFO, 'Наши менеджеры обязательно свяжутся с Вами и ответят на все Ваши вопросы.')
 		return HttpResponseRedirect(self.get_success_url())
 
 

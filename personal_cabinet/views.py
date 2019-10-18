@@ -1,12 +1,11 @@
 from .models import Client, Favorite
 from orders.models import Cart
-from .forms import ProfileForm, RequizitesForm
+from .forms import ProfileForm, RequizitesForm, UserCreationWithEmailForm
 from multi_form_view import MultiModelFormView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
-from django.contrib.auth.forms import UserCreationForm
 from cart.cart import Cart as SessionCart
 from products.models import Research
 
@@ -75,7 +74,7 @@ class FavoriteResearchs(generic.ListView):
 
 
 class RegisterFormView(generic.edit.FormView):
-	form_class = UserCreationForm
+	form_class = UserCreationWithEmailForm
 
 	template_name = "registration/register.html"
 

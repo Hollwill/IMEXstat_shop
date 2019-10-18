@@ -3,50 +3,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="lk__profile">
-    <div class="row">
 
-        <div class="lk__data-mid">
-          <div class="lk__data-items">
-            
-
-            {% if next %}
-            {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed,
-            please login with an account that has access.</p>
-            {% else %}
-            <p>Please login to see this page.</p>
-            {% endif %}
-            {% endif %}
-
-            <form action="" method="post">
-              {% csrf_token %}
-              <div class="lk__data-item">
-              {% if form.errors %}
-                <p>Имя пользователя или пароль недействительны. Попробуйте снова.</p>
-              {% endif %}
-              </div>
-              <div class="lk__data-item">
-                <p>Имя пользователя</p>
-                {{ form.username }}
-              </div>
-              <div class="lk__data-item">
-                <p>Пароль</p>
-                {{ form.password1 }}
-              </div>
-              <div class="lk__data-item">
-                <p>{{ form.password2.label }}</p>
-                {{ form.password2 }}
-              </div>
-
-              <div class="lk__data-button lk__data-buttonMobile">
-                <button type="submit" >Зарегестрироваться</button>
-              </div>
-            </form>
-          </div>
+<section class="cartBuy__bio mb-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="section__title mb-4">
+                <h2>Регистрация</h2>
+                <div class="section__title-line"></div>
+            </div>
+        </div>  
+{{ form.errors }}
+    <form action="" method="post">
+      {% csrf_token %}
+      <div class="row cartBuy__bio-forms mt-0 mb-5">
+        <div class="cartBuy__bio-formItem cartBuy__bio-formItem_required">
+          <p>Ваше имя</p>
+          {{ form.username }}
         </div>
-    </div>
+      </div>
 
+      <div class="row cartBuy__bio-forms mt-0 mb-5">
+        <div class="cartBuy__bio-formItem cartBuy__bio-formItem_required">
+          <p>E-mail</p>
+          {{ form.email }}
+        </div>
+      </div>
+
+      <div class="row cartBuy__bio-forms mt-0 mb-5">
+        <div class="cartBuy__bio-formItem cartBuy__bio-formItem_required">
+          <p>Пароль</p>
+          {{ form.password1 }}
+        </div>
+      </div>
+
+      <div class="row cartBuy__bio-forms mt-0 mb-5">
+        <div class="cartBuy__bio-formItem cartBuy__bio-formItem_required">
+          <p>Повторите пароль</p>
+          {{ form.password2 }}
+        </div>
+      </div>
+
+      <div class="row cartBuy__bio-forms mt-0 mb-5">
+        <input class="btn cartBuy__pay-button" type="submit" value="Зарегистрироваться" />
+      </div>
+    </form>
+  </div>
 </section>
 
 {% endblock %}

@@ -1,8 +1,15 @@
 $(function ()    {
     $(document).ready(function(){
+
+
+
         $("#navbarTogglerDemo02").on("click","a", function (event) {
             $("#navbarTogglerDemo02").removeClass('show');
         });
+    });
+
+    $(document).ready(function(){
+        $('#modal-thanx').modal('show');
     });
 
     /*Нерабочий код*/
