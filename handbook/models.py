@@ -25,3 +25,4 @@ class Handbook(MPTTModel):
 	class MPTTMeta:
 		order_insertion_by = ['name']
 
+# TODO: перевести справочник

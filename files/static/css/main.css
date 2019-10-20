@@ -4526,3 +4526,9 @@ footer {
 .accordion__item.accordion__item_level-6 .accordion__title-index {
 	left: -480px;
 }
+
+.cartBuy__bio-buttons {
+	width: 550px;
+	display: flex;
+	justify-content: space-between;
+}

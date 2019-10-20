@@ -13,28 +13,31 @@
         {% if form.errors %}
         <p>Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.</p>
         {% endif %}
-    <form method="post" action="{% url 'login' %}">
-      {% csrf_token %}
-      <div class="row cartBuy__bio-forms mt-0 mb-5">
-        <div class="cartBuy__bio-formItem">
-          <p>Логин</p>
-          {{ form.username }}
-        </div>
-      </div>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="row cartBuy__bio-forms mt-0 mb-5">
+                <div class="cartBuy__bio-formItem">
+                    <p>Логин</p>
+                    {{ form.username }}
+                </div>
+            </div>
 
-      <div class="row cartBuy__bio-forms mt-0 mb-5">
-        <div class="cartBuy__bio-formItem">
-          <p>Пароль</p>
-          {{ form.password }}
-        </div>
-      </div>
+            <div class="row cartBuy__bio-forms mt-0 mb-5">
+                <div class="cartBuy__bio-formItem">
+                    <p>Пароль</p>
+                    {{ form.password }}
+                </div>
+            </div>
 
-      <div class="row cartBuy__bio-forms  mt-0 mb-5">
-        <button class="btn cartBuy__pay-button" type="submit" >Войти</button>
-        <a href="{% url 'password_reset' %}">Забыли пароль?</a>
-        <input type="hidden" name="next" value="{{ next }}" />
-      </div>
-    </form>
+            <div class="row cartBuy__bio-forms  mt-0 mb-5">
+                <div class="cartBuy__bio-buttons">
+                    <button class="btn cartBuy__pay-button" type="submit">Войти</button>
+                    <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+
+                </div>
+            </div>
+        </form>
   </div>
 </section>
 
