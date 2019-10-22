@@ -56,7 +56,7 @@ class FavoriteResearchs(generic.ListView):
 	template_name = 'personal_cabinet/favorite_research.html'
 	context_object_name = 'research'
 
-	def delete_from_favorite(self):
+	def delete_from_favorite(self, *args, **kwargs):
 		if self.request.GET.get('delete_from_favorite'):
 			research = Research.objects.get(slug=self.request.GET.get('delete_from_favorite'))
 
@@ -65,14 +65,13 @@ class FavoriteResearchs(generic.ListView):
 			favorite.research.remove(research)
 
 	def dispatch(self, request, *args, **kwargs):
-		self.delete_from_favorite(request)
+		self.delete_from_favorite()
 		return super(FavoriteResearchs, self).dispatch(request, *args, **kwargs)
 
 	def get_queryset(self):
 		favorite = Favorite.objects.get(client__user=self.request.user)
 		return Research.objects.filter(favorite=favorite)
 
-# TODO: Правильно разместить кнопку смены пароля
 
 class RegisterFormView(generic.edit.FormView):
 	form_class = UserCreationWithEmailForm

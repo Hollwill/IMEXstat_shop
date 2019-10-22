@@ -5,6 +5,7 @@ from ckeditor.fields import RichTextField
 class Article(models.Model):
 
 	title = models.CharField(max_length=200, verbose_name='Заголовок')
+	short_description = models.TextField(max_length=134, verbose_name='Описание статьи')
 	description = RichTextField(verbose_name='Текст статьи')
 	time_for_read = models.IntegerField(verbose_name='Время на чтение', blank=True, null=True)
 	category = models.ManyToManyField('ArticleCategory', verbose_name='Категория')
@@ -12,7 +13,7 @@ class Article(models.Model):
 	image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
 	author = models.ForeignKey('ArticleAuthor', on_delete=models.PROTECT, verbose_name='Автор')
 
-	def save(self):
+	def save(self, *args, **kwargs):
 		super(Article, self).save()
 		if not self.slug.endswith('-' + str(self.id)):
 			self.slug += '-' + str(self.id)
@@ -24,6 +25,8 @@ class Article(models.Model):
 	class Meta:
 		verbose_name = 'Статья'
 		verbose_name_plural = 'Статьи'
+
+
 from pytils.translit import slugify
 
 

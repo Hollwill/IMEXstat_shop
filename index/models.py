@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Tasks(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Заголовок')
 	description = models.TextField(verbose_name='Описание')
@@ -14,6 +15,25 @@ class Tasks(models.Model):
 		verbose_name_plural = 'Задачи'
 
 
+class Products(models.Model):
+	title = models.CharField(max_length=200, verbose_name='Название')
+	description = models.TextField(max_length=87, null=True, verbose_name='Описание')
+	image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
+	cost = models.IntegerField(blank=True, null=True, verbose_name='Цена')
+	url = models.CharField(max_length=200, verbose_name='Url адрес')
+
+	def __str__(self):
+		return self.title
+
+	def save(self, *args, **kwargs):
+		super(Products, self).save()
+		if self.cost == '0':
+			self.cost = 'Бесплатно'
+
+	class Meta:
+		verbose_name = 'Продукт'
+		verbose_name_plural = 'Продукты'
+
 
 class Feedback(models.Model):
 	name = models.CharField(max_length=200, verbose_name='Имя')
@@ -27,6 +47,7 @@ class Feedback(models.Model):
 		verbose_name = 'Обратная связь'
 		verbose_name_plural = "Обратная связь"
 
+
 class ClientsImages(models.Model):
 	name = models.CharField(max_length=200, verbose_name='Клиент')
 	image = models.ImageField(verbose_name='Изображение')
@@ -37,6 +58,7 @@ class ClientsImages(models.Model):
 	class Meta:
 		verbose_name = 'Клиент'
 		verbose_name_plural = "Наши клиенты"
+
 
 class MenuManagement(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Пункт')

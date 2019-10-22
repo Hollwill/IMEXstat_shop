@@ -34,7 +34,7 @@
                         <h2 itemprop="headline">{{ article.title }}</h2>
                     </div>
                     <div class="articles__item-text">
-                        <p itemprop="description">{{ article.description|safe }}</p>
+                        <p itemprop="description">{{ article.short_description|safe }}</p>
                     </div>
                     <div class="articles__item-btn">
                         <a href="{% url 'article:detail' article.slug %}">Читать полностью</a>

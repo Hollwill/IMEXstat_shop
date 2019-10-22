@@ -41,14 +41,15 @@
     <div class="ready__item">
         <div itemprop="associatedMedia" class="ready__item-img">
         {% if research.image %}
-            <img class="ready__item-img" src="{{ research.image.url }}" alt="">
+
+            <a href="{% url 'research:detail' research.slug %}"><img class="ready__item-img" src="{{ research.image.url }}" alt=""></a>
         {% endif %}
         </div> 
         <div class="ready__item-right">
             <div class="ready__item-top">
                 <div class="ready__item-topLeft">
                     <div class="ready__item-topLeftRow">
-                        <h2 itemprop="headline">{{ research.title}}</h2>
+                        <a href="{% url 'research:detail' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
                         <p><a id="research-list-star" href="{% url 'research:list' %}?add_to_favorite={{ research.slug }}"><img src="{% static "img/star.svg" %}"  id="product-star"></a></p>
                         <div class="ready__item-stars"></div>
                         <h2>{{ research.OM_cost}} Р</h2>

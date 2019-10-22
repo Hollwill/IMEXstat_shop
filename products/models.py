@@ -28,7 +28,7 @@ class Research(models.Model):
     OY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за год')
     slug = models.SlugField(unique=True, blank=True)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         super(Research, self).save()
         if not self.slug.endswith('-' + str(self.id)):
             self.slug += '-' + str(self.id)

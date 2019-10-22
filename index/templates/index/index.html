@@ -127,12 +127,12 @@
     {% endif %}
 
     
-    <section class="search">
-	<div class="container">
+<section class="search search__min">
+	<div class="container-fluid">
 		<form action="{% url 'research:list' %}", method="get">
 			<div class="row search__row">
 				<input type="text" name="research" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
-				<button class="search__button">Поиск</button>
+				<button type="submit" class="search__button">Поиск</button>
 			</div>
 		</form>
 	</div>
@@ -175,7 +175,6 @@
     </div>
 </section>
 
-
 <section class="products">
     <div class="container">
         <div class="row">
@@ -185,20 +184,23 @@
             </div>
         </div>
         <div class="row products__items">
-        	{% for research in research %}
+        	{% for product in products %}
         		
             <div class="products__item">
                 <div class="products__item-top">
-                    {% if research.image %}
-                	<img class="products__item-top" src="{{ research.image.url }}">
+                    {% if product.image %}
+                	<img class="products__item-top" src="{{ product.image.url }}">
                     {% endif %}
                 </div>
                 <div class="products__item-text">
-                    <h2>{{ research.title }}</h2>
-                    <p id="research_description">{{ research.description|slice:":111"|add:"..." }}</p>
-                    <p><span>{{ research.OM_cost }} Р</span></p>
+                    <h2>{{ product.title }}</h2>
+                    {% if product.cost %}
+                        <p><span>{{ product.cost }} Р</span></p>
+                    {% else %}
+                        <p><span>Бесплатно</span></p>
+                    {% endif %}
                 </div>
-                <a href="{% url 'research:detail' research.slug %}" class="products__item-btn">
+                <a href="{{ product.url }}" class="products__item-btn">
                     <p>Узнать больше</p>
                     <p>&rang;</p>
                 </a>

@@ -34,7 +34,6 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
                 return Research.objects.all()
 
 
-
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
