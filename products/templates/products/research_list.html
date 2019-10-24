@@ -50,9 +50,8 @@
                 <div class="ready__item-topLeft">
                     <div class="ready__item-topLeftRow">
                         <a href="{% url 'research:detail' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
-                        <p><a id="research-list-star" href="{% url 'research:list' %}?add_to_favorite={{ research.slug }}"><img src="{% static "img/star.svg" %}"  id="product-star"></a></p>
                         <div class="ready__item-stars"></div>
-                        <h2>{{ research.OM_cost}} Р</h2>
+                        <h2><span class="icon-ruble">{{ research.OM_cost}}</span></h2>
                     </div>
                     <p id="research_description" itemprop="description">{{ research.description}}</p>
                     <a href="{% url 'research:detail' research.slug %}">Подробнее...</a>

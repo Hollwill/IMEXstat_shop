@@ -15,6 +15,14 @@ $(function ()    {
         $('#modal-thanx').modal('show');
     });
 
+    $('.list-group-item_category').each(function(){
+			$(this).click(function(e){
+				e.preventDefault();
+				$(this).toggleClass('active');
+				$(this).siblings().removeClass('active');
+			});
+		});
+
     /*Нерабочий код*/
     /*
     $(document).ready(function(){

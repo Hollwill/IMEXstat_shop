@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="popular__content">
-                <p>Популярное:</p>
+                <div class="d-inline-block align-top mr-3"><p>Популярное:</p></div>
                 {% for category in categories %}
                 <a href="{% url 'article:category' category.slug %}">#{{ category.title }}</a>
                 {% endfor %}

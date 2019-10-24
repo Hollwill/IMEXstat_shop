@@ -1,8 +1,11 @@
 from django.db import models
-from personal_cabinet.models import Client
+
 from pytils.translit import slugify
 
 from ckeditor.fields import RichTextField
+
+import mptt
+from mptt.fields import TreeForeignKey
 
 
 class Research(models.Model):
@@ -12,7 +15,7 @@ class Research(models.Model):
         ('import', 'Импорт')
     ]
     title = models.CharField(max_length=200, verbose_name='Заголовок')
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    category = TreeForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     target = models.TextField(blank=True, null=True, verbose_name='Цель исследования')
     description = models.TextField(blank=True, null=True, verbose_name='Описание исследования')
     data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
@@ -59,3 +62,8 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+
+TreeForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Родитель').contribute_to_class(Category, 'parent')
+
+mptt.register(Category, order_insertion_by=['title'])

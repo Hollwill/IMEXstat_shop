@@ -1,13 +1,13 @@
 from django.contrib import admin
 from .models import Category, Research
-
+from mptt.admin import DraggableMPTTAdmin
 from seo.admin import ModelInstanceSeoInline
 
 class ResearchAdmin(admin.ModelAdmin):
 	inlines = [ModelInstanceSeoInline]
 	prepopulated_fields = {'slug': ('title',)}
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(DraggableMPTTAdmin):
 	prepopulated_fields = {'slug': ('title',)}
 
 admin.site.register(Category, CategoryAdmin)

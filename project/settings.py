@@ -75,6 +75,7 @@ class Base(Configuration):
                 ],
             'libraries':{
                 'zip': 'orders.templatetags.zip',
+                'poll_extras': 'products.templatetags.poll_extras'
                 }
             },
         },

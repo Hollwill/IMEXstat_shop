@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load mptt_tags %}
+{% load poll_extras %}
 {% block content %}
 <section class="search search__min">
 	<div class="container-fluid">
@@ -15,10 +17,21 @@
 		<div class="row">
 			<div class="content__container">
 				<div class="content__menu">
-					<div class="list-group">
-						{% for category in categories %}
-						<a href="{% url 'research:category' category.slug %}" class="list-group-item list-group-item-action">{{ category.title}}</a>
-						{% endfor %}
+                    <div class="list-group">
+                        {% recursetree categories %}
+                            {% if node.get_children %}
+                                <a href="{% url 'research:category' node.slug %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
+                            {% else %}
+                                <a href="{% url 'research:category' node.slug %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
+
+                            {% endif %}
+                            {% if not node.is_leaf_node %}
+                                <div class="list-group__dropdown">
+                                    {{ children }}
+                                </div>
+                            {% endif %}
+
+                        {% endrecursetree %}
 					</div>
 				</div> 
 				<div class="content__main">
