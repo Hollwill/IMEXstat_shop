@@ -36,8 +36,6 @@ class Research(models.Model):
         if not self.slug.endswith('-' + str(self.id)):
             self.slug += '-' + str(self.id)
             super(Research, self).save()
-    
-
 
     def __str__(self):
         return self.title

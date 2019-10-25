@@ -5,37 +5,7 @@
 
 {% load static %}
 {% block inner_content %}
-{% if messages %}
-    
-{% for message in messages %}
-{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-    
-<div class="modal modal-custom fade" id="modal-thanx" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Товар добавлен в корзину</div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
 
-            <div class="modal-body">
-                <p>Вы добавили к заказу оформление документа {{ message|safe }}
-                Вы можете оплатить выбранные услуги или добавить к заказу оформление других документов.</p>
-            </div>
-            
-            <div class="modal-footer d-flex flex-wrap justify-content-between">
-                <button class="btn btn-secondary btn-custom" type="button" data-dismiss="modal">Заказать ещё</button>
-                <a class="btn btn-inverse btn-custom" href="{% url 'orders:cart' %}">В корзину</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% elif DEFAULT_MESSAGE_LEVELS.ERROR %}
-    {{ message }}
-{% endif %}
-{% endfor %}
-{% endif %}
 <div itemscope itemtype="https://schema.org/NewsArticle" class="ready__items">
     {% for research in researchs %}
     <div class="ready__item">

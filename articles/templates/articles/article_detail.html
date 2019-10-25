@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 <section class="article___author">
@@ -20,12 +20,15 @@
 				</div>
 				<div class="article___author-right">
 					<div class="article__author-item">
-						<img src="assets/app/img/articleoclock.svg" alt="">
+						<img src="{% static 'img/articleoclock.svg' %}" alt="">
 						{% if article.time_for_read %}
 							<p>{{ article.time_for_read }} минут на чтение</p>
 						{% endif %}
 					</div>
-					
+                    <a href="{% url 'article:detail' article.slug %}?sent_article={{ article.slug }}" class="article__author-item">
+                        <img src="{% static 'img/articlemail.svg' %} " alt="">
+                        <p>Отправить статью на почту</p>
+                    </a>
 				</div>
 			</div>
 		</div>
@@ -82,7 +85,7 @@
 						<h2>{{ article.title }}</h2>
 					</div>
 					<div class="articles__item-text">
-						<p>{{ article.description|safe }}</p>
+						<p>{{ article.short_description|safe }}</p>
 					</div>
 					<div class="articles__item-btn">
 						<a href="{% url 'article:detail' article.slug %}">Читать полностью</a>

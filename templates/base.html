@@ -37,7 +37,7 @@
                     <a href="{% url 'lk:settings' %}" class="header__top-login">Личный кабинет</a>
                     <p><a href="{% url 'logout' %}"><img src="{% static 'img/sign-out-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
                     {% else %}
-                    <a href="{% url 'register' %}" class="header__top-login">Зарегистрироваться</a>
+                    <a href="{% url 'django_registration_register' %}" class="header__top-login">Зарегистрироваться</a>
                     <p><a href="{% url 'login' %}"><img src="{% static 'img/sign-in-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
                     {% endif %}
                     

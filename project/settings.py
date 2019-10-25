@@ -18,6 +18,7 @@ class Base(Configuration):
         'grappelli',
         'django.contrib.admin',
         'django.contrib.auth',
+        'django_registration',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
@@ -39,9 +40,6 @@ class Base(Configuration):
         'flatpage',
         'seo',
         'mptt',
-
-
-
 
     ]
 
@@ -133,13 +131,9 @@ class Base(Configuration):
         'articles.article'
     ]   
 
-
     MPTT_ADMIN_LEVEL_INDENT = 20
 
-
-
-
-
+    ACCOUNT_ACTIVATION_DAYS = 14
 
 
 class Dev(Base):
@@ -147,8 +141,8 @@ class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
-    SITE_ID = 1
-    
+    SITE_ID = 2
+
     ALLOWED_HOSTS = [ ]
 
     DATABASES = {
@@ -164,6 +158,7 @@ class Dev(Base):
     ]
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = '22golomonzin@gmail.com'
 
     @property
     def INSTALLED_APPS(self):
@@ -175,6 +170,13 @@ class Dev(Base):
 
 
 class Prod(Base):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = '22golomonzin@gmail.com'
+    EMAIL_HOST_PASSWORD = '22oleg032000'
+
     DEBUG = False
     ALLOWED_HOSTS = ['imex.naminteresno.ru']
 

@@ -12,6 +12,68 @@
 		</form>
 	</div>
 </section>
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="modal modal-custom fade" id="modal-thanx" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {% if message.level == 50 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар добавлен в корзину</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Вы добавили к заказу оформление документа {{ message|safe }}
+                    Вы можете оплатить выбранные услуги или добавить к заказу оформление других документов.</p>
+                </div>
+
+                <div class="modal-footer d-flex flex-wrap justify-content-between">
+                    <button class="btn btn-secondary btn-custom" type="button" data-dismiss="modal">Заказать ещё</button>
+                    <a class="btn btn-inverse btn-custom" href="{% url 'orders:cart' %}">В корзину</a>
+                </div>
+            {% elif message.level == 60 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар не был добавлен в корзину</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == 70 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар добавлен в избранное</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == 80 %}
+                <div class="modal-header">
+                    <div class="modal-title">Товар не был добавлен в избранное</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="modal-header">
+                    <div class="modal-title">Вы не вошли в свой аккаунт</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+{% endif %}
 <section class="ready">
 	<div class="container-fluid">
 		<div class="row">
@@ -33,7 +95,7 @@
 
                         {% endrecursetree %}
 					</div>
-				</div> 
+				</div>
 				<div class="content__main">
 					<div class="ready__type">
 						<a href="{% url 'research:type' 'industry' %}" id="industry" class="ready__type-item ">Отраслевые</a>
@@ -41,9 +103,9 @@
 						<a href="{% url 'research:type' 'import' %}" id="import" class="ready__type-item">Импорт</a>
 					</div>
 					{% block inner_content %}
-					
+
 					{% endblock inner_content %}
-					
+
 				</div>
 			</div>
 		</div>
