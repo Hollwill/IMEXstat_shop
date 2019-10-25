@@ -143,7 +143,7 @@ class Dev(Base):
 
     SITE_ID = 2
 
-    ALLOWED_HOSTS = [ ]
+    ALLOWED_HOSTS = ['*']
 
     DATABASES = {
         'default': {
