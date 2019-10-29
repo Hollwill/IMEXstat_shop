@@ -4649,3 +4649,7 @@ footer {
 	background-color: white !important;
 	border-bottom: 1px solid #E6E6E6 !important;
 }
+
+.individual-order-form {
+	margin-bottom: 30px;
+}

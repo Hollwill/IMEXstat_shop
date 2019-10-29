@@ -5,6 +5,7 @@ from seo.mixins.views import (
     ModelInstanceViewSeoMixin,
 )
 from personal_cabinet.models import Client
+from django.contrib import messages
 
 
 class ArticlesListView(generic.ListView):
@@ -42,21 +43,14 @@ class ArticleDetailView(ModelInstanceViewSeoMixin, generic.DetailView):
         context["author"] = ArticleAuthor.objects.get(article=article)
         return context
 
-    '''def sent_article_mail(self, request, *args, **kwargs):
-        article = Article.objects.get(slug=request.GET['sent_article'])
-
-        media_root = settings.MEDIA_ROOT
-        message = EmailMessage('Ваша статья сэр',
-                               'Прикрепляю статью к сообщению',
-                               'from@example.com',
-                               ['to@email.com'])
-        message.attach_file('%s/%s' % (media_root, article.article_pdf))
-        message.send()'''
-
     def dispatch(self, request, *args, **kwargs):
         try:
+            slug = request.GET['sent_article']
             client = Client.objects.get(user=request.user)
             article = Article.objects.get(slug=request.GET['sent_article'])
-            article.sent_file_in_mail(client)
+            if article.sent_file_in_mail(client) == 1:
+                messages.add_message(request, messages.INFO, 'Почта была успешно отправлена')
+            else:
+                messages.add_message(request, messages.INFO, 'Почта не была отправлена')
         finally:
             return super(ArticleDetailView, self).dispatch(request, *args, **kwargs)

@@ -3,7 +3,7 @@ from django.db import models
 from products.models import Research
 from personal_cabinet.models import Client
 from django.db.models import Sum
-from decimal import Decimal
+
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT, verbose_name='Клиент')
@@ -41,15 +41,26 @@ class OrderItem(models.Model):
     price = models.IntegerField(blank=True, null=True, verbose_name='стоимость')
 
     def save(self, *args, **kwargs):
-        if self.duration == 'OM':
-            self.price = self.research.OM_cost
-        elif self.duration == 'OQ':
-            self.price = self.research.OQ_cost
-        elif self.duration == 'HY':
-            self.price = self.research.HY_cost
-        elif self.duration == 'OY':
-            self.price = self.research.OY_cost
-
+        if self.update_frequency == 'MU':
+            if self.duration == 'OM':
+                self.price = self.research.M_OM_cost
+            elif self.duration == 'OQ':
+                self.price = self.research.M_OQ_cost
+            elif self.duration == 'HY':
+                self.price = self.research.M_HY_cost
+            elif self.duration == 'OY':
+                self.price = self.research.M_OY_cost
+        elif self.update_frequency == 'QU':
+            if self.duration == 'OM':
+                self.price = self.research.Q_OM_cost
+            elif self.duration == 'OQ':
+                self.price = self.research.Q_OQ_cost
+            elif self.duration == 'HY':
+                self.price = self.research.Q_HY_cost
+            elif self.duration == 'OY':
+                self.price = self.research.Q_OY_cost
+        if self.research.stock:
+            self.price = int(self.price - (self.price * self.research.discount / 100))
         super(OrderItem, self).save(*args, **kwargs)
 
     def get_cost(self):
@@ -61,7 +72,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return ''
-            
 
 
 class Cart(models.Model):
@@ -71,61 +81,11 @@ class Cart(models.Model):
     @property
     def summary(self):
         research = Research.objects.filter(cart__client=self.client)
-        count = research.aggregate(Sum('OM_cost'))
-        return count.get('OM_cost__sum')
+        count = research.aggregate(Sum('nominal'))
+        return count.get('nominal__sum')
 
     def __str__(self):
         return 'корзина'
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзина'
-    
-    
-'''    
-class SessionCart(object):
-
-    def __init__(self, request):
-        self.session = request.session
-        cart = self.session.get('cart')
-        if not cart:
-            cart = self.session['cart'] = {}
-        self.cart = cart
-    
-
-    def add(self, research):
-        research_id = research.id
-        if research_id not in self.cart:
-            self.cart[research_id] = {'OM_cost': str(research.OM_cost)}
-        self.save()
-
-    def save(self):
-        self.session['cart'] = self.cart
-        self.session.modified = True
-
-    def remove(self, research):
-        research_id = str(research.id)
-        if research_id in self.cart:
-            del self.cart[research_id]
-            self.save()
-
-    def __iter__(self):
-        """
-        Перебор элементов в корзине и получение продуктов из базы данных.
-        """
-        product_ids = self.cart.keys()
-        # получение объектов product и добавление их в корзину
-        research = Research.objects.filter(id__in=product_ids)
-        for research in research:
-            self.cart[str(research.id)]['research'] = research
-
-        for item in self.cart.values():
-            item['OM_cost'] = Decimal(item['OM_cost'])
-            yield item
-
-    def get_total_price(self):
-        """
-        Подсчет стоимости товаров в корзине.
-        """
-        return sum(Decimal(item['OM_cost']) for item in
-                   self.cart.values())
-'''

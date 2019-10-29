@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem, Cart
+from .models import Order, OrderItem
 
 
 class OrderItemInline(admin.TabularInline):
@@ -11,7 +11,7 @@ class OrderAdmin(admin.ModelAdmin):
 	list_display = ('client', 'date', 'paid', 'get_total_cost')
 	readonly_fields = ['date']
 	list_filter = ['paid', 'date']
-	inlines = [ OrderItemInline ]
+	inlines = [OrderItemInline]
 
 
 

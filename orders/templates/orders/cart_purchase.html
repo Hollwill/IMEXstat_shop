@@ -106,57 +106,61 @@
 						<div class="cartBuy__item-settings">
 							<div class="cartBuy__item-settingsLeft">
 								<label class="checkbox-transform">
-									<input type="radio" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
+									<input onchange="changeFrequency('{{i}}')" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
 									<span class="checkbox__label">Ежемесячное обновление</span>
 								</label>
 								<label class="checkbox-transform">
-									<input type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
+									<input onchange="changeFrequency('{{i}}')" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
 									<span class="checkbox__label">Ежеквартальное обновление</span>
 								</label>
 							</div>
 							<div class="cartBuy__item-settingsRight">
-								<div onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY')" class="radiobtn OM">
+								<div  class="radiobtn OM">
 									<input 
-										onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY')" 
+										onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio" 
 										name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.1.id_for_label }}" 
-										value="OM" class="Duration_choice">
+										value="OM" class="Duration_choice {{i}}D">
 									<label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
 
 								</div>
 								<div class="radiobtn OQ">
 									<input 
-										onchange="showCost('{{i}}OQ', '{{i}}OM', '{{i}}HY', '{{i}}OY')" 
+										onchange="showCost('{{i}}OQ', '{{i}}OM', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.2.id_for_label }}" 
-										value="OQ" class="Duration_choice">
+										value="OQ" class="Duration_choice {{i}}D">
 									<label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
 								</div>
 								<div class="radiobtn HY">
 									<input 
-										onchange="showCost('{{i}}HY', '{{i}}OQ', '{{i}}OM', '{{i}}OY')" 
+										onchange="showCost('{{i}}HY', '{{i}}OQ', '{{i}}OM', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.3.id_for_label }}" 
-										value="HY" class="Duration_choice">
+										value="HY" class="Duration_choice {{i}}D">
 									<label for="{{ form.duration.3.id_for_label }}">На пол года</label>
 								</div>
 								<div class="radiobtn OY">
 									<input 
-										onchange="showCost('{{i}}OY', '{{i}}OQ', '{{i}}HY', '{{i}}OM')"  
+										onchange="showCost('{{i}}OY', '{{i}}OQ', '{{i}}HY', '{{i}}OM', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.4.id_for_label }}" 
-										value="OY" class="Duration_choice">
+										value="OY" class="Duration_choice {{i}}D">
 									<label for="{{ form.duration.4.id_for_label }}">На один год</label>
 								</div>
 							</div>
 						</div>
 						<div class="cartBuy__item-price">
 							<div class="cartBuy__item-priceBlock">
-								<p id="{{i}}OM">{{ research.OM_cost }} Р</p>
-								<p id="{{i}}OQ" style="display: none;">{{ research.OQ_cost }} Р</p>
-								<p id="{{i}}HY" style="display: none;">{{ research.HY_cost }} Р</p>
-								<p id="{{i}}OY" style="display: none;">{{ research.OY_cost }} Р</p>
+								<p class="{{i}}OM {{i}}M" style="display: none;">{{ research.M_OM_cost }} Р</p>
+								<p class="{{i}}OQ {{i}}M" style="display: none;">{{ research.M_OQ_cost }} Р</p>
+								<p class="{{i}}HY {{i}}M" style="display: none;">{{ research.M_HY_cost }} Р</p>
+								<p class="{{i}}OY {{i}}M" style="display: none;">{{ research.M_OY_cost }} Р</p>
+								<p class="{{i}}OM {{i}}Q" style="display: none;">{{ research.Q_OM_cost }} Р</p>
+								<p class="{{i}}OQ {{i}}Q" style="display: none;">{{ research.Q_OQ_cost }} Р</p>
+								<p class="{{i}}HY {{i}}Q" style="display: none;">{{ research.Q_HY_cost }} Р</p>
+                                <p class="{{i}}OY {{i}}Q" style="display: none;">{{ research.Q_OY_cost }} Р</p>
 								<a href="{% url 'orders:cart_purchase' %}?remove_from_order={{ research.slug }}">Отменить заказ</a>
 							</div>
 						</div>

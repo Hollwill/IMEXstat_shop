@@ -25,10 +25,18 @@ class Research(models.Model):
     using_methods = RichTextField(blank=True, null=True, verbose_name='Используемые методы')
     data_sources = RichTextField(blank=True, null=True, verbose_name='Источники данных')
     research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE, verbose_name='Тип исследования')
-    OM_cost = models.IntegerField(verbose_name='цена за месяц')
-    OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за квартал')
-    HY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за полгода')
-    OY_cost = models.IntegerField(blank=True, null=True, verbose_name='цена за год')
+    nominal = models.IntegerField(verbose_name='Номинальная цена', default=1)
+    M_OM_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На один месяц')
+    M_OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На один квартал')
+    M_HY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На пол года')
+    M_OY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На один год')
+    Q_OM_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один месяц')
+    Q_OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один квартал')
+    Q_HY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На пол года')
+    Q_OY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один год')
+    stock = models.BooleanField(default=False, verbose_name='Акция')
+    discount = models.IntegerField(default=0, choices=[(i, i) for i in range(0, 101)], verbose_name='Скидка')
+
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -61,7 +69,21 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-
 TreeForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Родитель').contribute_to_class(Category, 'parent')
-
 mptt.register(Category, order_insertion_by=['title'])
+
+
+class IndividualResearchFeedback(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Имя')
+    contact_details = models.CharField(max_length=200, verbose_name='Контактные данные')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата обращения')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Исследование на заказ'
+        verbose_name_plural = "Исследования на заказ"
+
+
+

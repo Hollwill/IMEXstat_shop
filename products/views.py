@@ -3,10 +3,21 @@ from .models import Research
 from personal_cabinet.models import Client
 from orders.models import Order
 from .mixins import CategoryContextMixin
-from django.urls import reverse
-from .forms import ResearchBuyForm
+from django.urls import reverse, reverse_lazy
+from .forms import ResearchBuyForm, IndividualResearchFeedbackForm
 from seo.mixins.views import ModelInstanceViewSeoMixin
 from django.http import JsonResponse
+from django.contrib import messages
+
+
+class IndividualResearchFeedbackView(generic.FormView):
+    form_class = IndividualResearchFeedbackForm
+    template_name = 'products/research_individual_order.html'
+    success_url = reverse_lazy('research:individual')
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.INFO, 'Ваш заказ был принят, мы скоро с вами свяжемся')
+        return super().form_valid(form)
 
 
 def autocomplete(request):
@@ -45,26 +56,7 @@ class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, Category
     model = Research
 
 
-'''class ResearchFormBuyView(generic.FormView):
-    form_class = ResearchBuyForm
-    success_url = "/"
-
-    def form_valid(self, form):
-        client = Client.objects.get(user=self.request.user)
-        Order.objects.create(client=client)
-        order = Order.objects.latest()
-        form.research = Research.objects.get(slug=self.kwargs['slug'])
-        form.order = order
-        form.save()
-
-        return HttpResponseRedirect(self.get_success_url())
-    def get_success_url(self):
-        if self.success_url:
-            url = self.success_url % self.object.__dict__
-'''
-
-
-class ResearchBuyView(generic.edit.FormMixin, ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
+class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin, generic.edit.FormMixin):
     model = Research
     form_class = ResearchBuyForm
     template_name = 'products/research_buy.html'
@@ -77,7 +69,7 @@ class ResearchBuyView(generic.edit.FormMixin, ModelInstanceViewSeoMixin, generic
         context['form'] = self.get_form()
         return context
 
-    def post(self):
+    def post(self, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)

@@ -12,19 +12,19 @@
         <div itemprop="associatedMedia" class="ready__item-img">
         {% if research.image %}
 
-            <a href="{% url 'research:detail' research.slug %}"><img class="ready__item-img" src="{{ research.image.url }}" alt=""></a>
+            <a href="{% url 'research:buy' research.slug %}"><img class="ready__item-img" src="{{ research.image.url }}" alt=""></a>
         {% endif %}
         </div> 
         <div class="ready__item-right">
             <div class="ready__item-top">
                 <div class="ready__item-topLeft">
                     <div class="ready__item-topLeftRow">
-                        <a href="{% url 'research:detail' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
+                        <a href="{% url 'research:buy' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
                         <div class="ready__item-stars"></div>
-                        <h2><span class="icon-ruble">{{ research.OM_cost}}</span></h2>
+                        <h2><span class="icon-ruble">{{ research.nominal}}</span></h2>
                     </div>
                     <p id="research_description" itemprop="description">{{ research.description}}</p>
-                    <a href="{% url 'research:detail' research.slug %}">Подробнее...</a>
+                    <a href="{% url 'research:buy' research.slug %}">Подробнее...</a>
                 </div>
                 <div class="ready__item-topRight">
                     <h2>Дополнительно:</h2>

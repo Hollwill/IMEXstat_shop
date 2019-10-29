@@ -174,8 +174,8 @@ class Prod(Base):
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_USE_TLS = True
     EMAIL_PORT = 587
-    EMAIL_HOST_USER = '22golomonzin@gmail.com'
-    EMAIL_HOST_PASSWORD = '22oleg032000'
+    EMAIL_HOST_USER = 'imexstats@gmail.com'
+    EMAIL_HOST_PASSWORD = 'opmiktrihhpfgaam'
 
     DEBUG = False
     ALLOWED_HOSTS = ['imex.naminteresno.ru']

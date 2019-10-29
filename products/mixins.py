@@ -15,7 +15,7 @@ class CategoryContextMixin(ContextMixin):
 		NOT_ADDED = 60
 		if self.request.GET.get('add_to_cart'):
 			research = Research.objects.get(slug=self.request.GET.get('add_to_cart'))
-			success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (research.title, research.OM_cost)
+			success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (research.title, research.nominal)
 			if self.request.user.is_authenticated:
 				cart = Cart.objects.get(client__user=self.request.user)
 				try:
@@ -55,7 +55,7 @@ class CategoryContextMixin(ContextMixin):
 	def dispatch(self, request, *args, **kwargs):
 		self.add_to_cart(request)
 		self.add_to_favorite(request)
-		return super(CategoryContextMixin, self).dispatch(request, *args, **kwargs)
+		return super().dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

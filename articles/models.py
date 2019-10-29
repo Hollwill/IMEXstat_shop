@@ -29,7 +29,7 @@ class Article(models.Model):
                                    to=[client.email],
                                    from_email=settings.EMAIL_HOST_USER)
         message.attach_file('%s/%s' % (media_root, self.article_pdf))
-        message.send()
+        return message.send()
 
     def save(self, *args, **kwargs):
         super(Article, self).save()
@@ -73,3 +73,5 @@ class ArticleAuthor(models.Model):
     class Meta:
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
+
+
