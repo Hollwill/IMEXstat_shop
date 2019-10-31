@@ -5,7 +5,8 @@ from pytils.translit import slugify
 from ckeditor.fields import RichTextField
 
 import mptt
-from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel, TreeForeignKey
+from mptt.fields import TreeForeignKey as TreeKey
 
 
 class Research(models.Model):
@@ -15,7 +16,7 @@ class Research(models.Model):
         ('import', 'Импорт')
     ]
     title = models.CharField(max_length=200, verbose_name='Заголовок')
-    category = TreeForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    category = TreeKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     target = models.TextField(blank=True, null=True, verbose_name='Цель исследования')
     description = models.TextField(blank=True, null=True, verbose_name='Описание исследования')
     data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
@@ -53,9 +54,10 @@ class Research(models.Model):
         verbose_name_plural = 'Исследования'
 
 
-class Category(models.Model):
+class Category(MPTTModel):
     title = models.CharField(max_length=50, verbose_name='Название категории')
     slug = models.SlugField(unique=True, blank=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='Родитель')
 
     def save(self, *args, **kwargs):
         if self.slug is None:
@@ -66,11 +68,12 @@ class Category(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = 'Категория'
+        verbose_name = 'Категорию'
         verbose_name_plural = 'Категории'
 
-TreeForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Родитель').contribute_to_class(Category, 'parent')
-mptt.register(Category, order_insertion_by=['title'])
+    class MPTTMeta:
+        level_attr = 'mptt_level'
+        order_insertion_by = ['title']
 
 
 class IndividualResearchFeedback(models.Model):
