@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="modal modal-custom fade" id="modal-thanx" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Ваше сообщение отправлено!</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+<section class="search search__min mb-5">
+	<div class="container-fluid">
+		<form action="{% url 'research:list' %}" method="get">
+			<div class="row search__row">
+				<input type="text" name="research" class="search__input" placeholder="Введите код ВЭД, отрасль или тип товара">
+				<button type="submit" class="search__button">Поиск</button>
+			</div>
+		</form>
+	</div>
+</section>
+
+{% block inner_content %}
+
+{% endblock %}
+
+<section class="inn__analise inn__analise-desktop">
+    <div class="container">
+        <div class="row inn__analise-text">
+			<p>Как заказать</p>
+        </div>	<!-- /.inn__analise-text -->
+    </div>
+</section>
+
+<section class="inn__point inn__point2">
+    <div class="container">
+        <div class="row">
+            <h3>Более двухсот актуальных аналитических отчетов Вы можете найти и приобрести через наш он-лайн магазин.</h3>
+        </div>
+    </div>
+</section>
+
+<section class="contacts__q">
+    <div class="container">
+        <div class="row">
+            <div class="contacts__text">
+                <h2>Для заказа исследования рынка по индивидуальным критериям - свяжитесь с нами по телефону или фореме обратной связи.</h2>
+                <p>Оставьте данные для связи в форме ниже и мы обязательно свяжемся с вами в течении 15 минут</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="contacts__q">
+
+	<div class="container">
+        <div class="row">
+            <div class="footer__form">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% for value in form.errors.values %}
+                        {{ value }}
+                    {% endfor %}
+                    {{form.name}}
+                    {{ form.contact_details }}
+                    <button id="callback-form-button" disabled  type="submit" >получить консультацию специалиста</button>
+
+                    <p><input id="callback-form-check" onclick="changeButtonForm()" type="checkbox"  name="option2" value="a2">согласен на обработку персональных данных</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

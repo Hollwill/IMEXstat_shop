@@ -44,7 +44,7 @@ class Cart:
             item.unit_price = unit_price
             item.quantity = quantity
             item.save()
-        else: #ItemAlreadyExists
+        else: # ItemAlreadyExists
             item.unit_price = unit_price
             item.quantity = item.quantity + int(quantity)
             item.save()

@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 {% if messages %}
 {% for message in messages %}
 
@@ -10,7 +9,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Сообщение о почте</div>
+                <div class="modal-title">Сообщение!</div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -47,6 +46,9 @@
 							<p>{{ article.time_for_read }} минут на чтение</p>
 						{% endif %}
 					</div>
+                    <a href="{% url 'article:detail' article.slug %}?add_to_favorite={{ article.slug }}" class="article__author-item article__author-item_icon article__author-item_icon-star">
+                        <p>Добавить в закладки</p>
+                    </a>
                     <a href="{% url 'article:detail' article.slug %}?sent_article={{ article.slug }}" class="article__author-item">
                         <img src="{% static 'img/articlemail.svg' %} " alt="">
                         <p>Отправить статью на почту</p>
@@ -66,15 +68,17 @@
 				<div class="section__title-line"></div>
 			</div>
 		</div>
-		<div class="row article__content-row">
+		<div class="article__content-row">
 			<div itemprop="associatedMedia" class="article__content-img">
 				{% if article.image %}
 					<img class="article__content-img" src="{{ article.image.url }}" alt="">
 				{% endif %}
 			</div>
-			<div class="article__content-text">
+            <p itemprop="articleBody">
 				{{ article.description|safe }}
-			</div>
+            </p>
+            <div class="article__content-text">
+            </div>
 		</div>
 	</div>
 </section>
@@ -105,6 +109,7 @@
 				<div class="articles__item-right">
 					<div class="articles__item-title">
 						<h2>{{ article.title }}</h2>
+                        <a href="{% url 'article:detail' article.slug %}?add_to_favorite={{ article.slug }}" class="articles__item-icon articles__item-icon-star">Добавить в закладки</a>
 					</div>
 					<div class="articles__item-text">
 						<p>{{ article.short_description|safe }}</p>

@@ -9,20 +9,38 @@
 			<div class="lk__bestType-items">
 				<a href="{% url 'lk:favorite_research' %}">Исследования</a>
 				<a href="{% url 'lk:favorite_articles' %}" class="lk__bestType-active">Статьи</a>
-				<a href="{% url 'lk:favorite_reports' %}" class="">Отчёты</a>
 			</div>
 		</div>
 	</div>
+</section>
+<section itemscope itemtype="https://schema.org/NewsArticle" class="lk__best-items">
+    <div class="container-fluid">
+        <div class="row lk__best-itemsRow">
+            {% for article in articles %}
+            <div class="lk__best-item">
+                <div itemprop="associatedMedia" class="lk__item-img">
+                    {% if article.image %}
+            			<img class="articles__item-left" src="{{ article.image.url }}" alt="">
+            		{% endif %}
+                </div>
+                <div class="lk__item-content">
+                    <div class="lk__item-top">
+                        <h2 itemprop="headline">{{ article.title }}</h2>
+                    </div>
+                    <div class="lk__item-mid">
+                        <p itemprop="description">{{ article.short_description }}</p>
+                    </div>
+                    <div class="lk__item-bot">
+                        <a href="{% url 'article:detail' article.slug %}" class="lk__item-botMore">Продожить читать</a>
+                        <a href="{% url 'lk:favorite_articles' %}?delete_from_favorite={{ article.slug }}" class="lk__item-botDelete">Удалить</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
 </section>
 
-<section itemscope itemtype="https://schema.org/NewsArticle" class="lk__best-items">
-	<div class="container-fluid">
-		<div class="row lk__best-itemsRow">
-			<div class="lk__best-item">
-			<h1 class="in_developing">В разработке</h1>
-			</div>
-		</div>
-	</div>
-</section>
 
 {% endblock inner_content %}

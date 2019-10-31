@@ -21,7 +21,7 @@ class Research(models.Model):
     data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
     image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
     demo = models.FileField(blank=True, null=True, verbose_name='Демо файл')
-    contents = RichTextField(blank=True, null=True, verbose_name='Оглавление')
+    contents = RichTextField(blank=True, null=True, verbose_name='Структура исследования')
     using_methods = RichTextField(blank=True, null=True, verbose_name='Используемые методы')
     data_sources = RichTextField(blank=True, null=True, verbose_name='Источники данных')
     research_type = models.CharField(max_length=10, choices=TYPE_RESEARCH_CHOICE, verbose_name='Тип исследования')

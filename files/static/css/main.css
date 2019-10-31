@@ -1815,7 +1815,7 @@ footer {
 	padding: 0 240px;
 }
 .lk__bestType-items {
-	width: 400px;
+	width: 300px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -4639,10 +4639,6 @@ footer {
 
 .icon-ruble:after {
 	content: 'P';
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
 }
 .list-group-item.active {
 	color: gray;
@@ -4652,4 +4648,173 @@ footer {
 
 .individual-order-form {
 	margin-bottom: 30px;
+}
+.article__author-item_icon.article__author-item_icon-star:before {
+	background-image: url(../img/icons/icon-star.svg);
+}
+.article__author-item.article__author-item_icon {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	padding: 0 0 0 30px;
+}
+
+.article__author-item.article__author-item_icon:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 20px 0 0 20px;
+	background-position: 0 0;
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+}
+.articles__item-icon,
+.articles__item-icon:hover {
+	color: #000;
+	font-size: 13px;
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	padding: 0 0 0 30px;
+}
+
+.articles__item-icon:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 20px 0 0 20px;
+	background-position: 0 0;
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+}
+.articles__item-icon.articles__item-icon-star:before {
+	background-image: url(../img/icons/icon-star.svg);
+}
+.article__content-img {
+	float: left;
+	width: 100%;
+	max-width: 381px;
+	margin: 0 30px 20px 0;
+}
+.inn__analise-icon {
+	list-style: none;
+	position: relative;
+	padding: 0 0 0 40px;
+}
+
+.inn__analise-icon:before {
+	content: '';
+	position: absolute;
+	top: -3px;
+	left: 0;
+	padding: 30px 0 0 30px;
+	background-position: 0 0;
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-source:before {
+	background-image: url(../img/icons/icon-source.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-list:before {
+	background-image: url(../img/icons/icon-list.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-poll:before {
+	background-image: url(../img/icons/icon-poll.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-calculation:before {
+	background-image: url(../img/icons/icon-calculation.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-variations:before {
+	background-image: url(../img/icons/icon-variations.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-relations:before {
+	background-image: url(../img/icons/icon-relations.svg);
+}
+
+.inn__analise-icon.inn__analise-icon_icon-graph:before {
+	background-image: url(../img/icons/icon-graph.svg);
+}
+
+.inn__why-number.inn__why-number_icon {
+	width: 80px;
+	height: 80px;
+	margin: 0 0 25px;
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.inn__why-number.inn__why-number_icon:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-position: 0 0;
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+}
+
+.inn__why-number_icon.inn__why-number_icon-idea:before {
+	background-image: url(../img/icons/icon-idea.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-research:before {
+	background-image: url(../img/icons/icon-research.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-award:before {
+	background-image: url(../img/icons/icon-award.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-data:before {
+	background-image: url(../img/icons/icon-data.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-europe:before {
+	background-image: url(../img/icons/icon-europe.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-puzzle:before {
+	background-image: url(../img/icons/icon-puzzle.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-factory:before {
+	background-image: url(../img/icons/icon-factory.svg);
+}
+
+.inn__why-number_icon.inn__why-number_icon-coffee:before {
+	background-image: url(../img/icons/icon-coffee.svg);
+}
+
+.inn__analise-expander {
+	cursor: pointer;
+}
+
+.inn__analise-expander.active + .inn__analise-submenu {
+	display: block;
+}
+
+.inn__analise-submenu {
+	display: none;
+	list-style: none;
+	padding: 0 0 0 40px;
+}
+
+.inn__analise-submenu-item {
+	color: #000;
+	margin: 0 0 10px;
 }

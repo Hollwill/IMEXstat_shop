@@ -250,17 +250,16 @@
     <div class="container">
         <div class="row">
             <div class="footer__form">
-                <form action="{% url 'index:form' %}?next={% url 'index:index' %}" method="post">
+                <form action="" method="post">
                     {% for value in form.errors.values %}
                         {{ value }}
                     {% endfor %}
                     {% csrf_token %}
                     {{form.name}}
                     {{ form.contact_details }}
-                    <button type="submit" >получить консультацию специалиста</button>
-                    {% comment %}
-                    <p><input type="checkbox" checked name="option2" value="a2">согласен на обработку персональных данных</p>
-                    {% endcomment %}
+                    <button id="callback-form-button" disabled type="submit" >получить консультацию специалиста</button>
+
+                    <p><input id="callback-form-check" onclick="changeButtonForm()" type="checkbox" name="option2" value="a2">согласен на обработку персональных данных</p>
                 </form>
             </div>
         </div>

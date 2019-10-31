@@ -132,6 +132,14 @@ function changeText (a) {
         a.innerText="Смотреть ещё";
     }
 }
+function changeButtonForm () {
+    if ($('#callback-form-check').prop('checked', true)) {
+        $('#callback-form-button').removeAttr('disabled')
+    } else {
+        $('#callback-form-button').attr('disabled', true)
+    }
+
+}
 
 jQuery(function() {
     $(".search__input").on('keyup', function(){

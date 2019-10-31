@@ -7,12 +7,13 @@ class OrderItemInline(admin.TabularInline):
 	readonly_fields = ['price']
 	raw_id_field = ['research']
 
+
 class OrderAdmin(admin.ModelAdmin):
-	list_display = ('client', 'date', 'paid', 'get_total_cost')
+	list_display = ('__str__', 'date', 'paid', 'get_total_cost')
+
 	readonly_fields = ['date']
 	list_filter = ['paid', 'date']
 	inlines = [OrderItemInline]
-
 
 
 admin.site.register(Order, OrderAdmin)

@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from cart.cart import Cart as SessionCart
 from products.models import Research
+from articles.models import Article
 
 
 @method_decorator(login_required, name='dispatch')
@@ -35,24 +36,36 @@ class ProfileFormView(MultiModelFormView):
 		return reverse('lk:settings')
 
 	def forms_valid(self, forms):
-		profile = forms['profile_form'].save()
-		requizites = forms['requizites_form'].save()
+		forms['profile_form'].save()
+		forms['requizites_form'].save()
 		return super(ProfileFormView, self).forms_valid(forms)
 
 
 @method_decorator(login_required, name='dispatch')
-class FavoriteArticles(generic.TemplateView):
+class FavoriteArticles(generic.ListView):
 	template_name = 'personal_cabinet/favorite_articles.html'
+	context_object_name = 'articles'
+
+	def get_queryset(self, **kwargs):
+		favorite = Favorite.objects.get(client__user=self.request.user)
+		return Article.objects.filter(favorite=favorite)
 
 
-@method_decorator(login_required, name='dispatch')
-class FavoriteReports(generic.TemplateView):
-	template_name = 'personal_cabinet/favorite_reports.html'
+	def delete_from_favorite(self, *args, **kwargs):
+		if self.request.GET.get('delete_from_favorite'):
+			article = Article.objects.get(slug=self.request.GET.get('delete_from_favorite'))
+
+			favorite = Favorite.objects.get(client__user=self.request.user)
+			favorite.save()
+			favorite.articles.remove(article)
+
+	def dispatch(self, request, *args, **kwargs):
+		self.delete_from_favorite()
+		return super(FavoriteArticles, self).dispatch(request, *args, **kwargs)
 
 
 @method_decorator(login_required, name='dispatch')
 class FavoriteResearchs(generic.ListView):
-	model = Favorite
 	template_name = 'personal_cabinet/favorite_research.html'
 	context_object_name = 'research'
 

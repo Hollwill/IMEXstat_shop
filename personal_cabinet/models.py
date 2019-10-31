@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from pytils.translit import slugify
+
 from phonenumber_field.modelfields import PhoneNumberField
-
 import os
-
 
 
 class Client(models.Model):
@@ -19,12 +17,6 @@ class Client(models.Model):
     INN = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     KPP = models.IntegerField(blank=True, null=True, verbose_name='КПП')
     requisites_file = models.FileField(blank=True, null=True, verbose_name='Файл с реквизитами')
-    slug = models.SlugField(unique=True, blank=True)
-
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.user.username + ' ' + self.firstname + ' ' + self.lastname)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.firstname + ' ' + self.lastname + ' ' + self.user.username
@@ -38,7 +30,10 @@ class Client(models.Model):
 
 
 from products.models import Research
+from articles.models import Article
+
 
 class Favorite(models.Model):
     client = models.OneToOneField(Client, on_delete=models.CASCADE)
     research = models.ManyToManyField(Research, blank=True)
+    articles = models.ManyToManyField(Article, blank=True)

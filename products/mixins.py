@@ -31,7 +31,7 @@ class CategoryContextMixin(ContextMixin):
 				if cart.have(research):
 					messages.add_message(request, NOT_ADDED, 'Исследование уже в корзине')
 				else:
-					cart.add(research, research.OM_cost)
+					cart.add(research, research.nominal)
 					messages.add_message(request, ADDED, success_message)
 
 	def add_to_favorite(self, request, **kwargs):

@@ -1,16 +1,15 @@
 from django.views import generic
 from .models import Research
-from personal_cabinet.models import Client
-from orders.models import Order
 from .mixins import CategoryContextMixin
-from django.urls import reverse, reverse_lazy
-from .forms import ResearchBuyForm, IndividualResearchFeedbackForm
+from django.urls import reverse_lazy
+from .forms import IndividualResearchFeedbackForm
 from seo.mixins.views import ModelInstanceViewSeoMixin
 from django.http import JsonResponse
 from django.contrib import messages
 
 
-class IndividualResearchFeedbackView(generic.FormView):
+
+class IndividualResearchFeedbackView(generic.CreateView):
     form_class = IndividualResearchFeedbackForm
     template_name = 'products/research_individual_order.html'
     success_url = reverse_lazy('research:individual')
@@ -56,13 +55,15 @@ class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, Category
     model = Research
 
 
-class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin, generic.edit.FormMixin):
+class ResearchBuyView( ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
     model = Research
-    form_class = ResearchBuyForm
+    # form_class = CartResearchForm
     template_name = 'products/research_buy.html'
 
+
+'''
     def get_success_url(self):
-        return reverse('research:list')
+        return reverse('index:index')
 
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)
@@ -70,6 +71,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         return context
 
     def post(self, *args, **kwargs):
+        self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -77,13 +79,15 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        client = Client.objects.get(user=self.request.user)
-        Order.objects.create(client=client)
+        if self.request.user.is_authenticated:
+            client = Client.objects.get(user=self.request.user)
+            Order.objects.create(client=client)
+        else:
+            Order.objects.create(client=None)
         order = Order.objects.latest()
         order_cart = form.save(commit=False)
         order_cart.order = order
         order_cart.research = Research.objects.get(slug=self.kwargs['slug'])
         order_cart.save()
         return super().form_valid(form)
-
-
+'''

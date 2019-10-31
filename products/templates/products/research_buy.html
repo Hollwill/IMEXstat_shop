@@ -3,54 +3,6 @@
 {% load static %}
 
 {% block inner_content %}
-<!--<div class="ready__property-row">
-                        <div class="ready__property">
-                            <div class="wrapper">
-                                <label for="button2" id="labelbutton2" onclick="changeText(labelbutton2)">Смотреть ещё</label>
-                                <input type="checkbox" id="button2">
-                                <div class="xpandable-block">
-                                    <div class="ready__property-item">
-                                        <button class="ready__property-plus">+</button>
-                                        <div class="ready__property-code">
-                                            <p>01 02 03 04</p>
-                                        </div>
-                                        <div class="ready__property-name">
-                                            <p>Танки без дула с танкистом</p>
-                                        </div>
-                                    </div>
-                                    <div class="ready__property-item">
-                                        <button class="ready__property-plus">+</button>
-                                        <div class="ready__property-code">
-                                            <p>01 02 03 04</p>
-                                        </div>
-                                        <div class="ready__property-name">
-                                            <p>Танки без дула с танкистом</p>
-                                        </div>
-                                    </div>
-                                    <div class="ready__property-item">
-                                        <button class="ready__property-plus">+</button>
-                                        <div class="ready__property-code">
-                                            <p>01 02 03 04</p>
-                                        </div>
-                                        <div class="ready__property-name">
-                                            <p>Танки без дула с танкистом</p>
-                                        </div>
-                                    </div>
-                                    <div class="ready__property-item">
-                                        <button class="ready__property-plus">+</button>
-                                        <div class="ready__property-code">
-                                            <p>01 02 03 04</p>
-                                        </div>
-                                        <div class="ready__property-name">
-                                            <p>Танки без дула с танкистом</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="ready__property-save">Применить</button>
-                        </div>
-                    </div>-->
-
                     <div itemscope itemtype="https://schema.org/NewsArticle" class="readyInner__title">
                         <div class="section__title">
                             <div class="readyInner__title-content">
@@ -85,6 +37,7 @@
                             <p><span>Подписка на обновления данных отчета ( при первой покупки - первые 3-и месяца - БЕСПЛАТНО! ) </span></p>
                         </div>
                     </div>
+                    <!---
                     <form method="post">
                         {% csrf_token %}
                         <div class="readyInner__extend">
@@ -151,9 +104,21 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </form>-->
+
+                        <div class="readyInner__btns">
+                            {% if research.demo %}
+                            <div class="readyInner__btns-left">
+                                <a href="{{ research.demo.url }}">Скачать демо версию</a>
+                                <img src="{% static "img/pdf.svg" %}" alt="">
+                            </div>
+                            {% endif %}
+                            <div class="readyInner__btns-right">
+                                <a href="{% url 'research:buy' research.slug %}?add_to_cart={{ research.slug }}" class="readyInner__btns-add">Добавить в корзину</a>
+                            </div>
+                        </div>
                     <div class="ready__type readyInner__bot">
-                        <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Оглавление</a>
+                        <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
                         <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>
                         <a href="#" onclick="return false;" id="data_sources_button" class="ready__type-item">Источники данных</a>
                     </div>
