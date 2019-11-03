@@ -63,7 +63,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
     template_name = 'products/research_buy.html'
 
     def get_success_url(self):
-        return reverse('index:index')
+        return reverse('orders:cart_purchase')
 
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)

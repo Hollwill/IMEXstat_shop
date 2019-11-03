@@ -71,7 +71,6 @@ class CartPurchaseView(MultiFormView):
         else:
             cart = SessionCart(self.request)
             research = [a.product for a in cart]
-
         FormSet = forms.formset_factory(CartResearchForm, max_num=len(research), min_num=len(research))
         formset = FormSet(initial=[{
             'research': x.research,
@@ -133,7 +132,7 @@ class CartPurchaseView(MultiFormView):
         return initial
 
     def get_success_url(self):
-        return reverse('orders:cart_purchase')
+        return reverse('orders:cart')
 
     def forms_valid(self, forms):
         client = Client.objects.get(user=self.request.user)
