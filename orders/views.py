@@ -5,9 +5,8 @@ from cart.cart import Cart as SessionCart
 from products.models import Research
 from multi_form_view import MultiFormView
 from .forms import EntityForm, IndividualForm, CartResearchForm
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django import forms
-import six
 
 
 class CartListView(generic.TemplateView):
@@ -78,11 +77,13 @@ class CartPurchaseView(MultiFormView):
             'update_frequency': x.update_frequency
         } for x in research])
 
-        data['researchs'] = research
+
         try:
             data['cart'] = kwargs['form']
+            data['formset'] = zip(kwargs['form'], research)
         except:
             data['cart'] = formset
+            data['formset'] = zip(formset, research)
         finally:
             return data
 
@@ -135,7 +136,7 @@ class CartPurchaseView(MultiFormView):
         return reverse('orders:cart')
 
     def forms_valid(self, forms):
-        client = Client.objects.get(user=self.request.user)
+        client = Client.objects.get(user=self.request.user) if self.request.user.is_authenticated else None
         order = Order.objects.latest()
         for form in self.form_classes:
             for field in self.form_classes[form].base_fields:
@@ -143,6 +144,6 @@ class CartPurchaseView(MultiFormView):
                     client.__dict__[field] = forms[form].cleaned_data[field]
                 else:
                     order.__dict__[field] = forms[form].cleaned_data[field]
-        client.save()
+        client.save() if self.request.user.is_authenticated else None
         order.save()
         return super(CartPurchaseView, self).forms_valid(forms)

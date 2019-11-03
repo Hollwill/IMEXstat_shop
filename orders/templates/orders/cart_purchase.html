@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{% load zip %}
 
 
 <form method="post">
@@ -90,7 +89,7 @@
 					{{ cart.management_form }}
 					{% csrf_token %}
 					{% if user.is_authenticated %}
-					{% for form, research in cart, researchs %}
+					{% for form, research in formset %}
                     {% with research.research as research %}
 					{% with research.id as i %}
 					
@@ -174,7 +173,7 @@
                     {% endwith %}
 					{% endfor %}
                     {% else %}
-                    {% for form, item in cart, researchs %}
+                    {% for form, item in formset %}
                     {% with item.research as research %}
                     {% with research.id as i %}
                     {{ form.errors }}

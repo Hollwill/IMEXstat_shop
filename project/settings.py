@@ -3,6 +3,7 @@ from configurations import Configuration
 
 import os
 
+
 class Base(Configuration):
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,9 +11,6 @@ class Base(Configuration):
     ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 
     SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
-
-
-
 
     INSTALLED_APPS = [
         'grappelli',
@@ -72,7 +70,7 @@ class Base(Configuration):
                 'index.context_processors.menu.menu',
                 ],
             'libraries':{
-                'zip': 'orders.templatetags.zip',
+
                 }
             },
         },
@@ -184,7 +182,6 @@ class Prod(Base):
     ALLOWED_HOSTS = ['imex.naminteresno.ru']
 
     SITE_ID = 7
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -194,6 +191,7 @@ class Prod(Base):
             'HOST': '127.0.0.1',
             'PORT': '5432',
         }
+
     }
 
     LOGGING = {
@@ -208,7 +206,7 @@ class Prod(Base):
            'mail_admins': {
                'level': 'ERROR',
                'class': 'django.utils.log.AdminEmailHandler',
-           },       
+           },
        },
        'loggers': {
            'django': {
@@ -220,12 +218,9 @@ class Prod(Base):
                'handlers': ['mail_admins'],
                'level': 'ERROR',
                'propagate': True,
-           },              
+           },
        },
     }
-
-
-
 
     
 
