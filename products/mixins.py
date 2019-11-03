@@ -2,13 +2,12 @@ from django.views.generic.base import ContextMixin
 from .models import Category
 from personal_cabinet.models import Client, Favorite
 from .models import Research
-from orders.models import Cart
+from orders.models import Cart, CartItem
 from cart.cart import Cart as SessionCart
 from django.contrib import messages
 
 
 class CategoryContextMixin(ContextMixin):
-	additional_context = None
 
 	def add_to_cart(self, request, **kwargs):
 		ADDED = 50
@@ -19,19 +18,22 @@ class CategoryContextMixin(ContextMixin):
 			if self.request.user.is_authenticated:
 				cart = Cart.objects.get(client__user=self.request.user)
 				try:
-					Cart.objects.get(research__slug=self.request.GET.get('add_to_cart'), client__user=self.request.user)
+					CartItem.objects.get(research__slug=self.request.GET.get('add_to_cart'), cart=cart)
 					messages.add_message(request, NOT_ADDED, 'Исследование уже в корзине')
 				except:
-					cart.save()
-					cart.research.add(research)
+					CartItem.objects.create(research=research, cart=cart)
 					messages.add_message(request, ADDED, success_message)
-
 			else:
 				cart = SessionCart(request)
-				if cart.have(research):
-					messages.add_message(request, NOT_ADDED, 'Исследование уже в корзине')
+
+				for item in SessionCart(request):
+					if item.get_product() in CartItem.objects.filter(research=research):
+						messages.add_message(request, NOT_ADDED, 'Исследование уже в корзине')
+						break
 				else:
-					cart.add(research, research.nominal)
+					CartItem.objects.create(research=research)
+					item = CartItem.objects.latest()
+					cart.add(item, item.research.nominal)
 					messages.add_message(request, ADDED, success_message)
 
 	def add_to_favorite(self, request, **kwargs):
@@ -44,7 +46,6 @@ class CategoryContextMixin(ContextMixin):
 				try:
 					Favorite.objects.get(research__slug=self.request.GET.get('add_to_favorite'), client__user=self.request.user)
 					messages.add_message(request, NOT_ADDED, 'Исследование уже в избранном')
-
 				except:
 					favorite.save()
 					favorite.research.add(research)
@@ -59,7 +60,5 @@ class CategoryContextMixin(ContextMixin):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		if not self.additional_context == None:
-			context['message'] = self.additional_context
-		context["categories"] = Category.objects.all().order_by('tree_id')
+		context["categories"] = Category.objects.all()
 		return context

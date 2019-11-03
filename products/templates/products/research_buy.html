@@ -37,7 +37,7 @@
                             <p><span>Подписка на обновления данных отчета ( при первой покупки - первые 3-и месяца - БЕСПЛАТНО! ) </span></p>
                         </div>
                     </div>
-                    <!---
+
                     <form method="post">
                         {% csrf_token %}
                         <div class="readyInner__extend">
@@ -104,19 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>-->
-
-                        <div class="readyInner__btns">
-                            {% if research.demo %}
-                            <div class="readyInner__btns-left">
-                                <a href="{{ research.demo.url }}">Скачать демо версию</a>
-                                <img src="{% static "img/pdf.svg" %}" alt="">
-                            </div>
-                            {% endif %}
-                            <div class="readyInner__btns-right">
-                                <a href="{% url 'research:buy' research.slug %}?add_to_cart={{ research.slug }}" class="readyInner__btns-add">Добавить в корзину</a>
-                            </div>
-                        </div>
+                    </form>
                     <div class="ready__type readyInner__bot">
                         <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
                         <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>

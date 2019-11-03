@@ -89,11 +89,10 @@
 				<div class="row cartBuy__items">
 					{{ cart.management_form }}
 					{% csrf_token %}
-
 					{% if user.is_authenticated %}
 					{% for form, research in cart, researchs %}
+                    {% with research.research as research %}
 					{% with research.id as i %}
-
 					
 					<div class="cartBuy__item">
 						<div class="cartBuy__item-name">
@@ -107,17 +106,18 @@
 						<div class="cartBuy__item-settings">
 							<div class="cartBuy__item-settingsLeft">
 								<label class="checkbox-transform">
-									<input onchange="changeFrequency('{{i}}')" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
+									<input {% if form.initial.update_frequency == 'MU' %}checked{% endif %} onchange="changeFrequency('{{i}}')" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
 									<span class="checkbox__label">Ежемесячное обновление</span>
 								</label>
 								<label class="checkbox-transform">
-									<input onchange="changeFrequency('{{i}}')" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
+									<input {% if form.initial.update_frequency == 'QU' %}checked{% endif %} onchange="changeFrequency('{{i}}')" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
 									<span class="checkbox__label">Ежеквартальное обновление</span>
 								</label>
 							</div>
 							<div class="cartBuy__item-settingsRight">
 								<div  class="radiobtn OM">
-									<input 
+									<input
+                                        {% if form.initial.duration == 'OM' %}checked{% endif %}
 										onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio" 
 										name="{{ form.duration.html_name }}"  
@@ -127,7 +127,8 @@
 
 								</div>
 								<div class="radiobtn OQ">
-									<input 
+									<input
+                                        {% if form.initial.duration == 'OQ' %}checked{% endif %}
 										onchange="showCost('{{i}}OQ', '{{i}}OM', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.2.id_for_label }}" 
@@ -135,7 +136,8 @@
 									<label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
 								</div>
 								<div class="radiobtn HY">
-									<input 
+									<input
+                                        {% if form.initial.duration == 'HY' %}checked{% endif %}
 										onchange="showCost('{{i}}HY', '{{i}}OQ', '{{i}}OM', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.3.id_for_label }}" 
@@ -143,7 +145,8 @@
 									<label for="{{ form.duration.3.id_for_label }}">На пол года</label>
 								</div>
 								<div class="radiobtn OY">
-									<input 
+									<input
+                                        {% if form.initial.duration == 'OY' %}checked{% endif %}
 										onchange="showCost('{{i}}OY', '{{i}}OQ', '{{i}}HY', '{{i}}OM', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"  
 										id="{{ form.duration.4.id_for_label }}" 
@@ -168,10 +171,11 @@
 					</div>
 
 					{% endwith %}
+                    {% endwith %}
 					{% endfor %}
                     {% else %}
                     {% for form, item in cart, researchs %}
-                    {% with item.product as research %}
+                    {% with item.research as research %}
                     {% with research.id as i %}
                     {{ form.errors }}
                     <div class="cartBuy__item">
@@ -186,17 +190,18 @@
 						<div class="cartBuy__item-settings">
 							<div class="cartBuy__item-settingsLeft">
 								<label class="checkbox-transform">
-									<input onchange="changeFrequency('{{i}}')" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
+									<input {% if form.initial.update_frequency == 'MU' %}checked{% endif %} onchange="changeFrequency('{{i}}')" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
 									<span class="checkbox__label">Ежемесячное обновление</span>
 								</label>
 								<label class="checkbox-transform">
-									<input onchange="changeFrequency('{{i}}')" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
+									<input {% if form.initial.update_frequency == 'QU' %}checked{% endif %} onchange="changeFrequency('{{i}}')" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
 									<span class="checkbox__label">Ежеквартальное обновление</span>
 								</label>
 							</div>
 							<div class="cartBuy__item-settingsRight">
 								<div  class="radiobtn OM">
 									<input
+                                        {% if form.initial.duration == 'OM' %}checked{% endif %}
 										onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio"
 										name="{{ form.duration.html_name }}"
@@ -207,6 +212,7 @@
 								</div>
 								<div class="radiobtn OQ">
 									<input
+                                        {% if form.initial.duration == 'OQ' %}checked{% endif %}
 										onchange="showCost('{{i}}OQ', '{{i}}OM', '{{i}}HY', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"
 										id="{{ form.duration.2.id_for_label }}"
@@ -215,6 +221,7 @@
 								</div>
 								<div class="radiobtn HY">
 									<input
+                                        {% if form.initial.duration == 'HY' %}checked{% endif %}
 										onchange="showCost('{{i}}HY', '{{i}}OQ', '{{i}}OM', '{{i}}OY', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"
 										id="{{ form.duration.3.id_for_label }}"
@@ -223,6 +230,7 @@
 								</div>
 								<div class="radiobtn OY">
 									<input
+                                        {% if form.initial.duration == 'OY' %}checked{% endif %}
 										onchange="showCost('{{i}}OY', '{{i}}OQ', '{{i}}HY', '{{i}}OM', {{i}})"
 										type="radio" name="{{ form.duration.html_name }}"
 										id="{{ form.duration.4.id_for_label }}"

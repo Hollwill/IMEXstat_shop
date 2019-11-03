@@ -107,7 +107,7 @@ class Base(Configuration):
 
     LOGIN_REDIRECT_URL = 'lk:settings'
 
-    LOGOUT_REDIRECT_URL = 'research:list'
+    LOGOUT_REDIRECT_URL = 'index:index'
 
     STATIC_ROOT = os.path.join(ROOT_PATH, 'static')
     STATIC_URL = '/static/'

@@ -11,7 +11,8 @@
 		</div>
 		<div class="row cart__items">
 			{% if user.is_authenticated %}
-			{% for research in cart.research.all %}
+			{% for item in cart.items.all %}
+            {% with item.research as research %}
 			<div class="cart__item">
 				<div class="cart__item-img">
 					{% if research.image %}
@@ -38,11 +39,11 @@
 					</div>
 				</div>
 			</div>
+            {% endwith %}
 			{% endfor %}
 			{% else %}
 			{% for item in cart %}
-			{% with item.product as research %}
-			    
+			{% with item.product.research as research %}
 			<div class="cart__item">
 				<div class="cart__item-img">
 					{% if research.image %}

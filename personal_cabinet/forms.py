@@ -1,4 +1,3 @@
-
 from django import forms
 from .models import Client
 from django.contrib.auth.forms import UserCreationForm
@@ -9,15 +8,14 @@ class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = Client
 		fields = ['lastname', 'firstname', 'middle_name', 'email', 'phone']
-		exclude = ['user',]
+		exclude = ['user']
 
 
 class RequizitesForm(forms.ModelForm):
 	class Meta:
 
 		model = Client
-		fields = ['firm_name', 'legal_adress', 'INN', 'KPP', 'requisites_file' ]
-
+		fields = ['firm_name', 'legal_adress', 'INN', 'KPP', 'requisites_file']
 
 
 class UserCreationWithEmailForm(UserCreationForm):
@@ -32,7 +30,6 @@ class UserCreationWithEmailForm(UserCreationForm):
 		user = super(UserCreationForm, self).save(commit=False)
 		user.email = self.cleaned_data["email"]
 		user.set_password(self.cleaned_data['password1'])
-
 		if commit:
 			user.save()
 			return user

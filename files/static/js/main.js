@@ -89,6 +89,11 @@ $(function ()    {
         });
     });
 });
+function changeFrequency(a) {
+    $(`.${a}` + 'D').prop('checked', false);
+    $(`.${a}M`).hide()
+    $(`.${a}Q`).hide()
+}
 
 function showCost(a, b, c, d, i) {
     if  ($(`.${i}` + 'QU').prop("checked") || $(`.${i}` + 'MU').prop("checked")) {
@@ -108,12 +113,7 @@ function showCost(a, b, c, d, i) {
     }
 }
 
-function changeFrequency(a) {
-    $(`.${a}` + 'D').prop('checked', false);
-    $(`.${a}M`).hide()
-    $(`.${a}Q`).hide()
 
-}
 function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";
     document.getElementById(b).style.display = "none";

@@ -1,23 +1,25 @@
 from django.views import generic
 from personal_cabinet.models import Client
-from .models import Cart, Order
+from .models import Cart, CartItem, Order
 from cart.cart import Cart as SessionCart
 from products.models import Research
 from multi_form_view import MultiFormView
 from .forms import EntityForm, IndividualForm, CartResearchForm
 from django.urls import reverse, reverse_lazy
 from django import forms
+import six
 
 
-class CartListView(generic.ListView):
-    context_object_name = 'cart'
+class CartListView(generic.TemplateView):
     template_name = 'orders/cart_list.html'
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            return Cart.objects.get(client__user_id=self.request.user.id)
+            context['cart'] = Cart.objects.get(client__user=self.request.user)
         else:
-            return SessionCart(self.request)
+            context['cart'] = SessionCart(self.request)
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.remove_from_cart(request)
@@ -29,14 +31,14 @@ class CartListView(generic.ListView):
 
             if self.request.user.is_authenticated:
                 cart = Cart.objects.get(client_id=self.request.user.id)
-                cart.save()
-                cart.research.remove(research)
+                CartItem.objects.get(cart=cart, research=research).delete()
             else:
                 cart = SessionCart(self.request)
-                cart.remove(research)
+                for item in cart:
+                    if item.get_product().research == research:
+                        cart.remove(item.product)
 
 
-# @method_decorator(login_required, name='dispatch')
 class CartPurchaseView(MultiFormView):
     form_classes = {
         'entity_form': EntityForm,
@@ -52,21 +54,31 @@ class CartPurchaseView(MultiFormView):
         if self.request.GET.get('remove_from_order'):
             research = Research.objects.get(slug=self.request.GET.get('remove_from_order'))
 
-            cart = Cart.objects.get(client_id=self.request.user.id)
-            cart.save()
-            cart.research.remove(research)
+            if self.request.user.is_authenticated:
+                cart = Cart.objects.get(client_id=self.request.user.id)
+                CartItem.objects.get(cart=cart, research=research).delete()
+            else:
+                cart = SessionCart(self.request)
+                for item in cart:
+                    if item.get_product().research == research:
+                        cart.remove(item.product)
 
     def get_context_data(self, **kwargs):
         data = super(CartPurchaseView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             cart = Cart.objects.get(client__user=self.request.user)
-            research = cart.research.all()
+            research = cart.items.all()
         else:
             cart = SessionCart(self.request)
-            research = [a for a in cart]
+            research = [a.product for a in cart]
 
         FormSet = forms.formset_factory(CartResearchForm, max_num=len(research), min_num=len(research))
-        formset = FormSet(initial=[{'research': x if self.request.user.is_authenticated else x.product} for x in research])
+        formset = FormSet(initial=[{
+            'research': x.research,
+            'duration': x.duration,
+            'update_frequency': x.update_frequency
+        } for x in research])
+
         data['researchs'] = research
         try:
             data['cart'] = kwargs['form']
@@ -78,7 +90,7 @@ class CartPurchaseView(MultiFormView):
     def post(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
             cart = Cart.objects.get(client__user=self.request.user)
-            research = cart.research.all()
+            research = cart.items.all()
         else:
             cart = SessionCart(self.request)
             research = [a.product for a in cart]
@@ -115,41 +127,23 @@ class CartPurchaseView(MultiFormView):
         initial = super().get_initial()
         if self.request.user.is_authenticated:
             client = Client.objects.get(user=self.request.user)
-            initial['individual_form'] = {
-                'lastname': client.lastname,
-                'firstname': client.firstname,
-                'email': client.email,
-                'phone': client.phone
-            }
-            initial['entity_form'] = {
-                'firm_name': client.firm_name,
-                'INN': client.INN,
-                'KPP': client.KPP
-            }
+            for form in self.form_classes:
+                for field in self.form_classes[form].base_fields:
+                    initial[form][field] = getattr(client, field)
         return initial
 
     def get_success_url(self):
-        return reverse('index:index')
+        return reverse('orders:cart_purchase')
 
     def forms_valid(self, forms):
-        if self.request.user.is_authenticated:
-            client = Client.objects.get(user=self.request.user)
-            client.firstname = forms['individual_form'].cleaned_data['firstname']
-            client.lastname = forms['individual_form'].cleaned_data['lastname']
-            client.email = forms['individual_form'].cleaned_data['email']
-            client.phone = forms['individual_form'].cleaned_data['phone']
-            client.firm_name = forms['entity_form'].cleaned_data['firm_name']
-            client.INN = forms['entity_form'].cleaned_data['INN']
-            client.KPP = forms['entity_form'].cleaned_data['KPP']
-            client.save()
-        else:
-            order = Order.objects.latest()
-            order.firstname = forms['individual_form'].cleaned_data['firstname']
-            order.lastname = forms['individual_form'].cleaned_data['lastname']
-            order.email = forms['individual_form'].cleaned_data['email']
-            order.phone = forms['individual_form'].cleaned_data['phone']
-            order.firm_name = forms['entity_form'].cleaned_data['firm_name']
-            order.INN = forms['entity_form'].cleaned_data['INN']
-            order.KPP = forms['entity_form'].cleaned_data['KPP']
-            order.save()
+        client = Client.objects.get(user=self.request.user)
+        order = Order.objects.latest()
+        for form in self.form_classes:
+            for field in self.form_classes[form].base_fields:
+                if self.request.user.is_authenticated:
+                    client.__dict__[field] = forms[form].cleaned_data[field]
+                else:
+                    order.__dict__[field] = forms[form].cleaned_data[field]
+        client.save()
+        order.save()
         return super(CartPurchaseView, self).forms_valid(forms)

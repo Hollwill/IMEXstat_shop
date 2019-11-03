@@ -1,11 +1,20 @@
 from django import forms
-
+from orders.models import CartItem
 from .models import IndividualResearchFeedback
 from validate_email import validate_email
 from django.utils.encoding import smart_text
 import re
 
 
+class CartItemCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key in self.fields:
+            self.fields[key].required = False
+
+    class Meta:
+        model = CartItem
+        fields = '__all__'
 
 
 class ContactField(forms.Field):

@@ -1,10 +1,12 @@
 from django.views import generic
 from .models import Research
+from orders.models import Cart
+from cart.cart import Cart as SessionCart
 from .mixins import CategoryContextMixin
-from django.urls import reverse_lazy
-from .forms import IndividualResearchFeedbackForm
+from django.urls import reverse_lazy, reverse
+from .forms import IndividualResearchFeedbackForm, CartItemCreateForm
 from seo.mixins.views import ModelInstanceViewSeoMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
 
 
@@ -55,13 +57,11 @@ class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, Category
     model = Research
 
 
-class ResearchBuyView( ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):
+class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin, generic.CreateView):
     model = Research
-    # form_class = CartResearchForm
+    form_class = CartItemCreateForm
     template_name = 'products/research_buy.html'
 
-
-'''
     def get_success_url(self):
         return reverse('index:index')
 
@@ -70,24 +70,16 @@ class ResearchBuyView( ModelInstanceViewSeoMixin, generic.DetailView, CategoryCo
         context['form'] = self.get_form()
         return context
 
-    def post(self, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def form_valid(self, form):
         if self.request.user.is_authenticated:
-            client = Client.objects.get(user=self.request.user)
-            Order.objects.create(client=client)
+            model_instance = form.save(commit=False)
+            model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
+            model_instance.cart = Cart.objects.get(client__user=self.request.user)
+            model_instance.save()
         else:
-            Order.objects.create(client=None)
-        order = Order.objects.latest()
-        order_cart = form.save(commit=False)
-        order_cart.order = order
-        order_cart.research = Research.objects.get(slug=self.kwargs['slug'])
-        order_cart.save()
-        return super().form_valid(form)
-'''
+            model_instance = form.save(commit=False)
+            model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
+            model_instance.save()
+            cart = SessionCart(self.request)
+            cart.add(model_instance, model_instance.research.nominal)
+        return HttpResponseRedirect(self.get_success_url())
