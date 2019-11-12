@@ -21,6 +21,7 @@ class Base(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+
         'django_cleanup',
         'multi_form_view',
         'pytils',
@@ -38,6 +39,7 @@ class Base(Configuration):
         'flatpage',
         'seo',
         'mptt',
+        'flatblocks'
 
     ]
 

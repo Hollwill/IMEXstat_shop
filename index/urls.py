@@ -8,7 +8,8 @@ from .views import (
     AnalysisView,
     Analysis2View,
     ElectionView,
-    SearchView
+    SearchView,
+    RobotsView
 )
 
 app_name = 'index'
@@ -23,4 +24,5 @@ urlpatterns = [
     path('analysis2/', Analysis2View.as_view(), name='analysis2'),
     path('election/', ElectionView.as_view(), name='election'),
     path('search/', SearchView.as_view(), name='search'),
+    path('robots.txt/', RobotsView.as_view(), name='robots')
 ]

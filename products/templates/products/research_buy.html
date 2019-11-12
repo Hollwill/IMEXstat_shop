@@ -38,24 +38,24 @@
                         </div>
                     </div>
 
-                    <form method="post">
+                    <form id="submit_form" method="post">
                         {% csrf_token %}
                         <div class="readyInner__extend">
                             <div class="cartBuy__item-settings">
                                 <div class="cartBuy__item-settingsLeft">
                                     <label class="checkbox-transform">
-                                        <input type="radio" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
+                                        <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
                                         <span class="checkbox__label">Ежемесячное обновление</span>
                                     </label>
                                     <label class="checkbox-transform">
-                                        <input type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
+                                        <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
                                         <span class="checkbox__label">Ежеквартальное обновление</span>
                                     </label>
                                 </div>
                                 <div class="cartBuy__item-settingsRight">
-                                    <div onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY')" class="radiobtn OM">
+                                    <div class="radiobtn OM">
                                         <input 
-                                        onchange="showCost('{{i}}OM', '{{i}}OQ', '{{i}}HY', '{{i}}OY')" 
+                                        onchange="showCostAlone()"
                                         type="radio" 
                                         name="{{ form.duration.html_name }}"  
                                         id="{{ form.duration.1.id_for_label }}" 
@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="radiobtn OQ">
                                         <input 
-                                        onchange="showCost('{{i}}OQ', '{{i}}OM', '{{i}}HY', '{{i}}OY')" 
+                                        onchange="showCostAlone()"
                                         type="radio" name="{{ form.duration.html_name }}"  
                                         id="{{ form.duration.2.id_for_label }}" 
                                         value="OQ" class="Duration_choice">
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="radiobtn HY">
                                         <input 
-                                        onchange="showCost('{{i}}HY', '{{i}}OQ', '{{i}}OM', '{{i}}OY')" 
+                                        onchange="showCostAlone()"
                                         type="radio" name="{{ form.duration.html_name }}"  
                                         id="{{ form.duration.3.id_for_label }}" 
                                         value="HY" class="Duration_choice">
@@ -81,7 +81,7 @@
                                     </div>
                                     <div class="radiobtn OY">
                                         <input 
-                                        onchange="showCost('{{i}}OY', '{{i}}OQ', '{{i}}HY', '{{i}}OM')"  
+                                        onchange="showCostAlone()"
                                         type="radio" name="{{ form.duration.html_name }}"  
                                         id="{{ form.duration.4.id_for_label }}" 
                                         value="OY" class="Duration_choice">
@@ -98,9 +98,19 @@
                             </div>
                             {% endif %}
                             <div class="readyInner__btns-right">
-                                <a href="{% url 'research:buy' research.slug %}?add_to_cart={{ research.slug }}" class="readyInner__btns-add">Добавить в корзину</a>
-                                <div class="cartBuy__pay-button">
-                                    <input type="submit" value="Оплатить">
+                                <a href="javascript:{}" onclick="document.getElementById('submit_form').submit();" class="readyInner__btns-add">Добавить в корзину</a>
+                                <div class="cartBuy__item-price">
+                                    <div class="cartBuy__item-priceBlock">
+                                        <p class="nominal">{{ research.nominal }} P</p>
+                                        <p class="OM MU" style="display: none;">{{ research.M_OM_cost }} Р</p>
+                                        <p class="OQ MU" style="display: none;">{{ research.M_OQ_cost }} Р</p>
+                                        <p class="HY MU" style="display: none;">{{ research.M_HY_cost }} Р</p>
+                                        <p class="OY MU" style="display: none;">{{ research.M_OY_cost }} Р</p>
+                                        <p class="OM QU" style="display: none;">{{ research.Q_OM_cost }} Р</p>
+                                        <p class="OQ QU" style="display: none;">{{ research.Q_OQ_cost }} Р</p>
+                                        <p class="HY QU" style="display: none;">{{ research.Q_HY_cost }} Р</p>
+                                        <p class="OY QU" style="display: none;">{{ research.Q_OY_cost }} Р</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

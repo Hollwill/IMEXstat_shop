@@ -72,3 +72,6 @@ class ElectionView(generic.TemplateView, IndexFormView):
 class SearchView(generic.TemplateView, IndexFormView):
 	template_name = 'index/search.html'
 	success_url = reverse_lazy('index:search')
+
+class RobotsView(generic.TemplateView):
+	template_name = 'robots.txt'

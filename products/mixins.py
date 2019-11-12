@@ -21,7 +21,9 @@ class CategoryContextMixin(ContextMixin):
 					CartItem.objects.get(research__slug=self.request.GET.get('add_to_cart'), cart=cart)
 					messages.add_message(request, NOT_ADDED, 'Исследование уже в корзине')
 				except:
-					CartItem.objects.create(research=research, cart=cart)
+					cartitem = CartItem.objects.get_or_create(research=research, cart=cart)[0]
+					cartitem.price = research.nominal
+					cartitem.save()
 					messages.add_message(request, ADDED, success_message)
 			else:
 				cart = SessionCart(request)

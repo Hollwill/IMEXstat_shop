@@ -1,6 +1,6 @@
 from django.views import generic
 from .models import Research
-from orders.models import Cart
+from orders.models import Cart, CartItem
 from cart.cart import Cart as SessionCart
 from .mixins import CategoryContextMixin
 from django.urls import reverse_lazy, reverse
@@ -63,7 +63,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
     template_name = 'products/research_buy.html'
 
     def get_success_url(self):
-        return reverse('orders:cart_purchase')
+        return reverse('research:list')
 
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)
@@ -71,15 +71,31 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         return context
 
     def form_valid(self, form):
+        model_instance = form.save(commit=False)
+        model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
+        model_instance.save()
+        success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (
+        model_instance.research.title, model_instance.price)
+
         if self.request.user.is_authenticated:
-            model_instance = form.save(commit=False)
-            model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
-            model_instance.cart = Cart.objects.get(client__user=self.request.user)
-            model_instance.save()
+            cart = Cart.objects.get(client__user=self.request.user)
+            try:
+                CartItem.objects.get(research=model_instance.research, cart=cart)
+                messages.add_message(self.request, 60, 'Исследование уже в корзине')
+            except:
+                model_instance.cart = Cart.objects.get(client__user=self.request.user)
+                model_instance.save()
+
+                messages.add_message(self.request, 50, success_message)
         else:
-            model_instance = form.save(commit=False)
-            model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
-            model_instance.save()
-            cart = SessionCart(self.request)
-            cart.add(model_instance, model_instance.research.nominal)
+
+            for item in SessionCart(self.request):
+                if item.get_product() in CartItem.objects.filter(research=model_instance.research):
+                    messages.add_message(self.request, 60, 'Исследование уже в корзине')
+                    break
+            else:
+                model_instance.save()
+                cart = SessionCart(self.request)
+                cart.add(model_instance, model_instance.price)
+                messages.add_message(self.request, 50, success_message)
         return HttpResponseRedirect(self.get_success_url())

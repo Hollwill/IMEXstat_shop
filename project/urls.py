@@ -4,7 +4,6 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 
-
 urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
@@ -16,8 +15,7 @@ urlpatterns = [
     path('register/', include('django_registration.backends.activation.urls')),
     path('order/', include('orders.urls', namespace='orders')),
     path('pages/', include('django.contrib.flatpages.urls')),
-    path('handbook/', include('handbook.urls', namespace='handbook') )
-
+    path('handbook/', include('handbook.urls', namespace='handbook')),
 ]
 
 if settings.DEBUG:
