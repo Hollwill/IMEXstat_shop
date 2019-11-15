@@ -74,8 +74,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         model_instance = form.save(commit=False)
         model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
         model_instance.save()
-        success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (
-        model_instance.research.title, model_instance.price)
+        success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (model_instance.research.title, model_instance.price)
 
         if self.request.user.is_authenticated:
             cart = Cart.objects.get(client__user=self.request.user)

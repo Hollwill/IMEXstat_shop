@@ -1,109 +1,8 @@
-
+{% extends 'base.html' %}
 
 {% load static %}
 {% load seo %}
-<!doctype html>
-<html lang="ru">
-<head>
-    
-    {% get_seo_data seo %}
-    {% get_seo_data request.seo %}
-    <title>
-        {% block title %}Главная{% endblock title %}
-    </title>	
-    <meta charset="utf-8" />   
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap&subset=cyrillic" rel="stylesheet">
-    
-    <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.structure.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.theme.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-</head>
-<body >
-    <section class="header__top">
-        <div class="container-fluid">
-            <div class="row header__top-row">
-                <div class="header__top-left">
-                    <a href="tel:+7 913 903 56 16" class="header__top-links">+7 913 903 56 16</a>
-                    <a href="tel:+7 913 903 56 16" class="header__top-links">+7 913 903 56 16</a>
-                    <a href="mailto:mail@imexstat.ru" class="header__top-links">mail@imexstat.ru</a>
-                </div>
-                <div class="header__top-right">
-                    <a href="{% url 'article:list' %}" class="header__top-links">Статьи</a>
-                    <a href="{% url 'handbook:handbook' %}" class="header__top-links">Справочник</a>
-                    <a href="{% url 'orders:cart' %}" class="header__top-links">Корзина</a>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'lk:settings' %}" class="header__top-login">Личный кабинет</a>
-                    <p><a href="{% url 'logout' %}"><img src="{% static 'img/sign-out-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
-                    {% else %}
-                    <a href="{% url 'django_registration_register' %}" class="header__top-login">Зарегистрироваться</a>
-                    <p><a href="{% url 'login' %}"><img src="{% static 'img/sign-in-alt-solid.svg' %}" width="50" height="50" border="0" alt="Пример"></a></p>
-                    {% endif %}
-                    
-                </div>
-            </div>
-        </div>
-    </section>    
-    <header>
-        <div class="container-fluid">
-            <div class="row header__row">
-                <a href="{% url 'index:index' %}" class="header__logo">
-                    <div class="logo">
-    
-                    </div>
-                    <p>IMEXstat</p>
-                </a>
-                <div class="header__menu header__menu-desktop" id="header__menu">
-                    <nav class="navbar navbar-expand-lg navbar-light" id="menu">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                {% for menu in menu %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'index:index' %}{{menu.url}}">{{ menu.title }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-            <div class="row">
-                <div class="header__menu header__menu-desktop header__menu-mobile" id="header__menu">
-                    <nav class="navbar navbar-expand-lg navbar-light" id="menu">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Таможенная статистика</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Готовые исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">По ИНН</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'index:contacts' %}">Контакты</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>
+{% block content %}
     {% if messages %}
     {% for message in messages %}
 
@@ -122,11 +21,9 @@
         </div>
     </div>
     {% endfor %}
-    
-
     {% endif %}
 
-    
+
 <section class="search search__min">
 	<div class="container-fluid">
 		<form action="{% url 'research:list' %}", method="get">
@@ -185,7 +82,7 @@
         </div>
         <div class="row products__items">
         	{% for product in products %}
-        		
+
             <div class="products__item">
                 <div class="products__item-top">
                     {% if product.image %}
@@ -206,7 +103,7 @@
                 </a>
             </div>
         	{% endfor %}
-            
+
         </div>
     </div>
 </section>
@@ -243,124 +140,27 @@
         </div>
     </div>
     <div class="container">
-        
 </section>
 
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="footer__form">
-                <form action="" method="post">
-                    {% for value in form.errors.values %}
-                        {{ value }}
-                    {% endfor %}
-                    {% csrf_token %}
-                    {{form.name}}
-                    {{ form.contact_details }}
-                    <button id="callback-form-button" disabled type="submit" >получить консультацию специалиста</button>
 
-                    <p><input id="callback-form-check" onclick="changeButtonForm()" type="checkbox" name="option2" value="a2">согласен на обработку персональных данных</p>
-                </form>
-            </div>
-        </div>
-        <div class="row header__row footer__menu">
-            <a href="" class="header__logo">
-                <div class="logo">
+{% endblock %}
 
-                </div>
-                <p>IMEXstat</p>
-            </a>
-            <div class="header__menu header__menu-desktop" id="header__menu">
-                <nav class="navbar navbar-expand-lg navbar-light" id="menu">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Таможенная статистика</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Готовые исследования</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">По ИНН</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Контакты</a>
-                            </li>
-                            {% if user.is_staff %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin">Панель администратора</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <div class="row footer__content">
-            <div class="footer__item">
-                <p>ИНН 1231542453445</p>
-                <p>ОГРН 123154245345</p>
-            </div>
-            <div class="footer__item">
-                <table>
-                    <tr>
-                        <td><p>Телефон: </p></td>
-                        <td><a href="tel:+7 913 903 56 16">+7 913 903 56 16</a></td>
-                    </tr>
-                    <tr>
-                        <td><p>Факс: </p></td>
-                        <td><a href="tel:+7 913 903 56 16">+7 913 903 56 16</a></td>
-                    </tr>
-                    <tr>
-                        <td><p>E-mail:</p></td>
-                        <td><a href="mailto:mail@imexstat.ru">mail@imexstat.ru</a></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="footer__item">
-                <p>Наши социальные сети</p>
-                <div class="footer__item-social">
-                    <a href="" class="social__item">
-                        <img src="{% static "img/facebook.svg" %}" alt="">
-                    </a>
-                    <a href="" class="social__item">
-                        <img src="{% static "img/vk.svg" %}" alt="">
-                    </a>
-                    <a href="" class="social__item">
-                        <img src="{% static "img/telegram.svg" %}" alt="">
-                    </a>
-                    <a href="" class="social__item">
-                        <img src="{% static "img/twitter.svg" %}" alt="">
-                    </a>
-                    <a href="" class="social__item">
-                        <img src="{% static "img/inst.svg" %}" alt="">
-                    </a>
-                </div>
-            </div>
-        </div>
+{% block footer_form %}
+<div class="row">
+    <div class="footer__form">
+        <form action="" method="post">
+            {% for value in form.errors.values %}
+                {{ value }}
+            {% endfor %}
+            {% csrf_token %}
+            {{form.name}}
+            {{ form.contact_details }}
+            <button id="callback-form-button" disabled type="submit" >получить консультацию специалиста</button>
+
+            <p><input id="callback-form-check" onclick="changeButtonForm()" type="checkbox" name="option2" value="a2">согласен на обработку персональных данных</p>
+        </form>
     </div>
-    <a href="" class="up">
-        <img src="{% static "img/up.svg" %}" alt="">
-    </a>
-</footer>
-    
-    
-    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    </body>
-    </html>
-</body>
-</html>
+</div>
+{% endblock %}
 
-
+{% block footer_class %}{% endblock %}
