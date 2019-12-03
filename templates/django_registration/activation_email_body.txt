@@ -1,2 +1,2 @@
-Подтвердите адрес почты. Ваш ключ активации: {{site}}{% url 'django_registration_activate' activation_key %}
-Вы должны подтвердить пароль в срок {{ expiration_days }} дней
+Вы зарегистрировались на сайте {{ site }}. Для завершения регистрации, пройдите по ссылке {{site}}{% url 'django_registration_activate' activation_key %}.
+Вы должны подтвердить пароль в срок {{ expiration_days }} дней.

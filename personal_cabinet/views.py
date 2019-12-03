@@ -95,7 +95,6 @@ class RegisterFormView(generic.edit.FormView):
 		return reverse_lazy('login')
 
 	def form_valid(self, form):
-		SessionCart(self.request)
 		form.save()
 		cart = Cart.objects.get(client__user__username=form.cleaned_data['username'])
 		# сохранение корзины из сессии в аккаунт

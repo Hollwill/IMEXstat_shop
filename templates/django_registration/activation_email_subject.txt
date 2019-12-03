@@ -1,1 +1,1 @@
-{{user}}, you have {{expiration_days}} days
+Регистрация на сайте {{ site }}

@@ -47,7 +47,7 @@ class ArticleDetailView(ModelInstanceViewSeoMixin, generic.DetailView):
         try:
             client = Client.objects.get(user=request.user)
             article = Article.objects.get(slug=request.GET['sent_article'])
-            if article.sent_file_in_mail(client) == 1:
+            if article.sent_file_in_mail(client, request) == 1:
                 messages.add_message(request, messages.INFO, 'Почта была успешно отправлена')
             else:
                 messages.add_message(request, messages.INFO, 'Почта не была отправлена')

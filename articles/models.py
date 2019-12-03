@@ -17,17 +17,13 @@ class Article(models.Model):
     author = models.ForeignKey('ArticleAuthor', on_delete=models.PROTECT, verbose_name='Автор')
     article_pdf = models.FileField(null=True, blank=True, verbose_name='Статья в pdf')
 
-    def sent_file_in_mail(self, client):
+    def sent_file_in_mail(self, client, request):
         media_root = settings.MEDIA_ROOT
-        if settings.DEBUG:
-            message = EmailMessage(subject='Ваша статья сэр',
-                                   body='Прикрепляю статью к сообщению',
-                                   to=[client.email])
-        else:
-            message = EmailMessage(subject='Ваша статья сэр',
-                                   body='Прикрепляю статью к сообщению',
-                                   to=[client.email],
-                                   from_email=settings.EMAIL_HOST_USER)
+        domain = request.META['HTTP_HOST']
+        message = EmailMessage(subject='Статья с сайта %s' % domain,
+                               body='Вам понравилась статья %s на сайте %s. Чтобы не потерять, высылаем ее в удобном формате' % (self.title, domain),
+                               to=[client.email],
+                               from_email=settings.EMAIL_HOST_USER if settings.DEBUG else None)
         message.attach_file('%s/%s' % (media_root, self.article_pdf))
         return message.send()
 

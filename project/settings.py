@@ -10,6 +10,10 @@ class Base(Configuration):
 
     ROOT_PATH = os.path.abspath(os.path.dirname(__name__))
 
+    TEMPLATES_DIR = os.path.join(ROOT_PATH, 'templates')
+
+    FRONTEND_DIR = os.path.join(ROOT_PATH, 'frontend')
+
     SECRET_KEY = 'hs1jb!@*+#%@z&xmh#_!dv@3l7cjhy@h6xs@0&8v-lozc1m5e+'
 
     INSTALLED_APPS = [
@@ -22,16 +26,21 @@ class Base(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-        'django_cleanup',
-        'multi_form_view',
-        'pytils',
         'personal_cabinet',
         'products',
         'orders',
         'index',
         'cart',
+        'statistic',
         'articles',
         'handbook',
+
+        'corsheaders',
+        'rest_framework',
+        'webpack_loader',
+        'django_cleanup',
+        'multi_form_view',
+        'pytils',
         'ckeditor',
         'phonenumber_field',
         'django.contrib.sites',
@@ -54,6 +63,8 @@ class Base(Configuration):
         'whitenoise.middleware.WhiteNoiseMiddleware',
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
         'seo.middleware.url_seo_middleware',
+        'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
     ]
 
     ROOT_URLCONF = 'project.urls'
@@ -133,6 +144,25 @@ class Base(Configuration):
     MPTT_ADMIN_LEVEL_INDENT = 20
 
     ACCOUNT_ACTIVATION_DAYS = 14
+
+    REST_FRAMEWORK = {
+        # Use Django's standard `django.contrib.auth` permissions,
+        # or allow read-only access for unauthenticated users.
+        # 'DEFAULT_PERMISSION_CLASSES': [
+        #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # ]
+    }
+
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'CACHE': True,
+            'BUNDLE_DIR_NAME': 'bundles/',  # must end with slash
+            'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
+        }
+    }
+
+    CORS_ORIGIN_ALLOW_ALL = True
+
 
 
 class Dev(Base):

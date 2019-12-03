@@ -16,6 +16,7 @@ urlpatterns = [
     path('order/', include('orders.urls', namespace='orders')),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('handbook/', include('handbook.urls', namespace='handbook')),
+    path('statistic/', include('statistic.urls', namespace='statistic'))
 ]
 
 if settings.DEBUG:
