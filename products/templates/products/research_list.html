@@ -23,7 +23,7 @@
                         <div class="ready__item-stars"></div>
                         <h2><span class="icon-ruble">{{ research.nominal}}</span></h2>
                     </div>
-                    <p id="research_description" itemprop="description">{{ research.description}}</p>
+                    <p id="research_description" itemprop="description">{{ research.description|safe }}</p>
                     <a href="{% url 'research:buy' research.slug %}">Подробнее...</a>
                 </div>
                 <div class="ready__item-topRight">

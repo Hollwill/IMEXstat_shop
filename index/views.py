@@ -35,7 +35,6 @@ class IndexList(IndexFormView, generic.TemplateView):
 	template_name = 'index/index.html'
 	success_url = reverse_lazy('index:index')
 
-
 	def get_context_data(self, *args, **kwargs):
 		context = super(IndexList, self).get_context_data(**kwargs)
 		context['tasks'] = Tasks.objects.all()

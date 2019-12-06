@@ -15,9 +15,10 @@ urlpatterns = [
     path('register/', include('django_registration.backends.activation.urls')),
     path('order/', include('orders.urls', namespace='orders')),
     path('pages/', include('django.contrib.flatpages.urls')),
-    path('handbook/', include('handbook.urls', namespace='handbook')),
     path('statistic/', include('statistic.urls', namespace='statistic'))
 ]
+
+# path('handbook/', include('handbook.urls', namespace='handbook')),
 
 if settings.DEBUG:
     import debug_toolbar

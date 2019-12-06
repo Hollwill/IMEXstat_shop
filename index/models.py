@@ -1,11 +1,13 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 class Tasks(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Заголовок')
-	description = models.TextField(verbose_name='Описание')
+	description = RichTextField(verbose_name='Описание')
 	url = models.URLField(max_length=200, verbose_name='Url адрес')
 	image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
+	priority = models.IntegerField(default=1, verbose_name='Приоритет')
 
 	def __str__(self):
 		return self.title
@@ -13,13 +15,14 @@ class Tasks(models.Model):
 	class Meta:
 		verbose_name = 'Задачу'
 		verbose_name_plural = 'Задачи'
+		order_with_respect_to = 'priority'
 
 
 class Products(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Название')
 	description = models.TextField(max_length=87, null=True, verbose_name='Описание')
 	image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
-	cost = models.IntegerField(blank=True, null=True, verbose_name='Цена')
+	cost = models.CharField(max_length=200, blank=True, null=True, verbose_name='Цена')
 	url = models.CharField(max_length=200, verbose_name='Url адрес')
 
 	def __str__(self):

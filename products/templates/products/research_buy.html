@@ -27,13 +27,13 @@
                         <div class="readyInner__content-text">
                             <h3>Цель иследования</h3>
                             <div class="readyInner__content-textLine"></div>
-                            <p>{{ research.target }}</p>
+                            <p>{{ research.target|safe }}</p>
                             <h3 >Описание иследования</h3>
                             <div class="readyInner__content-textLine"></div>
-                            <p itemprop="description">{{ research.description }}</p>
+                            <p itemprop="description">{{ research.description|safe }}</p>
                             <h3>Обновление данных</h3>
                             <div class="readyInner__content-textLine"></div>
-                            <p>{{ research.data_update }}</p>
+                            <p>{{ research.data_update|safe }}</p>
                             <p><span>Подписка на обновления данных отчета ( при первой покупки - первые 3-и месяца - БЕСПЛАТНО! ) </span></p>
                         </div>
                     </div>

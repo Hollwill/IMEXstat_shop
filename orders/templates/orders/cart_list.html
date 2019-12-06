@@ -26,17 +26,21 @@
 							<h2>{{ item.price }} Р</h2>
 						</div>
 						<div class="cart__item-left-text">
-							<p >{{ research.description}}</p>
+							<p >{{ research.description|safe}}</p>
 						</div>
 						<div class="cart__item-left-bot">
 							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
 						</div>
 					</div>
-					<div class="cart__item-right">
-						<h2>Детали подписки:</h2>
-						<p>Ежемесячно на срок 1 год</p>
-						<p><span>* - обновления первых трех месяцев бесплатно</span></p>
-					</div>
+          {% if research.extra %}
+            <div class="cart__item-right">
+              <h2>Детали подписки:</h2>
+              <p>{{ research.extra }}</p>
+              {% if research.extra_red %}
+                <p><span>*{{ research.extra_red }}</span></p>
+              {% endif %}
+            </div>
+          {% endif %}
 				</div>
 			</div>
             {% endwith %}
@@ -57,17 +61,21 @@
 							<h2>{{ item.product.price}} Р</h2>
 						</div>
 						<div class="cart__item-left-text">
-							<p >{{ research.description}}</p>
+							<p >{{ research.description|safe}}</p>
 						</div>
 						<div class="cart__item-left-bot">
 							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
 						</div>
 					</div>
-					<div class="cart__item-right">
-						<h2>Детали подписки:</h2>
-						<p>Ежемесячно на срок 1 год</p>
-						<p><span>* - обновления первых трех месяцев бесплатно</span></p>
-					</div>
+					{% if research.extra %}
+            <div class="cart__item-right">
+              <h2>Детали подписки:</h2>
+              <p>{{ research.extra }}</p>
+              {% if research.extra_red %}
+                <p><span>*{{ research.extra_red }}</span></p>
+              {% endif %}
+            </div>
+          {% endif %}
 				</div>
 			</div>
 			{% endwith %}

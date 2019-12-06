@@ -32,7 +32,7 @@
                 </div>
                 <div class="header__top-right">
                     <a href="{% url 'article:list' %}" class="header__top-links">Статьи</a>
-                    <a href="{% url 'handbook:handbook' %}" class="header__top-links">Справочник</a>
+{#                    <a href="{% url 'handbook:handbook' %}" class="header__top-links">Справочник</a>#}
                     <a href="{% url 'orders:cart' %}" class="header__top-links">Корзина</a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'lk:settings' %}" class="header__top-login">Личный кабинет</a>

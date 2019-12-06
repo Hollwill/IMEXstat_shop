@@ -4,7 +4,6 @@ from pytils.translit import slugify
 
 from ckeditor.fields import RichTextField
 
-import mptt
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.fields import TreeForeignKey as TreeKey
 
@@ -17,11 +16,11 @@ class Research(models.Model):
     ]
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     category = TreeKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
-    target = models.TextField(blank=True, null=True, verbose_name='Цель исследования')
-    description = models.TextField(blank=True, null=True, verbose_name='Описание исследования')
+    target = RichTextField(blank=True, null=True, verbose_name='Цель исследования')
+    description = RichTextField(blank=True, null=True, verbose_name='Описание исследования')
+    data_update = RichTextField(blank=True, null=True, verbose_name='Обновление данных')
     extra = models.TextField(blank=True, null=True, default=' ', verbose_name='Дополнительно')
     extra_red = models.TextField(blank=True, null=True, default=' ', verbose_name='Дополнительно*')
-    data_update = models.TextField(blank=True, null=True, verbose_name='Обновление данных')
     image = models.ImageField(blank=True, null=True, verbose_name='Изображение')
     demo = models.FileField(blank=True, null=True, verbose_name='Демо файл')
     contents = RichTextField(blank=True, null=True, verbose_name='Структура исследования')

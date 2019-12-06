@@ -7,8 +7,13 @@ class FeedbackAdmin(admin.ModelAdmin):
 	readonly_fields = ['date']
 
 
+class TasksAdmin(admin.ModelAdmin):
+	list_display = ['__str__', 'priority']
+	list_editable = ['priority']
+
+
 admin.site.register(MenuManagement)
 admin.site.register(Feedback, FeedbackAdmin)
-admin.site.register(Tasks)
+admin.site.register(Tasks, TasksAdmin)
 admin.site.register(ClientsImages)
 admin.site.register(Products)

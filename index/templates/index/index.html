@@ -59,7 +59,7 @@
                     </div>
                     <div class="why__item-text">
                         <h2>{{ task.title }}</h2>
-                        <p>{{ task.description }}</p>
+                        <p>{{ task.description|safe }}</p>
                     </div>
                 </div>
                 <a href="{{ task.url }}" class="why__item-btn">

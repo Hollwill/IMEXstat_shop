@@ -30,7 +30,7 @@
                         <h2 itemprop="headline">{{ research.title }}</h2>
                     </div>
                     <div class="lk__item-mid">
-                        <p itemprop="description">{{ research.description | slice:":220" }}</p>
+                        <p itemprop="description">{{ research.description|safe | slice:":220" }}</p>
                     </div>
                     <div class="lk__item-bot">
                         <a href="{% url 'research:buy' research.slug %}" class="lk__item-botMore">Подробнее</a>
