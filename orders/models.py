@@ -1,10 +1,9 @@
 from django.db import models
-
 from products.models import Research
 from personal_cabinet.models import Client
 from django.db.models import Sum
 from phonenumber_field.modelfields import PhoneNumberField
-
+from datetime import datetime
 
 UPDATE_FREQUENCY_CHOICES = [
     ('MU', 'Ежемесячное обновление'),
@@ -99,24 +98,71 @@ class OrderItem(models.Model):
         return ''
 
 
+# class Cart(models.Model):
+#     client = models.OneToOneField(Client, on_delete=models.CASCADE, verbose_name='Клиент')
+#
+#     def summary(self):
+#         cart_item = CartItem.objects.filter(cart=self)
+#         count = cart_item.aggregate(Sum('price'))
+#         return count.get('price__sum')
+#
+#     def __str__(self):
+#         return 'корзина'
+#
+#     class Meta:
+#         verbose_name = 'Корзина'
+#         verbose_name_plural = 'Корзина'
+#
+#
+# class CartItem(models.Model):
+#     cart = models.ForeignKey(Cart, blank=True, null=True, related_name='items', on_delete=models.CASCADE, verbose_name='Корзина')
+#     research = models.ForeignKey(Research, on_delete=models.CASCADE, verbose_name='Исследование')
+#     update_frequency = models.CharField(blank=True, null=True, max_length=2, choices=UPDATE_FREQUENCY_CHOICES,
+#                                         verbose_name='частота обновления')
+#     duration = models.CharField(blank=True, null=True, max_length=2, choices=DURATION_CHOICES, verbose_name='подписка')
+#     price = models.IntegerField(blank=True, null=True, verbose_name='стоимость')
+#
+#     def save(self, *args, **kwargs):
+#         if not (self.update_frequency and self.duration):
+#             self.price = self.research.nominal
+#         else:
+#             for u_choice in self._meta.get_field('update_frequency').choices:
+#                 if self.update_frequency == u_choice[0]:
+#                     for d_choice in  self._meta.get_field('duration').choices:
+#                         if self.duration == d_choice[0]:
+#                             self.price = getattr(self.research, '{0}_{1}_cost'.format(u_choice[0][0], d_choice[0]))
+#         super().save(*args, **kwargs)
+#
+#     def __str__(self):
+#         return self.research.title
+#
+#     class Meta:
+#         verbose_name = 'Исследование'
+#         verbose_name_plural = 'Исследования'
+#         get_latest_by = 'id'
+
+
 class Cart(models.Model):
-    client = models.OneToOneField(Client, on_delete=models.CASCADE, verbose_name='Клиент')
-
-    def summary(self):
-        cart_item = CartItem.objects.filter(cart=self)
-        count = cart_item.aggregate(Sum('price'))
-        return count.get('price__sum')
-
-    def __str__(self):
-        return 'корзина'
+    client = models.OneToOneField(Client, blank=True, null=True, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(verbose_name='creation date', auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзина'
+        verbose_name = 'cart'
+        verbose_name_plural = 'carts'
+        ordering = ('-creation_date',)
+
+    def __str__(self):
+        return str(self.creation_date)
+
+    def summary_price(self):
+        product = CartItem.objects.filter(cart=self)
+        count = product.aggregate(Sum('price'))
+        return count.get('price__sum')
+    price = property(summary_price)
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, blank=True, null=True, related_name='items', on_delete=models.CASCADE, verbose_name='Корзина')
+    cart = models.ForeignKey(Cart, blank=True, null=True, verbose_name='cart', on_delete=models.CASCADE)
     research = models.ForeignKey(Research, on_delete=models.CASCADE, verbose_name='Исследование')
     update_frequency = models.CharField(blank=True, null=True, max_length=2, choices=UPDATE_FREQUENCY_CHOICES,
                                         verbose_name='частота обновления')
@@ -129,7 +175,7 @@ class CartItem(models.Model):
         else:
             for u_choice in self._meta.get_field('update_frequency').choices:
                 if self.update_frequency == u_choice[0]:
-                    for d_choice in  self._meta.get_field('duration').choices:
+                    for d_choice in self._meta.get_field('duration').choices:
                         if self.duration == d_choice[0]:
                             self.price = getattr(self.research, '{0}_{1}_cost'.format(u_choice[0][0], d_choice[0]))
         super().save(*args, **kwargs)

@@ -2,7 +2,6 @@ Babel==2.7.0
 confusable-homoglyphs==3.2.0
 dj-database-url==0.5.0
 Django==2.2.5
--e git+git://github.com/Hollwill/django-cart-2
 django-ckeditor==5.7.1
 django-cleanup==4.0.0
 django-configurations==2.1
@@ -27,6 +26,7 @@ django-seo2==1.0.1
 django-tinymce==2.8.0
 django-treebeard==4.3
 django-unused-media==0.1.13
+django-webpack-loader==0.6.0
 django-widget-tweaks==1.4.5
 djangorestframework==3.10.3
 DjangoSEO==1.0

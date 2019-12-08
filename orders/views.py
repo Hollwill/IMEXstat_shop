@@ -1,7 +1,7 @@
 from django.views import generic
 from personal_cabinet.models import Client
-from .models import Cart, CartItem, Order
-from cart.cart import Cart as SessionCart
+from .models import Order
+from orders.cart import Cart
 from products.models import Research
 from multi_form_view import MultiFormView
 from .forms import EntityForm, IndividualForm, CartResearchForm
@@ -14,28 +14,27 @@ class CartListView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            context['cart'] = Cart.objects.get(client__user=self.request.user)
-        else:
-            context['cart'] = SessionCart(self.request)
+
+        context['cart'] = Cart(self.request)
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        self.remove_from_cart(request)
+        if self.request.GET.get('remove_from_cart'):
+            self.remove_from_cart(request)
         return super(CartListView, self).dispatch(request, *args, **kwargs)
 
     def remove_from_cart(self, request, **kwargs):
-        if self.request.GET.get('remove_from_cart'):
-            research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
-
-            if self.request.user.is_authenticated:
-                cart = Cart.objects.get(client_id=self.request.user.id)
-                CartItem.objects.get(cart=cart, research=research).delete()
-            else:
-                cart = SessionCart(self.request)
-                for item in cart:
-                    if item.get_product().research == research:
-                        cart.remove(item.product)
+        research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
+        cart = Cart(self.request)
+        cart.remove(research)
+        # if self.request.user.is_authenticated:
+        #     cart = Cart.objects.get(client_id=self.request.user.id)
+        #     CartItem.objects.get(cart=cart, research=research).delete()
+        # else:
+        #     cart = Cart(self.request)
+        #     for item in cart:
+        #         if item.get_product().research == research:
+        #             cart.remove(item.product)
 
 
 class CartPurchaseView(MultiFormView):
@@ -46,37 +45,45 @@ class CartPurchaseView(MultiFormView):
     template_name = 'orders/cart_purchase.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.remove_from_cart(request)
+        if self.request.GET.get('remove_from_cart'):
+            self.remove_from_cart(request)
         return super(CartPurchaseView, self).dispatch(request, *args, **kwargs)
 
-    def remove_from_cart(self, request, **kwargs):
-        if self.request.GET.get('remove_from_order'):
-            research = Research.objects.get(slug=self.request.GET.get('remove_from_order'))
+    # def remove_from_cart(self, request, **kwargs):
+    #     if self.request.GET.get('remove_from_order'):
+    #         research = Research.objects.get(slug=self.request.GET.get('remove_from_order'))
+    #
+    #         if self.request.user.is_authenticated:
+    #             cart = Cart.objects.get(client_id=self.request.user.id)
+    #             CartItem.objects.get(cart=cart, research=research).delete()
+    #         else:
+    #             cart = Cart(self.request)
+    #             for item in cart:
+    #                 if item.get_product().research == research:
+    #                     cart.remove(item.product)
 
-            if self.request.user.is_authenticated:
-                cart = Cart.objects.get(client_id=self.request.user.id)
-                CartItem.objects.get(cart=cart, research=research).delete()
-            else:
-                cart = SessionCart(self.request)
-                for item in cart:
-                    if item.get_product().research == research:
-                        cart.remove(item.product)
+    def remove_from_cart(self, request, **kwargs):
+        research = Research.objects.get(slug=self.request.GET.get('remove_from_cart'))
+        cart = Cart(self.request)
+        cart.remove(research)
 
     def get_context_data(self, **kwargs):
         data = super(CartPurchaseView, self).get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            cart = Cart.objects.get(client__user=self.request.user)
-            research = cart.items.all()
-        else:
-            cart = SessionCart(self.request)
-            research = [a.product for a in cart]
+        # if self.request.user.is_authenticated:
+        #     cart = Cart.objects.get(client__user=self.request.user)
+        #     research = cart.items.all()
+        # else:
+        #     cart = Cart(self.request)
+        #     research = [a.product for a in cart]
+        cart = Cart(self.request)
+        research = cart.cart.cartitem_set.all()
+
         FormSet = forms.formset_factory(CartResearchForm, max_num=len(research), min_num=len(research))
         formset = FormSet(initial=[{
             'research': x.research,
             'duration': x.duration,
             'update_frequency': x.update_frequency
         } for x in research])
-
 
         try:
             data['cart'] = kwargs['form']
@@ -88,12 +95,8 @@ class CartPurchaseView(MultiFormView):
             return data
 
     def post(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            cart = Cart.objects.get(client__user=self.request.user)
-            research = cart.items.all()
-        else:
-            cart = SessionCart(self.request)
-            research = [a.product for a in cart]
+        cart = Cart(self.request)
+        research = cart.cart.cartitem_set.all()
         FormSet = forms.formset_factory(CartResearchForm, max_num=len(research))
         formset = FormSet(request.POST or None)
         get_forms = self.get_forms()
@@ -116,11 +119,8 @@ class CartPurchaseView(MultiFormView):
             order_cart = item.save(commit=False)
             order_cart.order = order
             order_cart.save()
-        if self.request.user.is_authenticated:
-            Cart.objects.get(client__user=self.request.user).delete()
-            Cart.objects.create(client=client)
-        else:
-            SessionCart(self.request).clear()
+
+        Cart(self.request).clear()
         return super().form_valid(form)
 
     def get_initial(self):

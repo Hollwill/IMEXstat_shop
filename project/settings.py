@@ -30,7 +30,6 @@ class Base(Configuration):
         'products',
         'orders',
         'index',
-        'cart',
         'statistic',
         'articles',
         'handbook',
@@ -106,6 +105,8 @@ class Base(Configuration):
         },
     ]
 
+    PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+
     LANGUAGE_CODE = 'ru-ru'
 
     TIME_ZONE = 'UTC'
@@ -162,7 +163,6 @@ class Base(Configuration):
     }
 
     CORS_ORIGIN_ALLOW_ALL = True
-
 
 
 class Dev(Base):
@@ -254,5 +254,15 @@ class Prod(Base):
        },
     }
 
-    
 
+class RDev(Dev):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'imex',
+            'USER': 'ubuntu',
+            'PASSWORD': 'jmfMbcbm47',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }

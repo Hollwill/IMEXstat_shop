@@ -10,9 +10,9 @@
 			</div>
 		</div>
 		<div class="row cart__items">
-			{% if user.is_authenticated %}
-			{% for item in cart.items.all %}
-            {% with item.research as research %}
+			{% for cartitem in cart %}
+      {% with cartitem.research as research %}
+
 			<div class="cart__item">
 				<div class="cart__item-img">
 					{% if research.image %}
@@ -23,7 +23,7 @@
 					<div class="cart__item-left">
 						<div class="cart__item-left-top">
 							<h2>{{ research.title }}</h2>
-							<h2>{{ item.price }} Р</h2>
+							<h2>{{ cartitem.price }} Р</h2>
 						</div>
 						<div class="cart__item-left-text">
 							<p >{{ research.description|safe}}</p>
@@ -43,44 +43,9 @@
           {% endif %}
 				</div>
 			</div>
-            {% endwith %}
+      {% endwith %}
+
 			{% endfor %}
-			{% else %}
-			{% for item in cart %}
-			{% with item.product.research as research %}
-			<div class="cart__item">
-				<div class="cart__item-img">
-					{% if research.image %}
-					<img class="cart__item-img" src="{{ research.image.url }}" alt="">
-					{% endif %}
-				</div>
-				<div class="cart__item-content">
-					<div class="cart__item-left">
-						<div class="cart__item-left-top">
-							<h2>{{ research.title }}</h2>
-							<h2>{{ item.product.price}} Р</h2>
-						</div>
-						<div class="cart__item-left-text">
-							<p >{{ research.description|safe}}</p>
-						</div>
-						<div class="cart__item-left-bot">
-							<a href="{% url 'orders:cart' %}?remove_from_cart={{ research.slug }}">Убрать из корзины</a>
-						</div>
-					</div>
-					{% if research.extra %}
-            <div class="cart__item-right">
-              <h2>Детали подписки:</h2>
-              <p>{{ research.extra }}</p>
-              {% if research.extra_red %}
-                <p><span>*{{ research.extra_red }}</span></p>
-              {% endif %}
-            </div>
-          {% endif %}
-				</div>
-			</div>
-			{% endwith %}
-			{% endfor %}
-			{% endif %}
 		</div>
 		<div class="row cart__buy">
 			<div class="cart__buy-block">

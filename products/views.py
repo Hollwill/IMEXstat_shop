@@ -1,14 +1,12 @@
 from django.views import generic
 from .models import Research
-from orders.models import Cart, CartItem
-from cart.cart import Cart as SessionCart
+from orders.cart import Cart
 from .mixins import CategoryContextMixin
 from django.urls import reverse_lazy, reverse
 from .forms import IndividualResearchFeedbackForm, CartItemCreateForm
 from seo.mixins.views import ModelInstanceViewSeoMixin
 from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
-
 
 
 class IndividualResearchFeedbackView(generic.CreateView):
@@ -63,7 +61,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
     template_name = 'products/research_buy.html'
 
     def get_success_url(self):
-        return reverse('research:list')
+        return reverse('r>esearch:list')
 
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)
@@ -71,30 +69,38 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         return context
 
     def form_valid(self, form):
-        model_instance = form.save(commit=False)
-        model_instance.research = Research.objects.get(slug=self.kwargs['slug'])
-        model_instance.save()
         success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (model_instance.research.title, model_instance.price)
+        cart = Cart(self.request)
 
-        if self.request.user.is_authenticated:
-            cart = Cart.objects.get(client__user=self.request.user)
-            try:
-                CartItem.objects.get(research=model_instance.research, cart=cart)
-                messages.add_message(self.request, 60, 'Исследование уже в корзине')
-            except:
-                model_instance.cart = Cart.objects.get(client__user=self.request.user)
-                model_instance.save()
+        cart_item = form.save(commit=False)
+        cart_item.research = Research.objects.get(slug=self.kwargs['slug'])
+        cart_item.cart = cart
+        cart_item.save()
 
-                messages.add_message(self.request, 50, success_message)
+        if cart.add(cart_item):
+            messages.add_message(self.request, 50, success_message)
         else:
+            messages.add_message(self.request, 60, 'Исследование уже в корзине')
 
-            for item in SessionCart(self.request):
-                if item.get_product() in CartItem.objects.filter(research=model_instance.research):
-                    messages.add_message(self.request, 60, 'Исследование уже в корзине')
-                    break
-            else:
-                model_instance.save()
-                cart = SessionCart(self.request)
-                cart.add(model_instance, model_instance.price)
-                messages.add_message(self.request, 50, success_message)
+        # if self.request.user.is_authenticated:
+        #     cart = Cart.objects.get(client__user=self.request.user)
+        #     try:
+        #         CartItem.objects.get(research=model_instance.research, cart=cart)
+        #         messages.add_message(self.request, 60, 'Исследование уже в корзине')
+        #     except:
+        #         model_instance.cart = Cart.objects.get(client__user=self.request.user)
+        #         model_instance.save()
+        #
+        #         messages.add_message(self.request, 50, success_message)
+        # else:
+        #
+        #     for item in Cart(self.request):
+        #         if item.get_product() in CartItem.objects.filter(research=model_instance.research):
+        #             messages.add_message(self.request, 60, 'Исследование уже в корзине')
+        #             break
+        #     else:
+        #         model_instance.save()
+        #         cart = Cart(self.request)
+        #         cart.add(model_instance, model_instance.price)
+        #         messages.add_message(self.request, 50, success_message)
         return HttpResponseRedirect(self.get_success_url())

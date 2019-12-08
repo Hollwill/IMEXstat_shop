@@ -1,12 +1,12 @@
 from .models import Client, Favorite
-from orders.models import Cart
 from .forms import ProfileForm, RequizitesForm, UserCreationWithEmailForm
 from multi_form_view import MultiModelFormView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
-from cart.cart import Cart as SessionCart
+from orders.cart import Cart as SessionCart
+from orders.models import Cart
 from products.models import Research
 from articles.models import Article
 
@@ -49,7 +49,6 @@ class FavoriteArticles(generic.ListView):
 	def get_queryset(self, **kwargs):
 		favorite = Favorite.objects.get(client__user=self.request.user)
 		return Article.objects.filter(favorite=favorite)
-
 
 	def delete_from_favorite(self, *args, **kwargs):
 		if self.request.GET.get('delete_from_favorite'):
@@ -99,6 +98,6 @@ class RegisterFormView(generic.edit.FormView):
 		cart = Cart.objects.get(client__user__username=form.cleaned_data['username'])
 		# сохранение корзины из сессии в аккаунт
 		for item in SessionCart(self.request):
-			id = item.product.id
+			id = item.research.id
 			cart.research.add(Research.objects.get(id=id))
 		return super(RegisterFormView, self).form_valid(form)

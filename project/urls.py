@@ -18,6 +18,7 @@ urlpatterns = [
     path('statistic/', include('statistic.urls', namespace='statistic'))
 ]
 
+# Справочник вырезан из кода на время
 # path('handbook/', include('handbook.urls', namespace='handbook')),
 
 if settings.DEBUG:
