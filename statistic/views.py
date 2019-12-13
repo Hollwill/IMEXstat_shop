@@ -1,4 +1,4 @@
-from .models import StatisticData
+from .models import StatisticData, StatisticAggregateData
 from django.db.models import Avg, Max
 from django.http import JsonResponse
 from rest_framework.views import APIView
@@ -11,21 +11,21 @@ class MarketSummary(APIView):
     def get(self, request):
         date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
 
-        imp_data = StatisticData.objects.filter(napr='ИМ', period__range=date_range)
-        exp_data = StatisticData.objects.filter(napr='ЭК', period__range=date_range)
+        imp_data = StatisticAggregateData.objects.filter(period__range=date_range)
+        exp_data = StatisticAggregateData.objects.filter(period__range=date_range)
 
 
-        imp_cost = int(imp_data.aggregate(Avg('stoim'))['stoim__avg'])
-        imp_weight = int(imp_data.aggregate(Avg('netto'))['netto__avg'])
-        imp_country = imp_data.values('strana').distinct().count()
-        imp_max_stoim = imp_data.filter(tnved__regex=r'\d+').aggregate(Max('stoim'))['stoim__max']
-        imp_tnved = imp_data.get(stoim=imp_max_stoim).tnved
+        imp_cost = int(imp_data.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg'])
+        imp_weight = int(imp_data.aggregate(Avg('imp_sum_weight'))['imp_sum_weight__avg'])
+        imp_country = imp_data.values('imp_sum_unique_countries').distinct().count()
+        imp_max_stoim = imp_data.aggregate(Max('imp_sum_cost'))['imp_sum_cost__max']
+        imp_tnved = imp_data.get(imp_sum_cost=imp_max_stoim).imp_tnved_by_max_cost
 
-        exp_cost = int(exp_data.aggregate(Avg('stoim'))['stoim__avg'])
-        exp_weight = int(exp_data.aggregate(Avg('netto'))['netto__avg'])
-        exp_country = exp_data.values('strana').distinct().count()
-        exp_max_stoim = exp_data.filter(tnved__regex=r'\d+').aggregate(Max('stoim'))['stoim__max']
-        exp_tnved = exp_data.get(stoim=exp_max_stoim).tnved
+        exp_cost = int(exp_data.aggregate(Avg('exp_sum_cost'))['exp_sum_cost__avg'])
+        exp_weight = int(exp_data.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg'])
+        exp_country = exp_data.values('exp_sum_unique_countries').distinct().count()
+        exp_max_stoim = exp_data.aggregate(Max('exp_sum_cost'))['exp_sum_cost__max']
+        exp_tnved = exp_data.get(exp_sum_cost=exp_max_stoim).exp_tnved_by_max_cost
 
         context = {
             'imp': {

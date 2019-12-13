@@ -12,3 +12,18 @@ class StatisticData(models.Model):
     kol = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
+
+
+class StatisticAggregateData(models.Model):
+    period = models.DateField(db_index=True)
+    # таблица "сводка рынка"
+    imp_sum_cost = models.BigIntegerField(verbose_name='Импорт - суммарная стоимость')
+    exp_sum_cost = models.BigIntegerField(verbose_name='Экспорт - суммарная стоимость')
+    imp_sum_weight = models.BigIntegerField(verbose_name='Импорт - суммарный вес')
+    exp_sum_weight = models.BigIntegerField(verbose_name='Экспорт - суммарный вес')
+    imp_sum_unique_countries = models.BigIntegerField(verbose_name='Импорт - Количество вовлеченных стран')
+    exp_sum_unique_countries = models.BigIntegerField(verbose_name='Экспорт - Количество вовлеченных стран')
+    imp_tnved_by_max_cost = models.BigIntegerField(verbose_name='Импорт - Код тнвэд имеющий максимальную стоимость')
+    exp_tnved_by_max_cost = models.BigIntegerField(verbose_name='Экспорт - Код тнвэд имеющий максимальную стоимость')
+    # график динамика экспорта и импорта России
+
