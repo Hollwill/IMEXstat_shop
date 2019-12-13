@@ -1,3 +1,4 @@
+pandas
 Babel==2.7.0
 confusable-homoglyphs==3.2.0
 dj-database-url==0.5.0

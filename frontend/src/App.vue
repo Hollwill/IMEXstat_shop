@@ -13,11 +13,11 @@
     </select>
     <button @click="getData">Получить обновленные данные</button>
     <market-summary :date="date" ref="marketSummary"></market-summary>
-<!--    <exp-imp-dynamics :date="date"-->
-<!--                      :params="params"-->
-<!--                      :interval="interval"-->
-<!--                      ref="expImpDynamics"-->
-<!--    ></exp-imp-dynamics>-->
+    <exp-imp-dynamics :date="date"
+                      :params="params"
+                      :interval="interval"
+                      ref="expImpDynamics"
+    ></exp-imp-dynamics>
   </div>
 </template>
 
@@ -61,7 +61,7 @@ export default {
   components: {
     MonthPickerInput,
     MarketSummary: () => import('./components/MarketSummary'),
-    // ExpImpDynamics: () => import('./components/ExpImpDynamics')
+    ExpImpDynamics: () => import('./components/ExpImpDynamics')
   },
 };
 </script>

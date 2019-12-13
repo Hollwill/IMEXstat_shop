@@ -2,9 +2,11 @@ from .models import StatisticData, StatisticAggregateData
 from django.db.models import Avg, Max
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from datetime import date
+from datetime import date, timedelta
+from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
 import copy
+import pandas as pd
 
 
 class MarketSummary(APIView):
@@ -13,7 +15,6 @@ class MarketSummary(APIView):
 
         imp_data = StatisticAggregateData.objects.filter(period__range=date_range)
         exp_data = StatisticAggregateData.objects.filter(period__range=date_range)
-
 
         imp_cost = int(imp_data.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg'])
         imp_weight = int(imp_data.aggregate(Avg('imp_sum_weight'))['imp_sum_weight__avg'])
@@ -48,6 +49,71 @@ class MarketSummary(APIView):
 
 class ExpImpDynamics(APIView):
     def get(self, request):
+        def dynamics_list(dataset):
+            a = []
+            for i in range(1, len(dataset) - 1):
+                a.append(dataset[i + 1] - dataset[i])
+            return a
+
+        pd_interval = {
+            'year': 'Y',
+            'month': 'MS',
+            'quartal': '3MS'
+        }
+        interval = request.query_params.get('interval')
+        raw_date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
+        date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in raw_date_range]
+        dates_list = [i for i in pd.date_range(start=date_range[0], end=date_range[1], freq=pd_interval[interval])]
+        format_dates_list = [i.strftime("%Y-%m-%d") for i in dates_list]
+        data_objects_list = [StatisticAggregateData.objects.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]]) for i in range(len(format_dates_list) - 1)]
+        imp_cost_list = [int(a.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg']) for a in data_objects_list]
+        exp_cost_list = [int(a.aggregate(Avg('exp_sum_cost'))['exp_sum_cost__avg']) for a in data_objects_list]
+        imp_weight_list = [int(a.aggregate(Avg('imp_sum_weight'))['imp_sum_weight__avg']) for a in data_objects_list]
+        exp_weight_list = [int(a.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg']) for a in data_objects_list]
+        label_list = [i.strftime("%Y") if interval == 'year' else i.strftime("%Y-%m") for i in dates_list]
+        label_list.pop()
+        breakpoint()
+
+
+        # def aggregate_years(item, items_param, year):
+        #     # Todo: переделать функцию
+        #     return int(item.filter(period__range=[date_range[0].strftime('%Y-01-%d'), '%s-%s' % (str(year) + '-01',  date_range[1].strftime('%d'))]).aggregate(Avg(items_param))[items_param + '__avg'])
+        # interval = request.query_params.get('interval')
+        # # берем строку даты в url параметрах
+        # date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
+        # # делаем строку объектом даты
+        # date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in date_range]
+        # imp_data = StatisticData.objects.filter(napr='ИМ')
+        # exp_data = StatisticData.objects.filter(napr='ЭК')
+        # # согласно заданному интервалу, выдаем соответствующие данные
+        # if interval == 'year':
+        #     label_list = [date_range[1].year - i for i in reversed(range(date_range[1].year - date_range[0].year + 1))]
+        #     imp_cost_list = [aggregate_years(imp_data, 'stoim', i) for i in label_list]
+        #     exp_cost_list = [aggregate_years(exp_data, 'stoim', i) for i in label_list]
+        #     imp_weight_list = [aggregate_years(imp_data, 'netto', i) for i in label_list]
+        #     exp_weight_list = [aggregate_years(exp_data, 'netto', i) for i in label_list]
+        # elif interval == 'quartal' or interval == 'month':
+        #     label_list = []
+        #     current_time = copy.deepcopy(date_range[1])
+        #     # делаем список согласно выбранному интервалу из заданного промежутка
+        #     while date_range[0] <= current_time:
+        #         label_list.insert(0, current_time.strftime("%Y-%m"))
+        #         current_time = current_time - relativedelta(months=3 if interval == 'quartal' else 1)
+        #     # Если начальная дата не входит в список, то добавляем ее
+        #     label_list.insert(0, date_range[0].strftime('%Y-%m')) if not label_list[0] == date_range[0].strftime('%Y-%m') else None
+        #     imp_data_list = []
+        #     exp_data_list = []
+        #     # берем из базы данных объекты согласно заданному интервалу
+        #     for i in range(len(label_list) - 1):
+        #         imp_data_list.append(imp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
+        #         exp_data_list.append(exp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
+        #     label_list.pop(0)
+        #     # считаем нужные данные исходя из выбранных записей.
+        #     imp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in imp_data_list]
+        #     exp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in exp_data_list]
+        #     imp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in imp_data_list]
+        #     exp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in exp_data_list]
+
         def datasets_fragment(data_list1, data_list2):
             return [
                 {
@@ -61,45 +127,6 @@ class ExpImpDynamics(APIView):
                     'data': data_list2
                 }
             ]
-
-        def aggregate_years(item, items_param, year):
-            # Todo: переделать функцию
-            return int(item.filter(period__range=[date_range[0].strftime('%Y-01-%d'), '%s-%s' % (str(year) + '-01',  date_range[1].strftime('%d'))]).aggregate(Avg(items_param))[items_param + '__avg'])
-        interval = request.query_params.get('interval')
-        # берем строку даты в url параметрах
-        date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
-        # делаем строку объектом даты
-        date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in date_range]
-        imp_data = StatisticData.objects.filter(napr='ИМ')
-        exp_data = StatisticData.objects.filter(napr='ЭК')
-        # согласно заданному интервалу, выдаем соответствующие данные
-        if interval == 'year':
-            label_list = [date_range[1].year - i for i in reversed(range(date_range[1].year - date_range[0].year + 1))]
-            imp_cost_list = [aggregate_years(imp_data, 'stoim', i) for i in label_list]
-            exp_cost_list = [aggregate_years(exp_data, 'stoim', i) for i in label_list]
-            imp_weight_list = [aggregate_years(imp_data, 'netto', i) for i in label_list]
-            exp_weight_list = [aggregate_years(exp_data, 'netto', i) for i in label_list]
-        elif interval == 'quartal' or interval == 'month':
-            label_list = []
-            current_time = copy.deepcopy(date_range[1])
-            # делаем список согласно выбранному интервалу из заданного промежутка
-            while date_range[0] <= current_time:
-                label_list.insert(0, current_time.strftime("%Y-%m"))
-                current_time = current_time - relativedelta(months=3 if interval == 'quartal' else 1)
-            # Если начальная дата не входит в список, то добавляем ее
-            label_list.insert(0, date_range[0].strftime('%Y-%m')) if not label_list[0] == date_range[0].strftime('%Y-%m') else None
-            imp_data_list = []
-            exp_data_list = []
-            # берем из базы данных объекты согласно заданному интервалу
-            for i in range(len(label_list) - 1):
-                imp_data_list.append(imp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
-                exp_data_list.append(exp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
-            label_list.pop(0)
-            # считаем нужные данные исходя из выбранных записей.
-            imp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in imp_data_list]
-            exp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in exp_data_list]
-            imp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in imp_data_list]
-            exp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in exp_data_list]
 
         context = {
             'chart': {
