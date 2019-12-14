@@ -51,19 +51,24 @@ class ExpImpDynamics(APIView):
     def get(self, request):
         def dynamics_list(dataset):
             a = []
-            for i in range(1, len(dataset) - 1):
-                a.append(dataset[i + 1] - dataset[i])
+            b = 0
+            for i in dataset:
+                a.append(int((100 * b / i) - 100))
+                b = i
+                a[0] = 0
             return a
 
         pd_interval = {
-            'year': 'Y',
+            'year': '12MS',
             'month': 'MS',
             'quartal': '3MS'
         }
         interval = request.query_params.get('interval')
         raw_date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
         date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in raw_date_range]
+
         dates_list = [i for i in pd.date_range(start=date_range[0], end=date_range[1], freq=pd_interval[interval])]
+
         format_dates_list = [i.strftime("%Y-%m-%d") for i in dates_list]
         data_objects_list = [StatisticAggregateData.objects.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]]) for i in range(len(format_dates_list) - 1)]
         imp_cost_list = [int(a.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg']) for a in data_objects_list]
@@ -72,11 +77,9 @@ class ExpImpDynamics(APIView):
         exp_weight_list = [int(a.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg']) for a in data_objects_list]
         label_list = [i.strftime("%Y") if interval == 'year' else i.strftime("%Y-%m") for i in dates_list]
         label_list.pop()
-        breakpoint()
-
 
         # def aggregate_years(item, items_param, year):
-        #     # Todo: переделать функцию
+        #       # Todo: переделать функцию
         #     return int(item.filter(period__range=[date_range[0].strftime('%Y-01-%d'), '%s-%s' % (str(year) + '-01',  date_range[1].strftime('%d'))]).aggregate(Avg(items_param))[items_param + '__avg'])
         # interval = request.query_params.get('interval')
         # # берем строку даты в url параметрах
@@ -114,36 +117,43 @@ class ExpImpDynamics(APIView):
         #     imp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in imp_data_list]
         #     exp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in exp_data_list]
 
-        def datasets_fragment(data_list1, data_list2):
-            return [
-                {
-                    'label': 'Импорт',
-                    'backgroundColor': '#FFF839',
-                    'data': data_list1
-                },
-                {
-                    'label': 'Экспорт',
-                    'backgroundColor': '#1221FF',
-                    'data': data_list2
-                }
-            ]
-
+        # def datasets_fragment(data_list1, data_list2):
+        #     return [
+        #         {
+        #             'label': 'Импорт',
+        #             'backgroundColor': '#FFF839',
+        #             'data': data_list1
+        #         },
+        #         {
+        #             'label': 'Экспорт',
+        #             'backgroundColor': '#1221FF',
+        #             'data': data_list2
+        #         }
+        #     ]
         context = {
-            'chart': {
-                'cost': {
-                    'chartdata': {
-                        'labels': label_list,
-                        'datasets': datasets_fragment(imp_cost_list, exp_cost_list)
-                    }
-                },
-                'netto': {
-                    'chartdata': {
-                        'labels': label_list,
-                        'datasets': datasets_fragment(imp_weight_list, exp_weight_list)
-                    }
+            'labels': label_list,
+            'imp_cost_list': [imp_cost_list, dynamics_list(imp_cost_list)],
+            'exp_cost_list': [exp_cost_list, dynamics_list(exp_cost_list)],
+            'imp_weight_list': [imp_weight_list, dynamics_list(imp_weight_list)],
+            'exp_weight_list': [exp_weight_list, dynamics_list(exp_weight_list)],
 
-                }
-            }
         }
+        # context = {
+        #     'chart': {
+        #         'cost': {
+        #             'chartdata': {
+        #                 'labels': label_list,
+        #                 'datasets': datasets_fragment(imp_cost_list, exp_cost_list)
+        #             }
+        #         },
+        #         'netto': {
+        #             'chartdata': {
+        #                 'labels': label_list,
+        #                 'datasets': datasets_fragment(imp_weight_list, exp_weight_list)
+        #             }
+        #
+        #         }
+        #     }
+        # }
         return JsonResponse(context)
 # TODO: сделать на фронте обработку нетто и стоимости без лишнего запроса
