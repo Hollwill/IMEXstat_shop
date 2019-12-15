@@ -2,10 +2,7 @@ from .models import StatisticData, StatisticAggregateData
 from django.db.models import Avg, Max
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from datetime import date, timedelta
-from collections import OrderedDict
-from dateutil.relativedelta import relativedelta
-import copy
+from datetime import date
 import pandas as pd
 
 
@@ -66,9 +63,7 @@ class ExpImpDynamics(APIView):
         interval = request.query_params.get('interval')
         raw_date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
         date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in raw_date_range]
-
         dates_list = [i for i in pd.date_range(start=date_range[0], end=date_range[1], freq=pd_interval[interval])]
-
         format_dates_list = [i.strftime("%Y-%m-%d") for i in dates_list]
         data_objects_list = [StatisticAggregateData.objects.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]]) for i in range(len(format_dates_list) - 1)]
         imp_cost_list = [int(a.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg']) for a in data_objects_list]
@@ -77,7 +72,6 @@ class ExpImpDynamics(APIView):
         exp_weight_list = [int(a.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg']) for a in data_objects_list]
         label_list = [i.strftime("%Y") if interval == 'year' else i.strftime("%Y-%m") for i in dates_list]
         label_list.pop()
-
         # def aggregate_years(item, items_param, year):
         #       # Todo: переделать функцию
         #     return int(item.filter(period__range=[date_range[0].strftime('%Y-01-%d'), '%s-%s' % (str(year) + '-01',  date_range[1].strftime('%d'))]).aggregate(Avg(items_param))[items_param + '__avg'])
@@ -136,7 +130,6 @@ class ExpImpDynamics(APIView):
             'exp_cost_list': [exp_cost_list, dynamics_list(exp_cost_list)],
             'imp_weight_list': [imp_weight_list, dynamics_list(imp_weight_list)],
             'exp_weight_list': [exp_weight_list, dynamics_list(exp_weight_list)],
-
         }
         # context = {
         #     'chart': {
@@ -156,4 +149,15 @@ class ExpImpDynamics(APIView):
         #     }
         # }
         return JsonResponse(context)
-# TODO: сделать на фронте обработку нетто и стоимости без лишнего запроса
+
+    '''Надо разделить все записи за определенный период так чтобы в каждом наборе записей были записи, в которых первые 
+    2 символа значения поля tnved были одинаковыми и провести аггрегацию по этим полям.
+    При последующем обращении надо сначала отфильтровать записи, начинающиеся с номера пришедшего с фронта и разделить 
+    также как и в первом случае, но совпадать должны 4 символа. 
+    Количество символов может приходить с фронта. 
+    В конечном итоге должно приходить полное значение кода tnved - и со стороны фронта происходит переход на страницу 
+    детального отчета. Это можно повесить на другой эндпоинт.
+    
+    Я делаю 5 полей, в которых будет разобранный код tnved. 
+    
+    '''
