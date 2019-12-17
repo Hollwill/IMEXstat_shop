@@ -2,7 +2,7 @@ pandas
 Babel==2.7.0
 confusable-homoglyphs==3.2.0
 dj-database-url==0.5.0
-Django==2.2.5
+Django==2.2.8
 django-ckeditor==5.7.1
 django-cleanup==4.0.0
 django-configurations==2.1
