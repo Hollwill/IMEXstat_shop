@@ -170,19 +170,29 @@ class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
-    SITE_ID = 2
+    SITE_ID = 7
 
     ALLOWED_HOSTS = ['*']
 
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'imex',
+    #         'USER': 'oleg',
+    #         'PASSWORD': '22oleg03',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '5432'
+    #         }
+    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'imex',
-            'USER': 'oleg',
-            'PASSWORD': '22oleg03',
-            'HOST': '127.0.0.1',
+            'USER': 'imex',
+            'PASSWORD': '09qxwq8i2r',
+            'HOST': '80.249.145.226',
             'PORT': '5432'
-            }
+        }
     }
 
     INTERNAL_IPS = [
