@@ -47,7 +47,8 @@ class Base(Configuration):
         'flatpage',
         'seo',
         'mptt',
-        'flatblocks'
+        'flatblocks',
+        'django_elasticsearch_dsl',
 
     ]
 
@@ -164,6 +165,11 @@ class Base(Configuration):
 
     CORS_ORIGIN_ALLOW_ALL = True
 
+    ELASTICSEARCH_DSL = {
+        'default': {
+            'hosts': 'localhost:9200'
+        },
+    }
 
 class Dev(Base):
 
@@ -174,31 +180,33 @@ class Dev(Base):
 
     ALLOWED_HOSTS = ['*']
 
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #         'NAME': 'imex',
-    #         'USER': 'oleg',
-    #         'PASSWORD': '22oleg03',
-    #         'HOST': '127.0.0.1',
-    #         'PORT': '5432'
-    #         }
-    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'imex',
-            'USER': 'imex',
-            'PASSWORD': '09qxwq8i2r',
-            'HOST': '80.249.145.226',
+            'USER': 'oleg',
+            'PASSWORD': '22oleg03',
+            'HOST': '127.0.0.1',
             'PORT': '5432'
-        }
+            }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'imex',
+    #         'USER': 'imex',
+    #         'PASSWORD': '09qxwq8i2r',
+    #         'HOST': '80.249.145.226',
+    #         'PORT': '5432'
+    #     }
+    # }
 
     INTERNAL_IPS = [
 
         '127.0.0.1',
     ]
+
+
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = '22golomonzin@gmail.com'
@@ -262,17 +270,4 @@ class Prod(Base):
                'propagate': True,
            },
        },
-    }
-
-
-class RDev(Dev):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'imex',
-            'USER': 'ubuntu',
-            'PASSWORD': 'jmfMbcbm47',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
     }
