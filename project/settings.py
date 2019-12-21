@@ -271,3 +271,19 @@ class Prod(Base):
            },
        },
     }
+<<<<<<< HEAD
+
+
+class RDev(Dev):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'imex',
+            'USER': 'rodion',
+            'PASSWORD': '123',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
+=======
+>>>>>>> 7b569c70ec5618ec21dae57c21703723f47acb17
