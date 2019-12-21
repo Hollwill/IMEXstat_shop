@@ -47,7 +47,8 @@ class Base(Configuration):
         'flatpage',
         'seo',
         'mptt',
-        'flatblocks'
+        'flatblocks',
+        'django_elasticsearch_dsl',
 
     ]
 
@@ -164,13 +165,18 @@ class Base(Configuration):
 
     CORS_ORIGIN_ALLOW_ALL = True
 
+    ELASTICSEARCH_DSL = {
+        'default': {
+            'hosts': 'localhost:9200'
+        },
+    }
 
 class Dev(Base):
 
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
-    SITE_ID = 2
+    SITE_ID = 7
 
     ALLOWED_HOSTS = ['*']
 
@@ -184,11 +190,23 @@ class Dev(Base):
             'PORT': '5432'
             }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'imex',
+    #         'USER': 'imex',
+    #         'PASSWORD': '09qxwq8i2r',
+    #         'HOST': '80.249.145.226',
+    #         'PORT': '5432'
+    #     }
+    # }
 
     INTERNAL_IPS = [
 
         '127.0.0.1',
     ]
+
+
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = '22golomonzin@gmail.com'
@@ -253,6 +271,7 @@ class Prod(Base):
            },
        },
     }
+<<<<<<< HEAD
 
 
 class RDev(Dev):
@@ -266,3 +285,5 @@ class RDev(Dev):
             'PORT': '5432',
         }
     }
+=======
+>>>>>>> 7b569c70ec5618ec21dae57c21703723f47acb17

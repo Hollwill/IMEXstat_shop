@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
+from django_elasticsearch_dsl import Document
+from django_elasticsearch_dsl.registries import registry
 
 
 class StatisticData(models.Model):
@@ -6,12 +9,28 @@ class StatisticData(models.Model):
     period = models.DateField(db_index=True, blank=True, null=True)
     strana = models.CharField(db_index=True, max_length=3, blank=True, null=True)
     tnved = models.CharField(db_index=True, max_length=10, blank=True, null=True)
+    split_tnved = JSONField(db_index=True, blank=True, null=True)
     edizm = models.CharField(max_length=20, blank=True, null=True)
     stoim = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
     netto = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
     kol = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
+
+@registry.register_document
+class StatisticDataDocument(Document):
+    class Index:
+        name = 'statistic_data'
+    class Django:
+        model = StatisticData
+        fields = [
+            'tnved',
+            'split_tnved',
+            'stoim',
+            'netto',
+            'napr',
+
+        ]
 
 
 class StatisticAggregateData(models.Model):
@@ -26,4 +45,16 @@ class StatisticAggregateData(models.Model):
     imp_tnved_by_max_cost = models.BigIntegerField(verbose_name='Импорт - Код тнвэд имеющий максимальную стоимость')
     exp_tnved_by_max_cost = models.BigIntegerField(verbose_name='Экспорт - Код тнвэд имеющий максимальную стоимость')
     # график динамика экспорта и импорта России
+
+class TnvedHandbook(models.Model):
+    tnved = models.CharField(max_length=255, db_index=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+
+    ''' update statistic_statisticdata
+set split_tnved  = json_build_object('two', substring(tnved from 1 for 2),            
+'four', substring(tnved from 1 for 4),
+'six', substring(tnved from 1 for 6),
+'eight', substring(tnved from 1 for 8),
+'ten', substring(tnved from 1 for 10))
+;'''
 
