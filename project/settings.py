@@ -180,26 +180,26 @@ class Dev(Base):
 
     ALLOWED_HOSTS = ['*']
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'imex',
-            'USER': 'oleg',
-            'PASSWORD': '22oleg03',
-            'HOST': '127.0.0.1',
-            'PORT': '5432'
-            }
-    }
     # DATABASES = {
     #     'default': {
     #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
     #         'NAME': 'imex',
-    #         'USER': 'imex',
-    #         'PASSWORD': '09qxwq8i2r',
-    #         'HOST': '80.249.145.226',
+    #         'USER': 'oleg',
+    #         'PASSWORD': '22oleg03',
+    #         'HOST': '127.0.0.1',
     #         'PORT': '5432'
-    #     }
+    #         }
     # }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'imex',
+            'USER': 'imex',
+            'PASSWORD': '09qxwq8i2r',
+            'HOST': '80.249.145.226',
+            'PORT': '5432'
+        }
+    }
 
     INTERNAL_IPS = [
 

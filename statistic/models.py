@@ -9,6 +9,10 @@ class StatisticData(models.Model):
     period = models.DateField(db_index=True, blank=True, null=True)
     strana = models.CharField(db_index=True, max_length=3, blank=True, null=True)
     tnved = models.CharField(db_index=True, max_length=10, blank=True, null=True)
+    tnved_two = models.CharField(db_index=True, max_length=2, blank=True, null=True)
+    tnved_four = models.CharField(db_index=True, max_length=4, blank=True, null=True)
+    tnved_six = models.CharField(db_index=True, max_length=6, blank=True, null=True)
+    tnved_eight = models.CharField(db_index=True, max_length=8, blank=True, null=True)
     split_tnved = JSONField(db_index=True, blank=True, null=True)
     edizm = models.CharField(max_length=20, blank=True, null=True)
     stoim = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
@@ -17,20 +21,20 @@ class StatisticData(models.Model):
     region = models.CharField(max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
 
-@registry.register_document
-class StatisticDataDocument(Document):
-    class Index:
-        name = 'statistic_data'
-    class Django:
-        model = StatisticData
-        fields = [
-            'tnved',
-            'split_tnved',
-            'stoim',
-            'netto',
-            'napr',
-
-        ]
+# @registry.register_document
+# class StatisticDataDocument(Document):
+#     class Index:
+#         name = 'statistic_data'
+#     class Django:
+#         model = StatisticData
+#         fields = [
+#             'tnved',
+#             'split_tnved',
+#             'stoim',
+#             'netto',
+#             'napr',
+#
+#         ]
 
 
 class StatisticAggregateData(models.Model):
