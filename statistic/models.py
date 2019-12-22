@@ -21,20 +21,25 @@ class StatisticData(models.Model):
     region = models.CharField(max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
 
-# @registry.register_document
-# class StatisticDataDocument(Document):
-#     class Index:
-#         name = 'statistic_data'
-#     class Django:
-#         model = StatisticData
-#         fields = [
-#             'tnved',
-#             'split_tnved',
-#             'stoim',
-#             'netto',
-#             'napr',
-#
-#         ]
+
+@registry.register_document
+class StatisticDataDocument(Document):
+    class Index:
+        name = 'statistic'
+
+    class Django:
+        model = StatisticData
+        fields = [
+            'tnved',
+            'tnved_two',
+            'tnved_four',
+            'tnved_six',
+            'tnved_eight',
+            'stoim',
+            'netto',
+            'napr',
+
+        ]
 
 
 class StatisticAggregateData(models.Model):

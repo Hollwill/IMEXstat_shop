@@ -2,9 +2,14 @@
     <div id="exp-imp-dynamics">
         <exp-imp-dynamics-chart v-if="show_chart" :chart-data="chartdata"/>
 
-        <p v-for="data in tabledata" v-bind:key="data.id">
-            {{ data.labelList }}, {{ data.impData }}, {{ data.expData }}
-        </p>
+<!--        <p v-for="data in tabledata" v-bind:key="data.id">-->
+<!--            {{ data.labelList }}, {{ data.impData }}, {{ data.expData }}-->
+<!--        </p>-->
+
+
+
+
+        {{chartdata}}
     </div>
 </template>
 
@@ -79,11 +84,21 @@
                     }
                 })
                     .then(response => {
-                        if (this.params === 'stoim') {
-                            this.chartdata = response.data.chart.cost.chartdata
-                        } else {
-                            this.chartdata = response.data.chart.netto.chartdata
-                        }
+                        this.chartdata = {
+                                labels: response.data.labels,
+                                datasets: [
+                                    {
+                                        label: 'Импорт',
+                                        backgroundColor: '#FFF839',
+                                        data: (this.params === 'stoim') ? response.data.imp_cost_list[0] : response.data.imp_weight_list[0]
+                                    },
+                                    {
+                                        label: 'Экспорт',
+                                        backgroundColor: '#1221FF',
+                                        data: (this.params === 'stoim') ? response.data.exp_cost_list[0] : response.data.exp_weight_list[0]
+                                    }
+                                ]
+                            }
                         this.show_chart = true
                     })
             }
