@@ -1,9 +1,13 @@
-from .models import StatisticData, StatisticAggregateData
+from .models import StatisticData, StatisticAggregateData, StatisticDataDocument
 from django.db.models import Avg, Max
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from datetime import date
 import pandas as pd
+from elasticsearch_dsl import Search
+from elasticsearch_dsl import Q
+from math import ceil
+import datetime
 
 
 class MarketSummary(APIView):
@@ -149,3 +153,43 @@ class ExpImpDynamics(APIView):
         #     }
         # }
         return JsonResponse(context)
+
+
+tnved_dict = {
+    2: 'tnved_two',
+    4: 'tnved_four',
+    6: 'tnved_six',
+    8: 'tnved_eight',
+    10: 'tnved',
+}
+
+
+class TurnoverStructure(APIView):
+    def get(self, request):
+        date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
+        type = request.query_params.get('type')
+        type_dict = {'IM': 'ИМ', 'EK': 'ЭК'}
+        s = Search(index='statistic')
+        tnved = request.query_params.get('tnved')
+        print(datetime.datetime.now())
+        if not tnved:
+            tnved_list = StatisticData.objects.values('tnved_two').distinct()
+            for i in tnved_list:
+                s.filter(Q('range', date={'gte': date_range[0], 'lt': date_range[1]}))
+                s.query = Q('bool', must=[Q('match', napr=type_dict[type]), Q('match', tnved_two=i['tnved_two'])])
+                s.aggs.metric('stoim', 'sum', field='stoim')
+                s.aggs.metric('netto', 'sum', field='netto')
+                try:
+                    print(s[:s.count()].execute().aggregations)
+                except:
+                    print('timed out')
+                # stoim = 0
+                # netto = 0
+                # a = 1
+                # for i in range(1, ceil(s.count() // 10000)):
+                #     print(a)
+                #     print(i * 10000)
+                #     agg_result = s[a:i * 10000].execute().aggregations
+                #     a += 10000
+                #     netto += agg_result['netto']['value']
+                #     stoim += agg_result['stoim']['value']

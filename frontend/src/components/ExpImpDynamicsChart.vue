@@ -9,7 +9,7 @@
         data() {
             return {
                 options: {
-                    responsive: true
+
                 }
             }
         },

@@ -167,7 +167,7 @@ class Base(Configuration):
 
     ELASTICSEARCH_DSL = {
         'default': {
-            'hosts': 'localhost:9200'
+            'hosts': '80.249.145.226:9200'
         },
     }
 
