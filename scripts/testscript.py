@@ -2,6 +2,7 @@ from statistic.models import StatisticData, TnvedHandbook, StatisticDataDocument
 from django.db.models import Avg, Max, Sum
 from datetime import datetime
 from elasticsearch_dsl import Search, A, Index
+import collections
 from elasticsearch_dsl import Q
 
 
@@ -13,20 +14,25 @@ split_tnved_dict = {
     10: 'tnved',
 }
 
-# def run():
-#     for object in TnvedHandbook.objects.all().values_list('tnved'):
-#         filter_dict = {split_tnved_dict[len(object[0])]: object[0]}
-#         imp_data = Search(index='statistic')
-#         imp_data.query = Q('bool', must=[Q('match', napr='ИМ'), Q('match', **filter_dict)])
-#         imp_data = imp_data[:imp_data.count()]
-#         imp_data.aggs.metric('stoim_sum', 'sum', field='stoim')
-#         exp_data = Search(index='statistic')
-#         exp_data.query = Q('bool', must=[Q('match', napr='ЭК'), Q('match', **filter_dict)])
-#         exp_data = exp_data[:exp_data.count()]
-#         exp_data.aggs.metric('m', 'sum', field='stoim')
-#         print(exp_data.execute().aggregations)
 
 
 def run():
-    a = Index('statistic')
-    a.put_settings(body={"index.max_result_window": "10000000"})
+    # s = Search(index='statistic').params(request_timeout=100)
+    # s.aggs.bucket('a', 'terms', field='tnved_two', size=200)
+    #
+    # response = s.execute()
+    # print(len(response.aggregations.a.buckets))
+    # a = []
+    # for item in response.aggregations.a.buckets:
+    #     a.append(item.key)
+    # print([item for item, count in collections.Counter(a).items() if count > 1])
+
+    s = StatisticDataDocument.search()
+    s.aggs.bucket('a', 'terms', field='tnved_two', size=200)
+    result = s.execute()
+    a = [item.key for item in result.aggregations.a.buckets]
+
+
+
+# def run():
+#     print([i['tnved_two'] for i in StatisticData.objects.values('tnved_two').distinct()])

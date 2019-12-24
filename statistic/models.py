@@ -38,6 +38,7 @@ class StatisticDataDocument(Document):
             'stoim',
             'netto',
             'napr',
+            'period',
 
         ]
 
@@ -58,6 +59,17 @@ class StatisticAggregateData(models.Model):
 class TnvedHandbook(models.Model):
     tnved = models.CharField(max_length=255, db_index=True)
     description = models.CharField(max_length=255, blank=True, null=True)
+
+
+class TnvedAggregateData(models.Model):
+    type = models.CharField(max_length=2, blank=True, null=True, db_index=True)
+    tnved = models.CharField(max_length=10, blank=True, null=True, db_index=True)
+    imp_sum_cost = models.BigIntegerField(verbose_name='Импорт - суммарная стоимость')
+    exp_sum_cost = models.BigIntegerField(verbose_name='Экспорт - суммарная стоимость')
+    imp_sum_weight = models.BigIntegerField(verbose_name='Импорт - суммарный вес')
+    exp_sum_weight = models.BigIntegerField(verbose_name='Экспорт - суммарный вес')
+
+
 
     ''' update statistic_statisticdata
 set split_tnved  = json_build_object('two', substring(tnved from 1 for 2),            

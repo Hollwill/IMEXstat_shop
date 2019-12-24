@@ -1,10 +1,14 @@
 <template>
   <div class="app">
     <month-picker-input @input="date_from" :no-default="true" lang="ru"></month-picker-input>
-    <month-picker-input @input="date_to" :no-default="true" lang="ru"></month-picker-input>
+    <month-picker-input @input='date_to' :no-default="true" lang="ru"></month-picker-input>
     <select v-model="params">
       <option value="stoim">Стоимость</option>
       <option value="netto">Нетто</option>
+    </select>
+    <select v-model="category">
+      <option value="IM">Импорт</option>
+      <option value="EX">Экспорт</option>
     </select>
     <select v-model="interval">
       <option value="year">Год</option>
@@ -18,6 +22,13 @@
                       :interval="interval"
                       ref="expImpDynamics"
     ></exp-imp-dynamics>
+    <turnover-structure
+            :date="date"
+            :params="params"
+            :interval="interval"
+            :category="category"
+            ref="turnoverStructure"
+    ></turnover-structure>
   </div>
 </template>
 
@@ -35,13 +46,16 @@ export default {
               to: null
           },
           params: 'stoim',
-          interval: 'year'
+          interval: 'year',
+          category: 'IM',
       }
   },
   methods: {
       getData() {
-          this.$refs.marketSummary.recount()
-          this.$refs.expImpDynamics.recount()
+          this.$refs.marketSummary.recount();
+          this.$refs.expImpDynamics.recount();
+          this.$refs.turnoverStructure.clear();
+          this.$refs.turnoverStructure.recount();
       },
       date_from(data) {
           if (String(data.monthIndex).length === 1) {
@@ -61,7 +75,8 @@ export default {
   components: {
     MonthPickerInput,
     MarketSummary: () => import('./components/MarketSummary'),
-    ExpImpDynamics: () => import('./components/ExpImpDynamics')
+    ExpImpDynamics: () => import('./components/ExpImpDynamics'),
+    TurnoverStructure: () => import('./components/TurnoverStructure')
   },
 };
 </script>

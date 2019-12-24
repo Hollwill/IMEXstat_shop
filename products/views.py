@@ -1,6 +1,7 @@
 from django.views import generic
 from .models import Research
 from orders.cart import Cart
+from orders.models import CartItem
 from .mixins import CategoryContextMixin
 from django.urls import reverse_lazy, reverse
 from .forms import IndividualResearchFeedbackForm, CartItemCreateForm
@@ -61,7 +62,7 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
     template_name = 'products/research_buy.html'
 
     def get_success_url(self):
-        return reverse('r>esearch:list')
+        return reverse('research:list')
 
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)
@@ -69,18 +70,17 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
         return context
 
     def form_valid(self, form):
-        success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (model_instance.research.title, model_instance.price)
         cart = Cart(self.request)
 
         cart_item = form.save(commit=False)
         cart_item.research = Research.objects.get(slug=self.kwargs['slug'])
-        cart_item.cart = cart
-        cart_item.save()
-
-        if cart.add(cart_item):
-            messages.add_message(self.request, 50, success_message)
-        else:
+        cart_item.cart = cart.cart
+        if CartItem.objects.filter(research=cart_item.research, cart=cart.cart):
             messages.add_message(self.request, 60, 'Исследование уже в корзине')
+        else:
+            cart_item.save()
+            success_message = '<span class="font-weight-bold">"%s"</span>, по цене <span class="text-nowrap font-weight-bold">%s руб.</span><br />' % (cart_item.research.title, cart_item.price)
+            messages.add_message(self.request, 50, success_message)
 
         # if self.request.user.is_authenticated:
         #     cart = Cart.objects.get(client__user=self.request.user)

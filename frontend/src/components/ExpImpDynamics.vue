@@ -5,11 +5,6 @@
 <!--        <p v-for="data in tabledata" v-bind:key="data.id">-->
 <!--            {{ data.labelList }}, {{ data.impData }}, {{ data.expData }}-->
 <!--        </p>-->
-
-
-
-
-        {{chartdata}}
     </div>
 </template>
 

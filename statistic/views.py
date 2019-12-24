@@ -8,7 +8,7 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl import Q
 from math import ceil
 import datetime
-
+from functools import reduce
 
 class MarketSummary(APIView):
     def get(self, request):
@@ -50,14 +50,10 @@ class MarketSummary(APIView):
 
 class ExpImpDynamics(APIView):
     def get(self, request):
-        def dynamics_list(dataset):
-            a = []
-            b = 0
-            for i in dataset:
-                a.append(int((100 * b / i) - 100))
-                b = i
-                a[0] = 0
-            return a
+        def dynamics_list(d):
+            res = [int((d[i + 1] - d[i]) / d[i] * 100) for i in range(len(d) - 1)]
+            res.insert(0, 0)
+            return res
 
         pd_interval = {
             'year': '12MS',
@@ -76,58 +72,6 @@ class ExpImpDynamics(APIView):
         exp_weight_list = [int(a.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg']) for a in data_objects_list]
         label_list = [i.strftime("%Y") if interval == 'year' else i.strftime("%Y-%m") for i in dates_list]
         label_list.pop()
-        # def aggregate_years(item, items_param, year):
-        #       # Todo: переделать функцию
-        #     return int(item.filter(period__range=[date_range[0].strftime('%Y-01-%d'), '%s-%s' % (str(year) + '-01',  date_range[1].strftime('%d'))]).aggregate(Avg(items_param))[items_param + '__avg'])
-        # interval = request.query_params.get('interval')
-        # # берем строку даты в url параметрах
-        # date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
-        # # делаем строку объектом даты
-        # date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in date_range]
-        # imp_data = StatisticData.objects.filter(napr='ИМ')
-        # exp_data = StatisticData.objects.filter(napr='ЭК')
-        # # согласно заданному интервалу, выдаем соответствующие данные
-        # if interval == 'year':
-        #     label_list = [date_range[1].year - i for i in reversed(range(date_range[1].year - date_range[0].year + 1))]
-        #     imp_cost_list = [aggregate_years(imp_data, 'stoim', i) for i in label_list]
-        #     exp_cost_list = [aggregate_years(exp_data, 'stoim', i) for i in label_list]
-        #     imp_weight_list = [aggregate_years(imp_data, 'netto', i) for i in label_list]
-        #     exp_weight_list = [aggregate_years(exp_data, 'netto', i) for i in label_list]
-        # elif interval == 'quartal' or interval == 'month':
-        #     label_list = []
-        #     current_time = copy.deepcopy(date_range[1])
-        #     # делаем список согласно выбранному интервалу из заданного промежутка
-        #     while date_range[0] <= current_time:
-        #         label_list.insert(0, current_time.strftime("%Y-%m"))
-        #         current_time = current_time - relativedelta(months=3 if interval == 'quartal' else 1)
-        #     # Если начальная дата не входит в список, то добавляем ее
-        #     label_list.insert(0, date_range[0].strftime('%Y-%m')) if not label_list[0] == date_range[0].strftime('%Y-%m') else None
-        #     imp_data_list = []
-        #     exp_data_list = []
-        #     # берем из базы данных объекты согласно заданному интервалу
-        #     for i in range(len(label_list) - 1):
-        #         imp_data_list.append(imp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
-        #         exp_data_list.append(exp_data.filter(period__range=[label_list[i] + '-01', label_list[i + 1] + '-01']))
-        #     label_list.pop(0)
-        #     # считаем нужные данные исходя из выбранных записей.
-        #     imp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in imp_data_list]
-        #     exp_cost_list = [int(a.aggregate(Avg('stoim'))['stoim__avg']) for a in exp_data_list]
-        #     imp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in imp_data_list]
-        #     exp_weight_list = [int(a.aggregate(Avg('netto'))['netto__avg']) for a in exp_data_list]
-
-        # def datasets_fragment(data_list1, data_list2):
-        #     return [
-        #         {
-        #             'label': 'Импорт',
-        #             'backgroundColor': '#FFF839',
-        #             'data': data_list1
-        #         },
-        #         {
-        #             'label': 'Экспорт',
-        #             'backgroundColor': '#1221FF',
-        #             'data': data_list2
-        #         }
-        #     ]
         context = {
             'labels': label_list,
             'imp_cost_list': [imp_cost_list, dynamics_list(imp_cost_list)],
@@ -135,23 +79,6 @@ class ExpImpDynamics(APIView):
             'imp_weight_list': [imp_weight_list, dynamics_list(imp_weight_list)],
             'exp_weight_list': [exp_weight_list, dynamics_list(exp_weight_list)],
         }
-        # context = {
-        #     'chart': {
-        #         'cost': {
-        #             'chartdata': {
-        #                 'labels': label_list,
-        #                 'datasets': datasets_fragment(imp_cost_list, exp_cost_list)
-        #             }
-        #         },
-        #         'netto': {
-        #             'chartdata': {
-        #                 'labels': label_list,
-        #                 'datasets': datasets_fragment(imp_weight_list, exp_weight_list)
-        #             }
-        #
-        #         }
-        #     }
-        # }
         return JsonResponse(context)
 
 
@@ -166,30 +93,58 @@ tnved_dict = {
 
 class TurnoverStructure(APIView):
     def get(self, request):
+        def dynamics_list(d):
+            res = [0 if d[i] == 0 else int((d[i+1] - d[i])/d[i] * 100) for i in range(len(d)-1)]
+            res.insert(0, 0)
+            return res
+        print('all ok')
         date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
-        type = request.query_params.get('type')
-        type_dict = {'IM': 'ИМ', 'EK': 'ЭК'}
-        s = Search(index='statistic')
+        date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in date_range]
+        type = request.query_params.get('category')
+        type_dict = {'IM': 'ИМ', 'EX': 'ЭК'}
+        s = Search(index='statistic').params(request_timeout=100)
         tnved = request.query_params.get('tnved')
-        print(datetime.datetime.now())
+        start_tnved_list = int(request.query_params.get('start'))
+        length_tnved_list = int(request.query_params.get('length'))
+        label_list = []
+        netto_list = []
+        stoim_list = []
         if not tnved:
-            tnved_list = StatisticData.objects.values('tnved_two').distinct()
-            for i in tnved_list:
-                s.filter(Q('range', date={'gte': date_range[0], 'lt': date_range[1]}))
-                s.query = Q('bool', must=[Q('match', napr=type_dict[type]), Q('match', tnved_two=i['tnved_two'])])
+            two_tnved_list_request = StatisticDataDocument.search()
+            two_tnved_list_request.aggs.bucket('a', 'terms', field='tnved_two', size=200)
+            result = two_tnved_list_request.execute()
+            tnved_two_distinct = [item.key for item in result.aggregations.a.buckets]
+            tnved_two_distinct.reverse()
+            for i in tnved_two_distinct[start_tnved_list:start_tnved_list + length_tnved_list]:
+                s.query = Q('bool', must=[Q('match', napr=type_dict[type]),
+                                          Q('match', tnved_two=i),
+                                          Q('range', period={'gte': date_range[0], 'lt': date_range[1]})])
+                s.aggs.bucket('stoim', 'sum', field='stoim')
+                s.aggs.bucket('netto', 'sum', field='netto')
+                print(s.to_dict())
+                result = s[:s.count()].execute().aggregations
+                label_list.append(i)
+                netto_list.append(result['netto']['value'])
+                stoim_list.append(result['stoim']['value'])
+
+        else:
+            tnved_distinct = [i[tnved_dict[len(tnved) + 2]] for i in StatisticData.objects.filter(**{tnved_dict[len(tnved)]: tnved}).values(tnved_dict[len(tnved) + 2]).distinct()]
+            for i in tnved_distinct[start_tnved_list:start_tnved_list + length_tnved_list]:
+                tnved_query_field = {tnved_dict[len(tnved) + 2]: i}
+                s.query = Q('bool', must=[Q('match', napr=type_dict[type]),
+                                          Q('match', **tnved_query_field),
+                                          Q('range', period={'gte': date_range[0], 'lt': date_range[1]})])
                 s.aggs.metric('stoim', 'sum', field='stoim')
                 s.aggs.metric('netto', 'sum', field='netto')
-                try:
-                    print(s[:s.count()].execute().aggregations)
-                except:
-                    print('timed out')
-                # stoim = 0
-                # netto = 0
-                # a = 1
-                # for i in range(1, ceil(s.count() // 10000)):
-                #     print(a)
-                #     print(i * 10000)
-                #     agg_result = s[a:i * 10000].execute().aggregations
-                #     a += 10000
-                #     netto += agg_result['netto']['value']
-                #     stoim += agg_result['stoim']['value']
+                result = s[:s.count()].execute().aggregations
+                label_list.append(i)
+                netto_list.append(result['netto']['value'])
+                stoim_list.append(result['stoim']['value'])
+        context = {
+            'labels': label_list,
+            'netto': [netto_list, dynamics_list(netto_list)],
+            'cost': [stoim_list, dynamics_list(stoim_list)]
+        }
+        return JsonResponse(context)
+
+
