@@ -1,5 +1,6 @@
 <template>
   <div class="turnover-structure">
+    <h1>Структура товарооборота во внешнй торговли России</h1>
     <div class="d-table">
       <div class="d-tr" v-for="(label, index) in table_data.labels" :key="index">
         <div class="d-td div-as-button" @click="extendTnved(label)">{{label}}</div>
@@ -9,7 +10,6 @@
         <div class="d-td">{{table_data.cost[1][index]}}</div>
       </div>
     </div>
-    {{selectedData}}
 <!--    "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16))-->
     <turnover-structure-pie-chart
             @on-receive="extendTnved"
@@ -52,9 +52,12 @@
         },
         methods: {
             recount(tnved, date_to = this.date.to, date_from = this.date.from,) {
-                let def_date_to = new Date();
-                let def_date_from = new Date(def_date_to.getTime());
+                let def_date_to = moment(new Date()).format("YYYY-MM");
+
+                let def_date_from = new Date(new Date().getTime());
                 def_date_from.setMonth(def_date_from.getMonth() - 6);
+                def_date_from = moment(def_date_from).format("YYYY-MM");
+
                 HTTP.get('statistic/turnover_structure/', {
                     params: {
                         'date_from': date_from && date_to ? date_from : def_date_from,

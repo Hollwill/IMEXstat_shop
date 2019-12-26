@@ -29,6 +29,13 @@
             :category="category"
             ref="turnoverStructure"
     ></turnover-structure>
+    <country-statistic
+            :date="date"
+            :params="params"
+            :interval="interval"
+            :category="category"
+            ref="CountryStatistic"
+    ></country-statistic>
   </div>
 </template>
 
@@ -56,6 +63,7 @@ export default {
           this.$refs.expImpDynamics.recount();
           this.$refs.turnoverStructure.clear();
           this.$refs.turnoverStructure.recount();
+          this.$refs.CountryStatistic.recount();
       },
       date_from(data) {
           if (String(data.monthIndex).length === 1) {
@@ -76,7 +84,9 @@ export default {
     MonthPickerInput,
     MarketSummary: () => import('./components/MarketSummary'),
     ExpImpDynamics: () => import('./components/ExpImpDynamics'),
-    TurnoverStructure: () => import('./components/TurnoverStructure')
+    TurnoverStructure: () => import('./components/TurnoverStructure'),
+    CountryStatistic: () => import('./components/CountryStatistic')
+
   },
 };
 </script>

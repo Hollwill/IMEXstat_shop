@@ -1,6 +1,6 @@
 <template>
     <div id="MarketSummary">
-
+        <h1>Сводка рынка</h1>
         <table>
             <tr><th>Импорт</th></tr>
             <tr>

@@ -171,8 +171,8 @@ class Base(Configuration):
         },
     }
 
-class Dev(Base):
 
+class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
@@ -190,6 +190,7 @@ class Dev(Base):
     #         'PORT': '5432'
     #         }
     # }
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',

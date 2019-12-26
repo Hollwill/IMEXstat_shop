@@ -1,4 +1,4 @@
-from .views import MarketSummary, ExpImpDynamics, TurnoverStructure
+from .views import MarketSummary, ExpImpDynamics, TurnoverStructure, CountryStatistic
 from rest_framework import routers
 from django.urls import path
 from django.views.generic import TemplateView
@@ -12,6 +12,7 @@ urlpatterns = [
     path('market_summary/', MarketSummary.as_view(), name='market_summary'),
     path('exp_imp_dynamics/', ExpImpDynamics.as_view(), name='exp_imp_dynamics'),
     path('turnover_structure/', TurnoverStructure.as_view(), name='turnover_structure'),
+    path('country_statistic/', CountryStatistic.as_view(), name='country_statistic'),
 ]
 
 urlpatterns += router.urls

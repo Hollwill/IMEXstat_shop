@@ -1,5 +1,5 @@
-from .models import StatisticData, StatisticAggregateData, StatisticDataDocument
-from django.db.models import Avg, Max
+from .models import StatisticData, StatisticAggregateData, StatisticDataDocument, CountryAggregateData, CountryHandbook
+from django.db.models import Avg, Max, Sum
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from datetime import date
@@ -9,6 +9,7 @@ from elasticsearch_dsl import Q
 from math import ceil
 import datetime
 from functools import reduce
+from collections import defaultdict
 
 class MarketSummary(APIView):
     def get(self, request):
@@ -17,14 +18,14 @@ class MarketSummary(APIView):
         imp_data = StatisticAggregateData.objects.filter(period__range=date_range)
         exp_data = StatisticAggregateData.objects.filter(period__range=date_range)
 
-        imp_cost = int(imp_data.aggregate(Avg('imp_sum_cost'))['imp_sum_cost__avg'])
-        imp_weight = int(imp_data.aggregate(Avg('imp_sum_weight'))['imp_sum_weight__avg'])
+        imp_cost = int(imp_data.aggregate(Sum('imp_sum_cost'))['imp_sum_cost__sum'])
+        imp_weight = int(imp_data.aggregate(Sum('imp_sum_weight'))['imp_sum_weight__sum'])
         imp_country = imp_data.values('imp_sum_unique_countries').distinct().count()
         imp_max_stoim = imp_data.aggregate(Max('imp_sum_cost'))['imp_sum_cost__max']
         imp_tnved = imp_data.get(imp_sum_cost=imp_max_stoim).imp_tnved_by_max_cost
 
-        exp_cost = int(exp_data.aggregate(Avg('exp_sum_cost'))['exp_sum_cost__avg'])
-        exp_weight = int(exp_data.aggregate(Avg('exp_sum_weight'))['exp_sum_weight__avg'])
+        exp_cost = int(exp_data.aggregate(Sum('exp_sum_cost'))['exp_sum_cost__sum'])
+        exp_weight = int(exp_data.aggregate(Sum('exp_sum_weight'))['exp_sum_weight__sum'])
         exp_country = exp_data.values('exp_sum_unique_countries').distinct().count()
         exp_max_stoim = exp_data.aggregate(Max('exp_sum_cost'))['exp_sum_cost__max']
         exp_tnved = exp_data.get(exp_sum_cost=exp_max_stoim).exp_tnved_by_max_cost
@@ -97,7 +98,6 @@ class TurnoverStructure(APIView):
             res = [0 if d[i] == 0 else int((d[i+1] - d[i])/d[i] * 100) for i in range(len(d)-1)]
             res.insert(0, 0)
             return res
-        print('all ok')
         date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
         date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in date_range]
         type = request.query_params.get('category')
@@ -121,12 +121,10 @@ class TurnoverStructure(APIView):
                                           Q('range', period={'gte': date_range[0], 'lt': date_range[1]})])
                 s.aggs.bucket('stoim', 'sum', field='stoim')
                 s.aggs.bucket('netto', 'sum', field='netto')
-                print(s.to_dict())
                 result = s[:s.count()].execute().aggregations
                 label_list.append(i)
                 netto_list.append(result['netto']['value'])
                 stoim_list.append(result['stoim']['value'])
-
         else:
             tnved_distinct = [i[tnved_dict[len(tnved) + 2]] for i in StatisticData.objects.filter(**{tnved_dict[len(tnved)]: tnved}).values(tnved_dict[len(tnved) + 2]).distinct()]
             for i in tnved_distinct[start_tnved_list:start_tnved_list + length_tnved_list]:
@@ -146,5 +144,49 @@ class TurnoverStructure(APIView):
             'cost': [stoim_list, dynamics_list(stoim_list)]
         }
         return JsonResponse(context)
+
+
+class CountryStatistic(APIView):
+    def get(self, request):
+        def dynamics_list(d):
+            res = [0 if d[i] == 0 else int((d[i+1] - d[i])/d[i] * 100) for i in range(len(d)-1)]
+            res.insert(0, 0)
+            return res
+        date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
+        countries = [val['country'] for val in CountryAggregateData.objects.filter(period__range=date_range).values('country').distinct()]
+        type = request.query_params.get('category')
+        type_dict = {'IM': 'ИМ', 'EX': 'ЭК'}
+        table_country_long = []
+        weight_table_data = []
+        cost_table_data = []
+        chart_data_imp = {}
+        chart_data_exp = {}
+        for country in countries:
+            aggregate_data = CountryAggregateData.objects.filter(period__range=date_range, country=country).aggregate(
+                Sum('imp_sum_cost'), Sum('exp_sum_cost'), Sum('imp_sum_weight'), Sum('exp_sum_weight'))
+            chart_data_imp[country] = aggregate_data['imp_sum_weight__sum'] if aggregate_data['imp_sum_weight__sum'] else 0
+            chart_data_exp[country] = aggregate_data['exp_sum_weight__sum'] if aggregate_data['exp_sum_weight__sum'] else 0
+            table_country_long.append(CountryHandbook.objects.get(country=country).description)
+            if type == 'IM':
+                weight_table_data.append(aggregate_data['imp_sum_cost__sum'] if aggregate_data['imp_sum_cost__sum'] else 0)
+                cost_table_data.append(aggregate_data['imp_sum_weight__sum'] if aggregate_data['imp_sum_weight__sum'] else 0)
+            else:
+                weight_table_data.append(aggregate_data['exp_sum_cost__sum'] if aggregate_data['exp_sum_cost__sum'] else 0)
+                cost_table_data.append(aggregate_data['exp_sum_weight__sum'] if aggregate_data['exp_sum_weight__sum'] else 0)
+        context = {
+            'table': {
+                'labels': table_country_long,
+                'netto': [weight_table_data, dynamics_list(weight_table_data)],
+                'cost': [cost_table_data, dynamics_list(cost_table_data)]
+            },
+            'chart': {
+                'imp': chart_data_imp,
+                'exp': chart_data_exp
+            }
+        }
+        print(context)
+        return JsonResponse(context)
+
+
 
 

@@ -1,5 +1,6 @@
 <template>
     <div id="exp-imp-dynamics">
+        <h1>Динамика экспорта и импорта России</h1>
         <exp-imp-dynamics-chart v-if="show_chart" :chart-data="chartdata"/>
 
 <!--        <p v-for="data in tabledata" v-bind:key="data.id">-->
