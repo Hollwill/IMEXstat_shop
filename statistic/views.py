@@ -159,13 +159,13 @@ class CountryStatistic(APIView):
         table_country_long = []
         weight_table_data = []
         cost_table_data = []
-        chart_data_imp = {}
-        chart_data_exp = {}
+        chart_data_imp = []
+        chart_data_exp = []
         for country in countries:
             aggregate_data = CountryAggregateData.objects.filter(period__range=date_range, country=country).aggregate(
                 Sum('imp_sum_cost'), Sum('exp_sum_cost'), Sum('imp_sum_weight'), Sum('exp_sum_weight'))
-            chart_data_imp[country] = aggregate_data['imp_sum_weight__sum'] if aggregate_data['imp_sum_weight__sum'] else 0
-            chart_data_exp[country] = aggregate_data['exp_sum_weight__sum'] if aggregate_data['exp_sum_weight__sum'] else 0
+            chart_data_imp.append([country.lower(), aggregate_data['imp_sum_weight__sum'] if aggregate_data['imp_sum_weight__sum'] else 0])
+            chart_data_exp.append([country.lower(), aggregate_data['exp_sum_weight__sum'] if aggregate_data['exp_sum_weight__sum'] else 0])
             table_country_long.append(CountryHandbook.objects.get(country=country).description)
             if type == 'IM':
                 weight_table_data.append(aggregate_data['imp_sum_cost__sum'] if aggregate_data['imp_sum_cost__sum'] else 0)

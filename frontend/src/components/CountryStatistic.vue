@@ -11,6 +11,10 @@
         <div class="d-td">{{table_data.cost[1][index]}}</div>
       </div>
     </div>
+    <p>Импорт<input type="checkbox" name="type"  v-model="showImpMap"></p>
+    <p>Экспорт<input type="checkbox" name="type"  v-model="showExpMap"></p>
+    <highcharts :constructor-type="'mapChart'" :options="impMapOptions" v-if="showImpMap"></highcharts>
+    <highcharts :constructor-type="'mapChart'" :options="expMapOptions" v-if="showExpMap"></highcharts>
   </div>
 </template>
 
@@ -18,17 +22,104 @@
     import {HTTP} from '../http-common'
     import moment from 'moment'
 
+
+import Vue from 'vue'
+import HighchartsVue from 'highcharts-vue'
+import Highcharts from 'highcharts'
+import mapInit from 'highcharts/modules/map'
+import addWorldMap from '../js/worldmap'
+
+mapInit(Highcharts)
+addWorldMap(Highcharts)
+Vue.use(HighchartsVue)
+
     export default {
         name: "CountryStatistic",
         props: ['date', 'interval', 'params', 'category',],
         data() {
             return {
+              showImpMap: true,
+              showExpMap: false,
+              expMapData: [],
+              impMapData: [],
+              impMapOptions: {
+                chart: {
+                  map: 'myMapName'
+                },
+                title: {
+                  text: ''
+                },
+                subtitle: {
+                  text: ''
+                },
+                mapNavigation: {
+                  enabled: true,
+                  buttonOptions: {
+                    alignTo: 'spacingBox'
+                  }
+                },
+                colorAxis: {
+                  minColor: '#add8e6',
+                  maxColor: '#0000ff'
+                },
+                series: [
+                {
+                  name: 'Импорт',
+                  states: {
+                    hover: {
+                      color: '#BADA55'
+                    }
+                  },
+                  allAreas: true,
+                  data: []
+                }]
+              },
+              expMapOptions: {
+                chart: {
+                  map: 'myMapName'
+                },
+                title: {
+                  text: ''
+                },
+                subtitle: {
+                  text: ''
+                },
+                mapNavigation: {
+                  enabled: true,
+                  buttonOptions: {
+                    alignTo: 'spacingBox'
+                  }
+                },
+                colorAxis: {
+                  minColor: '#ffff00',
+                  maxColor: '#ffa500'
+                },
+                series: [
+                {
+                  name: 'Импорт',
+                  states: {
+                    hover: {
+                      color: '#BADA55'
+                    }
+                  },
+                  allAreas: true,
+                  data: []
+                }]
+              },
               table_data: {
                   labels: [],
                   netto: [[], []],
                   cost: [[], []],
               },
               show_table: true
+            }
+        },
+        watch: {
+            expMapData (newValue) {
+                this.impMapOptions.series[0].data = newValue
+            },
+            impMapData (newValue) {
+                this.expMapOptions.series[0].data = newValue
             }
         },
         methods: {
@@ -42,11 +133,13 @@
                 })
                     .then(response => {
                         this.table_data.labels = response.data.table.labels
-
                         this.table_data.netto[0] = response.data.table.netto[0]
                         this.table_data.netto[1] = response.data.table.netto[1]
                         this.table_data.cost[0] = response.data.table.cost[0]
                         this.table_data.cost[1] = response.data.table.cost[1]
+                        this.expMapData = response.data.chart.imp
+                        this.impMapData = response.data.chart.exp
+                        window.console.log(response.data.chart)
                     })
                     .catch(error => {
                         window.console.log(error)
