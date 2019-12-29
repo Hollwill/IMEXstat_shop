@@ -23,15 +23,15 @@
     import moment from 'moment'
 
 
-import Vue from 'vue'
-import HighchartsVue from 'highcharts-vue'
-import Highcharts from 'highcharts'
-import mapInit from 'highcharts/modules/map'
-import addWorldMap from '../js/worldmap'
+    import Vue from 'vue'
+    import HighchartsVue from 'highcharts-vue'
+    import Highcharts from 'highcharts'
+    import mapInit from 'highcharts/modules/map'
+    import addWorldMap from '../js/worldmap'
 
-mapInit(Highcharts)
-addWorldMap(Highcharts)
-Vue.use(HighchartsVue)
+    mapInit(Highcharts)
+    addWorldMap(Highcharts)
+    Vue.use(HighchartsVue)
 
     export default {
         name: "CountryStatistic",
@@ -139,7 +139,6 @@ Vue.use(HighchartsVue)
                         this.table_data.cost[1] = response.data.table.cost[1]
                         this.expMapData = response.data.chart.imp
                         this.impMapData = response.data.chart.exp
-                        window.console.log(response.data.chart)
                     })
                     .catch(error => {
                         window.console.log(error)
@@ -149,6 +148,12 @@ Vue.use(HighchartsVue)
                 this.show_table = (!this.show_table)
             }
         },
+        created() {
+            this.$eventHub.$on('recount', this.recount)
+        },
+        beforeDestroy(){
+            this.$eventHub.$off('recount');
+        },
         mounted() {
             this.recount()
         },
@@ -156,28 +161,5 @@ Vue.use(HighchartsVue)
 </script>
 
 <style scoped>
-*{
-  box-sizing: border-box;
-}
-.d-table{
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-}
-.d-tr{
-  display: table-row;
-}
-.d-td{
-  display: table-cell;
-  text-align: center;
-  border: none;
-  border: 1px solid #ccc;
-  vertical-align: middle;
-}
-.d-td:not(.no-p){
-  padding: 4px;
-}
-.div-as-button {
-  cursor: pointer;
-}
+
 </style>

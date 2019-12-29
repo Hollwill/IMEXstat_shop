@@ -42,6 +42,7 @@
     import {HTTP} from '../http-common'
     import moment from 'moment'
 
+
     export default {
         name: "MarketSummary",
         props: ['date'],
@@ -78,8 +79,15 @@
                     })
             }
         },
+        created() {
+            this.$eventHub.$on('recount', this.recount)
+        },
+        beforeDestroy(){
+            this.$eventHub.$off('recount');
+        },
         mounted() {
             this.recount()
+
         },
     }
 </script>

@@ -105,6 +105,13 @@
             },
 
         },
+        created() {
+            this.$eventHub.$on('recount', this.recount)
+            this.$eventHub.$on('recount', this.clear)
+        },
+        beforeDestroy(){
+            this.$eventHub.$off('recount');
+        },
         mounted() {
             let date_to = new Date();
             let date_from = new Date(date_to.getTime());
@@ -116,28 +123,5 @@
 </script>
 
 <style scoped>
-*{
-  box-sizing: border-box;
-}
-.d-table{
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-}
-.d-tr{
-  display: table-row;
-}
-.d-td{
-  display: table-cell;
-  text-align: center;
-  border: none;
-  border: 1px solid #ccc;
-  vertical-align: middle;
-}
-.d-td:not(.no-p){
-  padding: 4px;
-}
-.div-as-button {
-  cursor: pointer;
-}
+
 </style>

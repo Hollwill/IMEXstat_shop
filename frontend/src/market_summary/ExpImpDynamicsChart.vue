@@ -5,7 +5,6 @@
     export default {
         extends: Bar,
         mixins: [reactiveProp],
-        props: ['chartData'],
         data() {
             return {
                 options: {

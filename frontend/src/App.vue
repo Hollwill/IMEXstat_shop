@@ -1,69 +1,95 @@
 <template>
   <div class="app">
-    <month-picker-input @input="date_from" :no-default="true" lang="ru"></month-picker-input>
-    <month-picker-input @input='date_to' :no-default="true" lang="ru"></month-picker-input>
-    <select v-model="params">
-      <option value="stoim">Стоимость</option>
-      <option value="netto">Нетто</option>
-    </select>
-    <select v-model="category">
-      <option value="IM">Импорт</option>
-      <option value="EX">Экспорт</option>
-    </select>
-    <select v-model="interval">
-      <option value="year">Год</option>
-      <option value="quartal">Квартал</option>
-      <option value="month">Месяц</option>
-    </select>
-    <button @click="getData">Получить обновленные данные</button>
-    <market-summary :date="date" ref="marketSummary"></market-summary>
-    <exp-imp-dynamics :date="date"
-                      :params="params"
-                      :interval="interval"
-                      ref="expImpDynamics"
-    ></exp-imp-dynamics>
-    <turnover-structure
-            :date="date"
-            :params="params"
-            :interval="interval"
-            :category="category"
-            ref="turnoverStructure"
-    ></turnover-structure>
-    <country-statistic
-            :date="date"
-            :params="params"
-            :interval="interval"
-            :category="category"
-            ref="CountryStatistic"
-    ></country-statistic>
+    <div class="sidenav">
+      <p><router-link :to="{name: 'market_summary'}">Сводка рынка</router-link></p>
+      <p><router-link :to="{name: 'report_tnved'}">Отчет по ТНВЭД</router-link></p>
+    </div>
+    <div class="main">
+      <div class="data-pickers">
+        <month-picker-input @input="date_from" :no-default="true" lang="ru"></month-picker-input>
+        <month-picker-input @input='date_to' :no-default="true" lang="ru"></month-picker-input>
+      </div>
+
+      <autocomplete :min-len="1" :placeholder="'Введите код тнвэд'" :items="items" v-model="item" :get-label="getLabel" :component-item="template" @update-items="updateItems"></autocomplete>
+      <button @click="addTnved">+</button>
+      <div class="tnved_list" v-for="(tnved, index) in selectedTnved" :key="index">
+        <span class="div-as-button" @click="rmTnved(index)">{{tnved}}</span>
+      </div>
+      <br>
+      <select v-model="params">
+        <option value="stoim">Стоимость</option>
+        <option value="netto">Нетто</option>
+      </select>
+      <select v-model="category">
+        <option value="ИМ">Импорт</option>
+        <option value="ЭК">Экспорт</option>
+      </select>
+      <select v-model="interval">
+        <option value="year">Год</option>
+        <option value="quartal">Квартал</option>
+        <option value="month">Месяц</option>
+      </select>
+      <button @click="getData">Получить обновленные данные</button>
+    </div>
+    <router-view
+              :date="date"
+              :params="params"
+              :interval="interval"
+              :category="category"
+              :tnved_list="selectedTnved"
+      ></router-view>
   </div>
 </template>
 
 
 <script>
-
 import { MonthPickerInput } from 'vue-month-picker'
+import Autocomplete from 'v-autocomplete'
+import 'v-autocomplete/dist/v-autocomplete.css'
+import AutocompleteItemTemplate from "./AutocompleteItemTemplate";
+import {HTTP} from './http-common'
 
 export default {
   name: 'App',
   data() {
       return {
+          template: AutocompleteItemTemplate,
+          items: [],
+          item: null,
+          selectedTnved: [],
           date: {
               from: null,
               to: null
           },
           params: 'stoim',
           interval: 'year',
-          category: 'IM',
+          category: 'ИМ',
       }
   },
   methods: {
+      addTnved () {
+          this.selectedTnved.push(this.item)
+      },
+      rmTnved (index) {
+          this.selectedTnved = this.selectedTnved.splice(1, index)
+
+      },
+      updateItems (text) {
+        HTTP.get('statistic/autocomplete/', {
+            params: {
+                'q': text
+            }
+        })
+            .then(response => {
+                this.items = response.data
+            })
+
+      },
+      getLabel(item) {
+          return item
+      },
       getData() {
-          this.$refs.marketSummary.recount();
-          this.$refs.expImpDynamics.recount();
-          this.$refs.turnoverStructure.clear();
-          this.$refs.turnoverStructure.recount();
-          this.$refs.CountryStatistic.recount();
+          this.$eventHub.$emit('recount')
       },
       date_from(data) {
           if (String(data.monthIndex).length === 1) {
@@ -82,11 +108,7 @@ export default {
   },
   components: {
     MonthPickerInput,
-    MarketSummary: () => import('./components/MarketSummary'),
-    ExpImpDynamics: () => import('./components/ExpImpDynamics'),
-    TurnoverStructure: () => import('./components/TurnoverStructure'),
-    CountryStatistic: () => import('./components/CountryStatistic')
-
+    Autocomplete
   },
 };
 </script>
@@ -97,10 +119,55 @@ export default {
         z-index: 100;
     }
     .month-picker__year p {
-        background-color: white;
-        margin-block-start: 0 !important;
-        margin-block-end: 0 !important;
-        padding-top: 1em;
-        padding-bottom: 1em;
+      background-color: white;
+      margin-block-start: 0 !important;
+      margin-block-end: 0 !important;
+      padding-top: 1em;
+      padding-bottom: 1em;
     }
+    .sidenav {
+
+      width: 160px;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      padding-top: 20px;
+      margin-right: 0;
+    }
+    .main {
+      margin-left: 160px; /* Same as the width of the sidenav */
+      padding: 0px 10px;
+    }
+    .router-link-active {
+      color: orange;
+    }
+    .data-pickers {
+      margin: 0 !important;
+    }
+  *{
+    box-sizing: border-box;
+  }
+  .d-table{
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .d-tr{
+    display: table-row;
+  }
+  .d-td{
+    display: table-cell;
+    text-align: center;
+    border: none;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+  }
+  .d-td:not(.no-p){
+    padding: 4px;
+  }
+  .div-as-button {
+    cursor: pointer;
+  }
 </style>

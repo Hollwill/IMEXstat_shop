@@ -2,6 +2,7 @@
     <div id="exp-imp-dynamics">
         <h1>Динамика экспорта и импорта России</h1>
         <exp-imp-dynamics-chart v-if="show_chart" :chart-data="chartdata"/>
+        {{chartdata}}
 
 <!--        <p v-for="data in tabledata" v-bind:key="data.id">-->
 <!--            {{ data.labelList }}, {{ data.impData }}, {{ data.expData }}-->
@@ -99,11 +100,18 @@
                     })
             }
         },
+        created() {
+            this.$eventHub.$on('recount', this.recount)
+        },
+        beforeDestroy(){
+            this.$eventHub.$off('recount');
+        },
         mounted() {
             let date_to = new Date();
             let date_from = new Date(date_to.getTime());
             date_from.setFullYear(date_from.getFullYear() - 3);
             this.recount(moment(date_to).format("YYYY-MM"), moment(date_from).format("YYYY-MM"));
+
         }
 
     }
