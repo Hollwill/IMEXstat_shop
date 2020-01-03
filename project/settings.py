@@ -5,6 +5,7 @@ import os
 
 
 class Base(Configuration):
+    DISABLE_SERVER_SIDE_CURSORS = True
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

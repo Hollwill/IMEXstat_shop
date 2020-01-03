@@ -13,7 +13,6 @@ class StatisticData(models.Model):
     tnved_four = models.CharField(db_index=True, max_length=4, blank=True, null=True)
     tnved_six = models.CharField(db_index=True, max_length=6, blank=True, null=True)
     tnved_eight = models.CharField(db_index=True, max_length=8, blank=True, null=True)
-    split_tnved = JSONField(db_index=True, blank=True, null=True)
     edizm = models.CharField(max_length=20, blank=True, null=True)
     stoim = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
     netto = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
@@ -39,6 +38,7 @@ class StatisticDataDocument(Document):
             'netto',
             'napr',
             'period',
+            'strana',
         ]
 
 

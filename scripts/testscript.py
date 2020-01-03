@@ -14,25 +14,24 @@ split_tnved_dict = {
     10: 'tnved',
 }
 
-
+# def run():
+#     country_dict = StatisticData.objects.all().values('strana').distinct()
+#     country_list = [i['strana'] for i in country_dict]
+#     for country in country_list:
+#         imp_data = StatisticData.objects.filter(napr='ИМ', strana=country)
+#         exp_data = StatisticData.objects.filter(napr='ЭК', strana=country)
+#         imp_agg_data = imp_data.aggregate(Sum('netto'), Sum('stoim'))
+#         exp_agg_data = exp_data.aggregate(Sum('netto'), Sum('stoim'))
+#         print(imp_agg_data)
+#         print(exp_agg_data)
 
 def run():
-    # s = Search(index='statistic').params(request_timeout=100)
-    # s.aggs.bucket('a', 'terms', field='tnved_two', size=200)
-    #
-    # response = s.execute()
-    # print(len(response.aggregations.a.buckets))
-    # a = []
-    # for item in response.aggregations.a.buckets:
-    #     a.append(item.key)
-    # print([item for item, count in collections.Counter(a).items() if count > 1])
-
-    s = StatisticDataDocument.search()
-    s.aggs.bucket('a', 'terms', field='tnved_two', size=200)
-    result = s.execute()
-    a = [item.key for item in result.aggregations.a.buckets]
-
-
-
-# def run():
-#     print([i['tnved_two'] for i in StatisticData.objects.values('tnved_two').distinct()])
+    country_dict = StatisticData.objects.all().values('strana').distinct()
+    country_list = [i['strana'] for i in country_dict]
+    s = Search(index='statistic').params(request_timeout=100)
+    for country in country_list:
+        s.query = Q('match', strana=country)
+        s.aggs.bucket('stoim', 'sum', field='stoim')
+        s.aggs.bucket('netto', 'sum', field='netto')
+        result = s[:s.count()].execute().aggregations
+        print(result)
