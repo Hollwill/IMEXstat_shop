@@ -9,8 +9,8 @@
         <month-picker-input @input="date_from" :no-default="true" lang="ru"></month-picker-input>
         <month-picker-input @input='date_to' :no-default="true" lang="ru"></month-picker-input>
       </div>
-
-      <autocomplete :min-len="1" :placeholder="'Введите код тнвэд'" :items="items" v-model="item" :get-label="getLabel" :component-item="template" @update-items="updateItems"></autocomplete>
+      <input type="text" v-model="item">
+<!--      <autocomplete :min-len="1" :placeholder="'Введите код тнвэд'" :items="items" v-model="item" :get-label="getLabel" :component-item="template" @update-items="updateItems"></autocomplete>-->
       <button @click="addTnved">+</button>
       <div class="tnved_list" v-for="(tnved, index) in selectedTnved" :key="index">
         <span class="div-as-button" @click="rmTnved(index)">{{tnved}}</span>
@@ -44,7 +44,7 @@
 
 <script>
 import { MonthPickerInput } from 'vue-month-picker'
-import Autocomplete from 'v-autocomplete'
+// import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
 import AutocompleteItemTemplate from "./AutocompleteItemTemplate";
 import {HTTP} from './http-common'
@@ -69,10 +69,10 @@ export default {
   methods: {
       addTnved () {
           this.selectedTnved.push(this.item)
+          this.item = null
       },
       rmTnved (index) {
-          this.selectedTnved = this.selectedTnved.splice(1, index)
-
+          this.selectedTnved.splice(index, 1)
       },
       updateItems (text) {
         HTTP.get('statistic/autocomplete/', {
@@ -108,7 +108,7 @@ export default {
   },
   components: {
     MonthPickerInput,
-    Autocomplete
+    // Autocomplete
   },
 };
 </script>

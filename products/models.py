@@ -39,7 +39,7 @@ class Research(models.Model):
     stock = models.BooleanField(default=False, verbose_name='Акция')
     discount = models.IntegerField(default=0, choices=[(i, i) for i in range(0, 101)], verbose_name='Скидка')
 
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         super(Research, self).save()
@@ -56,8 +56,8 @@ class Research(models.Model):
 
 
 class Category(MPTTModel):
-    title = models.CharField(max_length=50, verbose_name='Название категории')
-    slug = models.SlugField(unique=True, blank=True)
+    title = models.CharField(max_length=255, verbose_name='Название категории')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='Родитель')
 
     def save(self, *args, **kwargs):
