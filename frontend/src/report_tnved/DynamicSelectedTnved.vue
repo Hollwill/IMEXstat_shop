@@ -250,7 +250,6 @@
             dynamics_array(arr) {
                 let new_arr = [0];
                 for (let i = 0; i < arr.length; i++) {
-                    window.console.log(i)
                     let val = (arr[i] === 0) ? 0 : ((arr[i+1] - arr[i])/arr[i] * 100).toFixed(2);
                     new_arr.push(val)
                 }
