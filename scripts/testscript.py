@@ -34,4 +34,8 @@ def run():
         s.aggs.bucket('stoim', 'sum', field='stoim')
         s.aggs.bucket('netto', 'sum', field='netto')
         result = s[:s.count()].execute().aggregations
+<<<<<<< HEAD
         print(result)
+=======
+        print(result)
+>>>>>>> 21eb6125a5978c9ae28bac91153bd364503a4655

@@ -2,6 +2,17 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django_elasticsearch_dsl import Document
 from django_elasticsearch_dsl.registries import registry
+from datetime import date
+import pandas as pd
+from django.db.models import Avg, Max, Sum
+
+tnved_dict = {
+    2: 'tnved_two',
+    4: 'tnved_four',
+    6: 'tnved_six',
+    8: 'tnved_eight',
+    10: 'tnved',
+}
 
 
 class StatisticData(models.Model):
@@ -19,6 +30,50 @@ class StatisticData(models.Model):
     kol = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
+
+    @classmethod
+    def pd_split_dates_by_inreval(cls, request):
+        pd_interval = {'year': '12MS', 'month': 'MS', 'quartal': '3MS'}
+        interval = request.query_params.get('interval')
+        str_date_range = [request.query_params.get('date_from'), request.query_params.get('date_to')]
+        date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in str_date_range]
+        return [i for i in pd.date_range(start=date_range[0], end=date_range[1], freq=pd_interval[interval])]
+
+    @classmethod
+    def get_codes_tnved_statistic_with_split_by_dates(cls, request, tnved_list):
+        split_dates = cls.pd_split_dates_by_inreval(request)
+        imp_data = StatisticData.objects.filter(napr='ИМ')
+        exp_data = StatisticData.objects.filter(napr='ЭК')
+        tnved_data_list = []
+        for tnved in tnved_list:
+            tnved_data = {
+                'tnved': tnved,
+                'exp': {
+                    'stoim': [],
+                    'weight': []
+                },
+                'imp': {
+                    'stoim': [],
+                    'weight': []
+                },
+            }
+            filter_dict = {tnved_dict[len(tnved)]: tnved}
+            tnved_imp_data = imp_data.filter(**filter_dict)
+            tnved_exp_data = exp_data.filter(**filter_dict)
+            for i in range(len(split_dates) - 1):
+                tnved_agg_imp = tnved_imp_data.filter(
+                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+                    Sum('stoim'), Sum('netto'))
+                tnved_agg_exp = tnved_exp_data.filter(
+                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+                    Sum('stoim'), Sum('netto'))
+                tnved_data['imp']['stoim'].append(int(tnved_agg_imp['stoim__sum']) if tnved_agg_imp['stoim__sum'] else 0)
+                tnved_data['imp']['weight'].append(int(tnved_agg_imp['netto__sum']) if tnved_agg_imp['netto__sum'] else 0)
+                tnved_data['exp']['stoim'].append(int(tnved_agg_exp['stoim__sum']) if tnved_agg_exp['stoim__sum'] else 0)
+                tnved_data['exp']['weight'].append(int(tnved_agg_exp['netto__sum']) if tnved_agg_exp['netto__sum'] else 0)
+            tnved_data_list.append(tnved_data)
+        del split_dates[0]
+        return tnved_data_list, split_dates
 
 
 @registry.register_document

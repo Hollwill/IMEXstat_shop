@@ -40,7 +40,7 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
             return Research.objects.filter(title__icontains=self.request.GET.get('research'))
         else:
             try:
-                return Research.objects.filter(research_type=self.kwargs['type'])
+                return Research.objects.filter(research_type=self.request.GET['type'])
             except KeyError:
                 return Research.objects.all()
 
@@ -49,7 +49,11 @@ class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
     def get_queryset(self):
-        return Research.objects.filter(category__slug=self.kwargs['slug'])
+        type = self.request.GET.get('type')
+        if type:
+            return Research.objects.filter(category__slug=self.kwargs['slug'], research_type=type)
+        else:
+            return Research.objects.filter(category__slug=self.kwargs['slug'])
 
 
 class ResearchDetailView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryContextMixin):

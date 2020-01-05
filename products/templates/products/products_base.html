@@ -81,9 +81,9 @@
                     <div class="list-group">
                         {% recursetree categories %}
                             {% if node.get_children %}
-                                <a href="{% url 'research:category' node.slug %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
+                                <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
                             {% else %}
-                                <a href="{% url 'research:category' node.slug %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
+                                <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
 
                             {% endif %}
                             {% if not node.is_leaf_node %}
@@ -97,9 +97,9 @@
 				</div>
 				<div class="content__main">
 					<div class="ready__type">
-						<a href="{% url 'research:type' 'industry' %}" id="industry" class="ready__type-item ">Отраслевые</a>
-						<a href="{% url 'research:type' 'export' %}" id="export" class="ready__type-item">Экспорт</a>
-						<a href="{% url 'research:type' 'import' %}" id="import" class="ready__type-item">Импорт</a>
+						<a href="{{ request.path }}?type=industry" id="industry" class="ready__type-item ">Отраслевые</a>
+						<a href="{{ request.path }}?type=export" id="export" class="ready__type-item">Экспорт</a>
+						<a href="{{ request.path }}?type=import" id="import" class="ready__type-item">Импорт</a>
 					</div>
 					{% block inner_content %}
 
