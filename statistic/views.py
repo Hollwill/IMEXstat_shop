@@ -125,7 +125,6 @@ class TurnoverStructure(APIView):
                                           Q('range', period={'gte': date_range[0], 'lt': date_range[1]})])
                 s.aggs.metric('stoim', 'sum', field='stoim')
                 s.aggs.metric('netto', 'sum', field='netto')
-                print(s.count())
                 result = s[:s.count()].execute().aggregations
                 label_list.append(i)
                 netto_list.append(result['netto']['value'])
@@ -188,7 +187,6 @@ class CountryStatistic(APIView):
                 'exp': chart_data_exp
             }
         }
-        print(context)
         return JsonResponse(context)
 
 
@@ -335,26 +333,34 @@ class TnvedDynamic(APIView):
 
 class CountryReport(APIView):
     def get(self, request):
-        str_date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
+        def get_data(request, tnved_list):
+            print(tnved_list)
+            str_date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
+
+            q_objects = _Q()
+            for tnved in tnved_list:
+                filter_dict = {tnved_dict[len(tnved)]: tnved}
+                q_objects |= _Q(**filter_dict)
+            tnved_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
+            country_list = [i[0] for i in tnved_data.values_list('strana').distinct()]
+            data = []
+            for country in country_list:
+                country_dict = {'country': CountryHandbook.objects.get(country=country).description, 'country_short': country, 'exp': {}, 'imp': {}}
+                imp_country_agg = tnved_data.filter(napr='ИМ', strana=country).aggregate(Sum('netto'), Sum('stoim'))
+                exp_country_agg = tnved_data.filter(napr='ЭК', strana=country).aggregate(Sum('netto'), Sum('stoim'))
+                country_dict['exp']['cost'] = int(exp_country_agg['stoim__sum']) if exp_country_agg['stoim__sum'] else 0
+                country_dict['exp']['weight'] = int(exp_country_agg['netto__sum']) if exp_country_agg['netto__sum'] else 0
+                country_dict['imp']['cost'] = int(imp_country_agg['stoim__sum']) if imp_country_agg['stoim__sum'] else 0
+                country_dict['imp']['weight'] = int(imp_country_agg['netto__sum']) if imp_country_agg['netto__sum'] else 0
+                data.append(country_dict)
+            return data
         tnved_list = [request.query_params.get('tnved_list[%s]' % i)
                       for i in range(int(request.query_params.get('tnved_list_length')))]
-        q_objects = _Q()
-        for tnved in tnved_list:
-            filter_dict = {tnved_dict[len(tnved)]: tnved}
-            q_objects |= _Q(**filter_dict)
-        tnved_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
-        country_list = [i[0] for i in tnved_data.values_list('strana').distinct()]
-        data = []
-        for country in country_list:
-            country_dict = {'country': CountryHandbook.objects.get(country=country).description, 'country_short': country, 'exp': {}, 'imp': {}}
-            imp_country_agg = tnved_data.filter(napr='ИМ', strana=country).aggregate(Sum('netto'), Sum('stoim'))
-            exp_country_agg = tnved_data.filter(napr='ЭК', strana=country).aggregate(Sum('netto'), Sum('stoim'))
-            country_dict['exp']['cost'] = exp_country_agg['stoim__sum'] if exp_country_agg['stoim__sum'] else 0
-            country_dict['exp']['weight'] = exp_country_agg['netto__sum'] if exp_country_agg['netto__sum'] else 0
-            country_dict['imp']['cost'] = imp_country_agg['stoim__sum'] if imp_country_agg['stoim__sum'] else 0
-            country_dict['imp']['weight'] = imp_country_agg['netto__sum'] if imp_country_agg['netto__sum'] else 0
-            data.append(country_dict)
-        return JsonResponse(data, safe=False)
+        context = {
+            'table': get_data(request, tnved_list),
+            'pie': get_data(request, [tnved_list[0]])
+        }
+        return JsonResponse(context)
 
 
 class DetailedCountryReport(APIView):
@@ -388,7 +394,6 @@ class DetailedCountryReport(APIView):
             'labels': format_dates_list,
             'data': country_data,
         }
-        print(context)
         return JsonResponse(context)
 
 

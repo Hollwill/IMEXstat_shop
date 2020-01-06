@@ -12,8 +12,8 @@
           <div class="d-td">{{item.dynamicStoim}}</div>
       </div>
     </div>
-<!--    <h1>Сегментный бублик</h1>-->
-<!--    <highcharts class="chart" :options="segmentPieOptions" :updateArgs="updateArgs"></highcharts>-->
+    <h1>Сегментный бублик</h1>
+    <highcharts class="chart" :options="firstTnvedCountriesPieOptions" :updateArgs="updateArgs"></highcharts>
 <!--    <h1>Доля первого кода в вышестоящем</h1>-->
 <!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
   </div>
@@ -59,7 +59,29 @@
                       },
 
                   ]
-                }
+                },
+                firstTnvedCountriesPieData: [],
+                firstTnvedCountriesPieOptions: {
+                  plotOptions: {
+                    series: {
+                      dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.percentage:.2f}%'
+                      }
+                    }
+                  },
+                  tooltip: {
+                    // headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: 'значение: <b>{point.y}</b><br/>'
+                  },
+                  chart: {
+                    type: "pie"
+                  },
+
+                  series: [{
+                    data: [],
+                  }],
+                },
             }
         },
         computed: {
@@ -93,62 +115,46 @@
                 return value
             },
         },
+        watch: {
+            firstTnvedCountriesPieData: {
+                handler(val) {
+                    let sorted_arr = val.slice().sort((a, b) => {
+                        if (this.category === 'ИМ') {
+                              a = (this.params === 'stoim') ? a.imp.cost : a.imp.weight;
+                              b = (this.params === 'stoim') ? b.imp.cost : b.imp.weight;
+                          } else {
+                              a = (this.params === 'stoim') ? a.exp.cost : a.exp.weight;
+                              b = (this.params === 'stoim') ? b.exp.cost : b.exp.weight;
+                          }
+                        return b - a
+                    });
+                    let value = []
+                    for (let i of sorted_arr.slice(0, 9)) {
+                        let data
+                        if (this.category === 'ИМ') {
+                              data = (this.params === 'stoim') ? i.imp.cost : i.imp.weight
+                          } else {
+                              data = (this.params === 'netto') ? i.exp.cost : i.exp.weight
+                          }
+                        value.push({name: i.country, y: data});
+                    }
+                    let sum_data = 0
+                    for (let i of sorted_arr.slice(10)) {
+                        let data
+                        if (this.category === 'ИМ') {
+                              data = (this.params === 'stoim') ? i.imp.cost : i.imp.weight
+                          } else {
+                              data = (this.params === 'netto') ? i.exp.cost : i.exp.weight
+                          }
+                        sum_data += data
+                    }
+                    value.push({name: 'Остальные', y: sum_data})
+                    this.firstTnvedCountriesPieOptions.series[0].data = value
+                },
+                deep: true
+            }
+        },
         methods: {
-            // updateFirstTnvedPartsPie(val) {
-            //     this.firstTnvedPartsPieOptions.series[0].data = [];
-            //     for (let i of val) {
-            //         let data;
-            //         if (this.category === 'ИМ') {
-            //               data = (this.params === 'stoim') ? i.imp.stoim : i.imp.weight
-            //           } else {
-            //               data = (this.params === 'netto') ? i.exp.stoim : i.exp.weight
-            //           }
-            //         this.firstTnvedPartsPieOptions.series[0].data.push({
-            //             name: i.tnved,
-            //             y: data
-            //         })
-            //     }
-            //
-            // },
-            // segmentPieData(val) {
-            //
-            //     this.segmentPieOptions.series[0].data = [
-            //         {
-            //             name: 'Импорт',
-            //             y: (this.params === 'stoim') ? this.imp_sum_table.stoim : this.imp_sum_table.weight,
-            //             drilldown: 'imp',
-            //             color: '#0600FF'
-            //         },
-            //         {
-            //             name: 'Экспорт',
-            //             y: (this.params === 'stoim') ? this.exp_sum_table.stoim : this.exp_sum_table.weight,
-            //             drilldown: 'exp',
-            //             color: '#EBFF00'
-            //         }
-            //     ];
-            //     this.segmentPieOptions.drilldown.series[0].data = [];
-            //     this.segmentPieOptions.drilldown.series[1].data = [];
-            //
-            //     for (let i = 0; i < val.length; i++) {
-            //         let imp_data = (this.params === 'stoim') ? val[i].imp.stoim : val[i].imp.weight
-            //         let exp_data = (this.params === 'stoim') ? val[i].exp.stoim : val[i].exp.weight
-            //         this.segmentPieOptions.drilldown.series[0].data.push([val[i].tnved, imp_data.reduce((a, b) => a + b, 0)])
-            //         this.segmentPieOptions.drilldown.series[1].data.push([val[i].tnved, exp_data.reduce((a, b) => a + b, 0)])
-            //     }
-            //
-            // },
-            // sumTables(val) {
-            //     let imp = {stoim: 0, weight: 0};
-            //     let exp = {stoim: 0, weight: 0};
-            //     for (let item of val) {
-            //         imp.stoim += item.imp.stoim.reduce((a, b) => a + b, 0);
-            //         imp.weight += item.imp.weight.reduce((a, b) => a + b, 0);
-            //         exp.stoim += item.exp.stoim.reduce((a, b) => a + b, 0);
-            //         exp.weight += item.exp.weight.reduce((a, b) => a + b, 0);
-            //     }
-            //     this.imp_sum_table = imp;
-            //     this.exp_sum_table = exp;
-            // },
             dynamics_array(arr) {
                 let new_arr = [0];
                 for (let i = 0; i < arr.length; i++) {
@@ -157,19 +163,6 @@
                 }
                 return new_arr
             },
-            // updateLineChart(val) {
-            //     this.chartOptions.series = [];
-            //       for (let tnved_data of val) {
-            //           let data;
-            //           if (this.category === 'ИМ') {
-            //               data = (this.params === 'stoim') ? tnved_data.imp.stoim : tnved_data.imp.weight
-            //           } else {
-            //               data = (this.params === 'netto') ? tnved_data.exp.stoim : tnved_data.exp.weight
-            //           }
-            //           this.chartOptions.series.push({name: tnved_data.tnved, data: data})
-            //       }
-            //       this.chartOptions.xAxis.categories = this.date_labels
-            // },
             recount() {
                 HTTP.get('statistic/country_report/', {
                     params: {
@@ -184,7 +177,8 @@
                     }
                 })
                     .then(response => {
-                        this.country_data = response.data
+                        this.firstTnvedCountriesPieData = response.data.pie;
+                        this.country_data = response.data.table;
                     })
             },
             countryDataRequest(country) {
