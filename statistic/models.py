@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django_elasticsearch_dsl import Document
 from django_elasticsearch_dsl.registries import registry
 from datetime import date
@@ -24,11 +23,11 @@ class StatisticData(models.Model):
     tnved_four = models.CharField(db_index=True, max_length=4, blank=True, null=True)
     tnved_six = models.CharField(db_index=True, max_length=6, blank=True, null=True)
     tnved_eight = models.CharField(db_index=True, max_length=8, blank=True, null=True)
-    edizm = models.CharField(max_length=20, blank=True, null=True)
-    stoim = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
-    netto = models.DecimalField(db_index=True, max_digits=22, decimal_places=0, blank=True, null=True)
+    edizm = models.CharField(db_index=True, max_length=20, blank=True, null=True)
+    stoim = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
+    netto = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
     kol = models.DecimalField(max_digits=22, decimal_places=0, blank=True, null=True)
-    region = models.CharField(max_length=255, blank=True, null=True)
+    region = models.CharField(db_index=True, max_length=255, blank=True, null=True)
     region_s = models.CharField(max_length=255, blank=True, null=True)
 
     @classmethod
@@ -55,7 +54,7 @@ class StatisticData(models.Model):
                 'imp': {
                     'stoim': [],
                     'weight': []
-                },
+                }
             }
             filter_dict = {tnved_dict[len(tnved)]: tnved}
             tnved_imp_data = imp_data.filter(**filter_dict)
@@ -129,12 +128,4 @@ class CountryAggregateData(models.Model):
     exp_sum_cost = models.BigIntegerField(blank=True, null=True, verbose_name='Экспорт - суммарная стоимость')
     imp_sum_weight = models.BigIntegerField(blank=True, null=True, verbose_name='Импорт - суммарный вес')
     exp_sum_weight = models.BigIntegerField(blank=True, null=True, verbose_name='Экспорт - суммарный вес')
-
-    ''' update statistic_statisticdata
-set split_tnved  = json_build_object('two', substring(tnved from 1 for 2),            
-'four', substring(tnved from 1 for 4),
-'six', substring(tnved from 1 for 6),
-'eight', substring(tnved from 1 for 8),
-'ten', substring(tnved from 1 for 10))
-;'''
 

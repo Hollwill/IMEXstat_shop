@@ -1,4 +1,5 @@
-from .views import MarketSummary, ExpImpDynamics, TurnoverStructure, CountryStatistic, Autocomplete, TnvedDynamic, DetailedCountryReport
+from .views import MarketSummary, ExpImpDynamics, TurnoverStructure, CountryStatistic, Autocomplete,\
+    TnvedDynamic, DetailedCountryReport, CountryReport, RegionReport, DetailedRegionReport
 from rest_framework import routers
 from django.urls import path
 from django.views.generic import TemplateView
@@ -15,7 +16,9 @@ urlpatterns = [
     path('country_statistic/', CountryStatistic.as_view(), name='country_statistic'),
     path('autocomplete/', Autocomplete.as_view(), name='autocomplete'),
     path('tnved_dynamics/', TnvedDynamic.as_view(), name='tnved_dynamics'),
+    path('country_report/', CountryReport.as_view(), name='country_report'),
     path('detailed_country_report/', DetailedCountryReport.as_view(), name='detailed_counrty_report'),
+    # path('part_tnved_in_countries/', PartTnvedInCountries.as_view(), name='part_tnved_in_countries'),
 ]
 
 urlpatterns += router.urls
