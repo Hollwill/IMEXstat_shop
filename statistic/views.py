@@ -397,74 +397,115 @@ class DetailedCountryReport(APIView):
         return JsonResponse(context)
 
 
-# class PartTnvedInCountries(APIView):
-#     def get(self, request):
-#         tnved = request.query_params.get('tnved')
-#         filter_dict = {tnved_dict[len(tnved)]: tnved}
-#         country_list = [i[0] for i in StatisticData.objects.filter(**filter_dict).values_list('strana').distinct()]
-#         data = []
-#         for country in country_list:
-#             country_data = {
-#                 'country': CountryHandbook.objects.get(country=country).description,
-#                 'exp': {},
-#                 'imp': {},
-#             }
-#             country_exp = StatisticData.objects.filter(strana=country, napr='ЭК', **filter_dict)
-#             country_imp = StatisticData.objects.filter(strana=country, napr='ИМ', **filter_dict)
-#             aggregate_exp = country_exp.aggregate(Sum('stoim'), Sum('netto'))
-#             aggregate_imp = country_imp.aggregate(Sum('stoim'), Sum('netto'))
-#
-#             country_data['exp']['cost'] = aggregate_exp['stoim__sum']
-#             country_data['exp']['weight'] = aggregate_exp['netto__sum']
-#             country_data['imp']['cost'] = aggregate_imp['stoim__sum']
-#             country_data['imp']['weight'] = aggregate_imp['netto__sum']
-#             data.append(country_data)
-#         return JsonResponse(data, safe=False)
-
 class RegionReport(APIView):
     def get(self, request):
-        split_dates = StatisticData.pd_split_dates_by_inreval(request)
-        format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
+        def get_data(request, tnved_list):
+            print(tnved_list)
+            str_date_range = [request.query_params.get('date_from') + '-01', request.query_params.get('date_to') + '-01']
+
+            q_objects = _Q()
+            for tnved in tnved_list:
+                filter_dict = {tnved_dict[len(tnved)]: tnved}
+                q_objects |= _Q(**filter_dict)
+            tnved_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
+            region_list = [i[0] for i in tnved_data.values_list('region').distinct()]
+            data = []
+            for region in region_list:
+                country_dict = {'region': region, 'exp': {}, 'imp': {}}
+                imp_country_agg = tnved_data.filter(napr='ИМ', region=region).aggregate(Sum('netto'), Sum('stoim'))
+                exp_country_agg = tnved_data.filter(napr='ЭК', region=region).aggregate(Sum('netto'), Sum('stoim'))
+                country_dict['exp']['cost'] = int(exp_country_agg['stoim__sum']) if exp_country_agg['stoim__sum'] else 0
+                country_dict['exp']['weight'] = int(exp_country_agg['netto__sum']) if exp_country_agg['netto__sum'] else 0
+                country_dict['imp']['cost'] = int(imp_country_agg['stoim__sum']) if imp_country_agg['stoim__sum'] else 0
+                country_dict['imp']['weight'] = int(imp_country_agg['netto__sum']) if imp_country_agg['netto__sum'] else 0
+                data.append(country_dict)
+            return data
+        tnved_list = [request.query_params.get('tnved_list[%s]' % i)
+                      for i in range(int(request.query_params.get('tnved_list_length')))]
+        context = {
+            'table': get_data(request, tnved_list),
+            'pie': get_data(request, [tnved_list[0]])
+        }
+        return JsonResponse(context)
+
+
+class DetailedRegionReport(APIView):
+    def get(self, request):
+        region = request.query_params.get('region')
         tnved_list = [request.query_params.get('tnved_list[%s]' % i)
                       for i in range(int(request.query_params.get('tnved_list_length')))]
         q_objects = _Q()
         for tnved in tnved_list:
             filter_dict = {tnved_dict[len(tnved)]: tnved}
             q_objects |= _Q(**filter_dict)
-        tnved_data = StatisticData.objects.filter(q_objects, period__range=format_dates_list)
-        region_list = [i[0] for i in tnved_data.values_list('region').distinct()]
-        data = []
-        for region in region_list:
-            country_dict = {'region': region, 'exp': {}, 'imp': {}}
-            imp_country_agg = tnved_data.filter(napr='ИМ', region=region).aggregate(Sum('netto'), Sum('stoim'))
-            exp_country_agg = tnved_data.filter(napr='ЭК', region=region).aggregate(Sum('netto'), Sum('stoim'))
-            country_dict['exp']['cost'] = exp_country_agg['stoim__sum']
-            country_dict['exp']['weight'] = exp_country_agg['netto__sum']
-            country_dict['imp']['cost'] = imp_country_agg['stoim__sum']
-            country_dict['imp']['weight'] = imp_country_agg['netto__sum']
-            data.append(country_dict)
-        return JsonResponse(data, safe=False)
+        tnved_data = StatisticData.objects.filter(q_objects, region=region)
 
-
-class DetailedRegionReport(APIView):
-    def get(self, request):
         split_dates = StatisticData.pd_split_dates_by_inreval(request)
         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
-        country = request.query_params.get('region')
         country_data = {
-            'country': country,
             'exp': {},
             'imp': {},
         }
-        aggregate_data = [CountryAggregateData.objects.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], country=country).aggregate(
-            Sum('imp_sum_cost'), Sum('exp_sum_cost'), Sum('imp_sum_weight'), Sum('exp_sum_weight')) for i in range(len(format_dates_list) - 1)]
-        country_data['exp']['cost'] = [i['exp_sum_cost__sum'] for i in aggregate_data]
-        country_data['exp']['weight'] = [i['exp_sum_weight__sum'] for i in aggregate_data]
-        country_data['imp']['cost'] = [i['imp_sum_cost__sum'] for i in aggregate_data]
-        country_data['imp']['weight'] = [i['imp_sum_weight__sum'] for i in aggregate_data]
+        aggregate_data_imp = [
+            tnved_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ИМ').aggregate(
+                Sum('stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
+        aggregate_data_exp = [
+            tnved_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ЭК',).aggregate(Sum(
+                'stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
+        country_data['imp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_imp]
+        country_data['imp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_imp]
+        country_data['exp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_exp]
+        country_data['exp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_exp]
         context = {
             'labels': format_dates_list,
-            'data': country_data
+            'data': country_data,
         }
         return JsonResponse(context)
+
+# class RegionReport(APIView):
+#     def get(self, request):
+#         split_dates = StatisticData.pd_split_dates_by_inreval(request)
+#         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
+#         tnved_list = [request.query_params.get('tnved_list[%s]' % i)
+#                       for i in range(int(request.query_params.get('tnved_list_length')))]
+#         q_objects = _Q()
+#         for tnved in tnved_list:
+#             filter_dict = {tnved_dict[len(tnved)]: tnved}
+#             q_objects |= _Q(**filter_dict)
+#         tnved_data = StatisticData.objects.filter(q_objects, period__range=format_dates_list)
+#         region_list = [i[0] for i in tnved_data.values_list('region').distinct()]
+#         data = []
+#         for region in region_list:
+#             country_dict = {'region': region, 'exp': {}, 'imp': {}}
+#             imp_country_agg = tnved_data.filter(napr='ИМ', region=region).aggregate(Sum('netto'), Sum('stoim'))
+#             exp_country_agg = tnved_data.filter(napr='ЭК', region=region).aggregate(Sum('netto'), Sum('stoim'))
+#             country_dict['exp']['cost'] = exp_country_agg['stoim__sum']
+#             country_dict['exp']['weight'] = exp_country_agg['netto__sum']
+#             country_dict['imp']['cost'] = imp_country_agg['stoim__sum']
+#             country_dict['imp']['weight'] = imp_country_agg['netto__sum']
+#             data.append(country_dict)
+#         return JsonResponse(data, safe=False)
+#
+#
+# class DetailedRegionReport(APIView):
+#     def get(self, request):
+#         split_dates = StatisticData.pd_split_dates_by_inreval(request)
+#         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
+#         country = request.query_params.get('region')
+#         country_data = {
+#             'country': country,
+#             'exp': {},
+#             'imp': {},
+#         }
+#         aggregate_data = [CountryAggregateData.objects.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], country=country).aggregate(
+#             Sum('imp_sum_cost'), Sum('exp_sum_cost'), Sum('imp_sum_weight'), Sum('exp_sum_weight')) for i in range(len(format_dates_list) - 1)]
+#         country_data['exp']['cost'] = [i['exp_sum_cost__sum'] for i in aggregate_data]
+#         country_data['exp']['weight'] = [i['exp_sum_weight__sum'] for i in aggregate_data]
+#         country_data['imp']['cost'] = [i['imp_sum_cost__sum'] for i in aggregate_data]
+#         country_data['imp']['weight'] = [i['imp_sum_weight__sum'] for i in aggregate_data]
+#         context = {
+#             'labels': format_dates_list,
+#             'data': country_data
+#         }
+#         return JsonResponse(context)
 
