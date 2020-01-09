@@ -61,7 +61,7 @@
     Vue.use(HighchartsVue);
 
     export default {
-        name: "DynamicSelectedTnved",
+        name: "DynamicSelectedCountry",
         props: ['date', 'params', 'interval', 'category', 'tnved_list'],
         data () {
             return {
@@ -275,7 +275,7 @@
                         'category': this.category,
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
-                        'get': 'tnved',
+                        'get': 'country'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
