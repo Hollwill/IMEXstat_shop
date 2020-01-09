@@ -7,13 +7,13 @@
             :category="category"
             :tnved_list="tnved_list"
     ></dynamic-selected-country>
-    <dynamic-tnved-by-selected-country
-            :date="date"
-            :params="params"
-            :interval="interval"
-            :category="category"
-            :tnved_list="tnved_list"
-    ></dynamic-tnved-by-selected-country>
+<!--    <dynamic-tnved-by-selected-country-->
+<!--            :date="date"-->
+<!--            :params="params"-->
+<!--            :interval="interval"-->
+<!--            :category="category"-->
+<!--            :tnved_list="tnved_list"-->
+<!--    ></dynamic-tnved-by-selected-country>-->
     <dynamic-region-by-selected-country
             :date="date"
             :params="params"
@@ -30,7 +30,7 @@
         props: ['date', 'params', 'interval', 'category', 'tnved_list'],
         components: {
             DynamicSelectedCountry: () => import('./report_country/DynamicSelectedCountry'),
-            DynamicTnvedBySelectedCountry: () => import('./report_country/DynamicTnvedBySelectedCountry'),
+            // DynamicTnvedBySelectedCountry: () => import('./report_country/DynamicTnvedBySelectedCountry'),
             DynamicRegionBySelectedCountry: () => import('./report_country/DynamicRegionBySelectedCountry'),
         }
     }

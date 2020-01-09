@@ -1,8 +1,8 @@
 <template>
   <div class="dynamic-selected-tnved">
-    <h1>Вовлеченность регионов в выбранные кода ТНВЭД</h1>
+    <h1>Вовлеченность регионов в торговлю с выбранными странами</h1>
     <highcharts class="chart" :options="chartOptions" :deepCopyOnUpdate="true" :updateArgs="updateArgs"></highcharts>
-    <h1>Динамика выбранных кодов ТНВЭД</h1>
+    <h1>Регионы участвующие в товарообороте с выбранными странами</h1>
     <div class="d-table">
       <div class="d-tr" v-for="(item, index) in dynamicTable" :key="index">
           <div class="d-td div-as-button" @click="regionDataRequest(item.label)">{{item.label}}</div>
@@ -12,7 +12,7 @@
           <div class="d-td">{{item.dynamicStoim}}</div>
       </div>
     </div>
-    <h1>Сегментный бублик</h1>
+    <h1>Доля субъектов РФ в товарообороте выбранных стран</h1>
     <highcharts class="chart" :options="firstTnvedCountriesPieOptions" :updateArgs="updateArgs"></highcharts>
 <!--    <h1>Доля первого кода в вышестоящем</h1>-->
 <!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->

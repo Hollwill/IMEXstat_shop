@@ -1,8 +1,8 @@
 <template>
   <div class="dynamic-selected-tnved">
-    <h1>Динамика выбранных кодов ТНВЭД</h1>
+    <h1>Динамика выбранных стран</h1>
     <highcharts class="chart" :options="chartOptions" :deepCopyOnUpdate="true" :updateArgs="updateArgs"></highcharts>
-    <h1>Динамика выбранных кодов ТНВЭД</h1>
+    <h1>Динамика выбранных стран</h1>
     <div class="d-table">
       <div class="d-tr" v-for="(item, index) in dynamicTable" :key="index">
           <div class="d-td">{{item.label}}</div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <br>
-    <h5>суммарный импорт по выбранным кодам</h5>
+    <h5>суммарный импорт по выбранным странам</h5>
     <div class="d-table" style="width: 50% !important;">
       <div class="d-tr">
         <div class="d-td">{{imp_sum_table.stoim}}</div>
@@ -24,8 +24,7 @@
         <div class="d-td">т</div>
       </div>
     </div>
-
-    <h5>суммарный экспорт по выбранным кодам</h5>
+    <h5>суммарный экспорт по выбранным странам</h5>
     <div class="d-table" style="width: 50% !important;">
       <div class="d-tr">
         <div class="d-td">{{exp_sum_table.stoim}}</div>
