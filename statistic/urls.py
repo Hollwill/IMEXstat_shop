@@ -18,7 +18,8 @@ urlpatterns = [
     path('tnved_dynamics/', TnvedDynamic.as_view(), name='tnved_dynamics'),
     path('country_report/', CountryReport.as_view(), name='country_report'),
     path('detailed_country_report/', DetailedCountryReport.as_view(), name='detailed_counrty_report'),
-    # path('part_tnved_in_countries/', PartTnvedInCountries.as_view(), name='part_tnved_in_countries'),
+    path('region_report/', RegionReport.as_view(), name='region_report'),
+    path('detailed_region_report/', DetailedRegionReport.as_view(), name='detailed_region_report'),
 ]
 
 urlpatterns += router.urls
