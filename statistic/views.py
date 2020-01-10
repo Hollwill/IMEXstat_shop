@@ -268,17 +268,22 @@ class CountryReportByTnved(APIView):
                     filter_dict = {'region': item}
                 q_objects |= _Q(**filter_dict)
             item_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
-            values_list = [i[0] for i in item_data.values_list('strana' if get == 'tnved' else 'tnved').distinct()]
+            values_list = [i[0] for i in item_data.values_list('strana' if get == 'tnved' else 'tnved_two').distinct()]
+            values_list = values_list[:18]
             data = []
+            print(len(values_list))
             for value in values_list:
+                print(value)
                 value_dict = {'exp': {}, 'imp': {}}
                 if get == 'tnved':
                     value_dict['item'] = CountryHandbook.objects.get(country=value).description
                     value_dict['item_short'] = value
-                elif get == 'country':
+                    filter_dict = {'strana': value}
+                elif get == 'country' or get == 'region':
                     value_dict['item'] = value
-                imp_country_agg = item_data.filter(napr='ИМ', strana=value).aggregate(Sum('netto'), Sum('stoim'))
-                exp_country_agg = item_data.filter(napr='ЭК', strana=value).aggregate(Sum('netto'), Sum('stoim'))
+                    filter_dict = {'tnved_two': value}
+                imp_country_agg = item_data.filter(napr='ИМ', **filter_dict).aggregate(Sum('netto'), Sum('stoim'))
+                exp_country_agg = item_data.filter(napr='ЭК', **filter_dict).aggregate(Sum('netto'), Sum('stoim'))
                 value_dict['exp']['cost'] = int(exp_country_agg['stoim__sum']) if exp_country_agg['stoim__sum'] else 0
                 value_dict['exp']['weight'] = int(exp_country_agg['netto__sum']) if exp_country_agg[
                     'netto__sum'] else 0
@@ -287,13 +292,12 @@ class CountryReportByTnved(APIView):
                     'netto__sum'] else 0
                 data.append(value_dict)
             return data
-
         item_list = [request.query_params.get('item_list[%s]' % i)
                       for i in range(int(request.query_params.get('item_list_length')))]
         context = {
             'table': get_data(request, item_list),
-            'pie': get_data(request, [item_list[0]])
         }
+        context['pie'] = context['table'] if len(item_list) == 1 else get_data(request, [item_list[0]])
         return JsonResponse(context)
 
 
@@ -309,10 +313,12 @@ class DetailedCountryReportByTnved(APIView):
                 filter_dict = {tnved_dict[len(item)]: item}
             elif get == 'country':
                 filter_dict = {'strana': item}
+            elif get == 'region':
+                filter_dict = {'region': item}
             q_objects |= _Q(**filter_dict)
         if get == 'tnved':
             filter_dict = {'strana': selected_item}
-        elif get == 'country':
+        elif get == 'country' or get == 'region':
             filter_dict = {tnved_dict[len(selected_item)]: selected_item}
         selected_item_data = StatisticData.objects.filter(q_objects, **filter_dict)
 
@@ -358,15 +364,21 @@ class RegionReportByTnved(APIView):
                     filter_dict = {'region': item}
                 q_objects |= _Q(**filter_dict)
             item_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
-            print(item_data)
-            values_list = [i[0] for i in item_data.values_list('region').distinct()]
+            values_list = [i[0] for i in item_data.values_list('region' if get == 'country' or get == 'tnved' else 'strana').distinct()]
             data = []
+            values_list = values_list[:18]
             for value in values_list:
                 value_dict = {'exp': {}, 'imp': {}}
-                if get == 'tnved' or get == 'country':
+                if get == 'region':
+                    value_dict['item'] = CountryHandbook.objects.get(country=value).description
+                else:
                     value_dict['item'] = value
-                imp_region_agg = item_data.filter(napr='ИМ', region=value).aggregate(Sum('netto'), Sum('stoim'))
-                exp_region_agg = item_data.filter(napr='ЭК', region=value).aggregate(Sum('netto'), Sum('stoim'))
+                if get == 'tnved' or get == 'country':
+                    filter_dict = {'region': value}
+                elif get == 'region':
+                    filter_dict = {'strana': value}
+                imp_region_agg = item_data.filter(napr='ИМ', **filter_dict).aggregate(Sum('netto'), Sum('stoim'))
+                exp_region_agg = item_data.filter(napr='ЭК', **filter_dict).aggregate(Sum('netto'), Sum('stoim'))
                 value_dict['exp']['cost'] = int(exp_region_agg['stoim__sum']) if exp_region_agg['stoim__sum'] else 0
                 value_dict['exp']['weight'] = int(exp_region_agg['netto__sum']) if exp_region_agg[
                     'netto__sum'] else 0
@@ -379,8 +391,9 @@ class RegionReportByTnved(APIView):
                       for i in range(int(request.query_params.get('item_list_length')))]
         context = {
             'table': get_data(request, item_list),
-            'pie': get_data(request, [item_list[0]])
         }
+        context['pie'] = context['table'] if len(item_list) == 1 else get_data(request, [item_list[0]])
+
         return JsonResponse(context)
 
 
@@ -399,12 +412,15 @@ class DetailedRegionReportByTnved(APIView):
                 filter_dict = {tnved_dict[len(item)]: item}
             elif get == 'country':
                 filter_dict = {'strana': item}
+            elif get == 'region':
+                filter_dict = {'region': item}
             q_objects |= _Q(**filter_dict)
-        if get == 'tnved':
+        if get == 'tnved' or get == 'country':
             filter_dict = {'region': selected_item}
-        elif get == 'country':
-            filter_dict = {'region': selected_item}
+        elif get == 'region':
+            filter_dict = {'strana': CountryHandbook.objects.get(description=selected_item).country }
         selected_item_data = StatisticData.objects.filter(q_objects, **filter_dict)
+        print(filter_dict)
 
         split_dates = StatisticData.pd_split_dates_by_inreval(request)
         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]

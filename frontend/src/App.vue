@@ -4,6 +4,7 @@
       <p><router-link :to="{name: 'market_summary'}">Сводка рынка</router-link></p>
       <p><router-link :to="{name: 'report_tnved'}">Отчет по ТНВЭД</router-link></p>
       <p><router-link :to="{name: 'report_country'}">Отчет по странам</router-link></p>
+      <p><router-link :to="{name: 'report_region'}">Отчет по регионам</router-link></p>
     </div>
     <div class="main">
       <div class="data-pickers">

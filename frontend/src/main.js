@@ -12,6 +12,7 @@ var router = new VueRouter({
     {path: '/market_summary', name: 'market_summary', props: true, component: () => import('./BaseMarketSummary.vue')},
     {path: '/report_tnved', name: 'report_tnved', props: true, component: () => import('./ReportByTnved.vue')},
     {path: '/report_country', name: 'report_country', props: true, component: () => import('./ReportByCountry.vue')},
+    {path: '/report_region', name: 'report_region', props: true, component: () => import('./ReportByRegion.vue')},
   ]
 });
 
