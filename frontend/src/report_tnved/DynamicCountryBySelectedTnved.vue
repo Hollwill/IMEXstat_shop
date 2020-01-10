@@ -99,8 +99,8 @@
 
                     value.push(
                         {
-                            short_label: data.country_short,
-                            label: data.country,
+                            short_label: data.item_short,
+                            label: data.item,
                             weight: weight,
                             stoim: stoim,
                         });
@@ -135,7 +135,7 @@
                           } else {
                               data = (this.params === 'netto') ? i.exp.cost : i.exp.weight
                           }
-                        value.push({name: i.country, y: data});
+                        value.push({name: i.item, y: data});
                     }
                     let sum_data = 0
                     for (let i of sorted_arr.slice(10)) {
@@ -168,8 +168,9 @@
                         'date_to': (this.date.from != null && this.date.to != null) ? this.date.to  : moment(new Date()).format('YYYY-MM'),
                         'date_from': (this.date.from != null && this.date.to != null) ? this.date.from : moment(new Date()).subtract(3, 'year').format('YYYY-MM'),
                         'interval': this.interval,
-                        'tnved_list': this.tnved_list,
-                        'tnved_list_length': this.tnved_list.length
+                        'item_list': this.tnved_list,
+                        'item_list_length': this.tnved_list.length,
+                        'get': 'tnved'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
@@ -186,9 +187,10 @@
                         'date_to': (this.date.from != null && this.date.to != null) ? this.date.to  : moment(new Date()).format('YYYY-MM'),
                         'date_from': (this.date.from != null && this.date.to != null) ? this.date.from : moment(new Date()).subtract(3, 'year').format('YYYY-MM'),
                         'interval': this.interval,
-                        'tnved_list': this.tnved_list,
-                        'tnved_list_length': this.tnved_list.length,
-                        'country': country
+                        'item_list': this.tnved_list,
+                        'item_list_length': this.tnved_list.length,
+                        'item': country,
+                        'get': 'tnved'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
