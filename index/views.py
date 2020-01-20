@@ -1,5 +1,5 @@
 from products.models import Research
-from .models import Tasks, ClientsImages, Products
+from .models import Tasks, ClientsImages, Products, Contacts
 from django.views import generic
 from .forms import ProfileForm
 from django.http import HttpResponseRedirect
@@ -45,7 +45,12 @@ class IndexList(IndexFormView, generic.TemplateView):
 
 class ContactsList(generic.TemplateView):
 	template_name = 'index/contacts.html'
-	success_url = reverse_lazy('index:contacts')
+
+	def get_context_data(self, **kwargs):
+		context = super(ContactsList, self).get_context_data(**kwargs)
+		context['contacts'] = Contacts.get_solo()
+		return context
+
 
 
 class InnView(generic.TemplateView, IndexFormView):

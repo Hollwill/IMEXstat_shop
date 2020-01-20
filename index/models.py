@@ -1,6 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
-from singleton_model import SingletonModel
+from solo.models import SingletonModel
 
 
 class Tasks(models.Model):
@@ -77,25 +77,64 @@ class MenuManagement(models.Model):
 		verbose_name_plural = 'Пункты меню'
 
 
-class Contacts(models.Model):
+class Contacts(SingletonModel):
 	fax = models.CharField(max_length=255, blank=True, null=True, verbose_name="Факс")
+	fax_link = models.CharField(max_length=255, blank=True, null=True, verbose_name="Факс ссылка")
 	email = models.CharField(max_length=255, blank=True, null=True, verbose_name='E-mail')
 	INN = models.CharField(max_length=255, blank=True, null=True, verbose_name='ИНН')
 	OGRN = models.CharField(max_length=255, blank=True, null=True, verbose_name='ОГРН')
 	KPP = models.CharField(max_length=255, blank=True, null=True, verbose_name='КПП')
 
+	class Meta:
+		verbose_name = "Контакты"
+
 
 class ContactsPhone(models.Model):
-	contacts = models.ForeignKey(Contacts, on_delete=models.CASCADE)
+	contacts = models.ForeignKey(Contacts, related_name='phones', on_delete=models.CASCADE)
 	number = models.CharField(max_length=255, verbose_name='Номер телефона')
+	number_link = models.CharField(max_length=255, default='', verbose_name='ссылка')
+
+	def __str__(self):
+		return self.number
+
+	class Meta:
+		verbose_name = "Телефонный номер"
+		verbose_name_plural = "Телефонные номера"
 
 
 class ContactsOffice(models.Model):
+	contacts = models.ForeignKey(Contacts, related_name='offices', blank=True, null=True, on_delete=models.CASCADE)
 	name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Название")
 	address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Адрес")
 	map_link = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ссылка карты")
 
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		verbose_name = "Офис"
+		verbose_name_plural = "Офисы"
+
 
 class ContactsOfficeImage(models.Model):
-	office = models.ForeignKey(ContactsOffice, on_delete=models.CASCADE)
-	img_link = models.ImageField()
+	office = models.ForeignKey(ContactsOffice, related_name='images', on_delete=models.CASCADE)
+	img = models.ImageField(verbose_name="Изображение")
+
+	class Meta:
+		verbose_name = "Изображение"
+		verbose_name_plural = "Изображения"
+
+
+class ContactsTeam(models.Model):
+	contacts = models.ForeignKey(Contacts, related_name='team_members', blank=True, null=True, on_delete=models.CASCADE)
+	name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Имя")
+	img = models.ImageField(verbose_name="Изображение")
+	job = models.CharField(max_length=255, blank=True, null=True, verbose_name="Должность")
+	description = models.TextField(verbose_name="Описание")
+
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		verbose_name = "Член команды"
+		verbose_name_plural = "Члены команды"
