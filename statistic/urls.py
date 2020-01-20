@@ -22,6 +22,7 @@ urlpatterns = [
     path('region_report/', RegionReportByTnved.as_view(), name='region_report'),
     path('detailed_region_report/', DetailedRegionReportByTnved.as_view(), name='detailed_region_report'),
 
+
     # path('country_dynamics/', CountryDynamic.as_view(), name='tnved_dynamics'),
     # path('tnved_report_by_country/', TnvedReportByCountry.as_view(), name='country_report'),
     # path('detailed_tnved_report_by_country/', DetailedTnvedReportByCountry.as_view(), name='detailed_counrty_report'),
