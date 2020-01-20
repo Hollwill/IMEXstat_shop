@@ -4,6 +4,7 @@
       <p><router-link :to="{name: 'market_summary'}">Сводка рынка</router-link></p>
       <p><router-link :to="{name: 'report_tnved'}">Отчет по ТНВЭД</router-link></p>
       <p><router-link :to="{name: 'report_country'}">Отчет по странам</router-link></p>
+      <p><router-link :to="{name: 'report_region'}">Отчет по регионам</router-link></p>
     </div>
     <div class="main">
       <div class="data-pickers">
@@ -32,6 +33,7 @@
       </select>
       <button @click="getData">Получить обновленные данные</button>
     </div>
+    <div id="page-container">
     <router-view
               :date="date"
               :params="params"
@@ -39,6 +41,7 @@
               :category="category"
               :tnved_list="selectedTnved"
       ></router-view>
+    </div>
   </div>
 </template>
 
@@ -170,5 +173,8 @@ export default {
   }
   .div-as-button {
     cursor: pointer;
+  }
+  #page-container {
+    margin: 10px 15%;
   }
 </style>

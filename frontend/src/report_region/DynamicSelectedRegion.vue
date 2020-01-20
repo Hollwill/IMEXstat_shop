@@ -37,8 +37,8 @@
     </div>
     <h1>Сегментный бублик</h1>
     <highcharts class="chart" :options="segmentPieOptions" :updateArgs="updateArgs"></highcharts>
-<!--    <h1>Доля первого кода в вышестоящем</h1>-->
-<!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
+    <h1>Доля первого кода в вышестоящем</h1>
+    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>
   </div>
 </template>
 
@@ -274,7 +274,7 @@
                         'category': this.category,
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
-                        'get': 'country'
+                        'get': 'region'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)

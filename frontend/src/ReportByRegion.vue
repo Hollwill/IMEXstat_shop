@@ -1,37 +1,37 @@
 <template>
-  <div class="report-by-tnved">
-    <dynamic-selected-country
+  <div class="report-by-region">
+    <dynamic-selected-region
             :date="date"
             :params="params"
             :interval="interval"
             :category="category"
             :tnved_list="tnved_list"
-    ></dynamic-selected-country>
-    <dynamic-tnved-by-selected-country
+    ></dynamic-selected-region>
+    <dynamic-tnved-by-selected-region
             :date="date"
             :params="params"
             :interval="interval"
             :category="category"
             :tnved_list="tnved_list"
-    ></dynamic-tnved-by-selected-country>
-    <dynamic-region-by-selected-country
+    ></dynamic-tnved-by-selected-region>
+    <dynamic-country-by-selected-region
             :date="date"
             :params="params"
             :interval="interval"
             :category="category"
             :tnved_list="tnved_list"
-    ></dynamic-region-by-selected-country>
+    ></dynamic-country-by-selected-region>
   </div>
 </template>
 
 <script>
     export default {
-        name: "ReportByTnved",
+        name: "ReportByRegion",
         props: ['date', 'params', 'interval', 'category', 'tnved_list'],
         components: {
-            DynamicSelectedCountry: () => import('./report_country/DynamicSelectedCountry'),
-            DynamicTnvedBySelectedCountry: () => import('./report_country/DynamicTnvedBySelectedCountry'),
-            DynamicRegionBySelectedCountry: () => import('./report_country/DynamicRegionBySelectedCountry'),
+            DynamicSelectedRegion: () => import('./report_region/DynamicSelectedRegion'),
+            DynamicTnvedBySelectedRegion: () => import('./report_region/DynamicTnvedBySelectedRegion'),
+            DynamicCountryBySelectedRegion: () => import('./report_region/DynamicCountryBySelectedRegion'),
         }
     }
 </script>

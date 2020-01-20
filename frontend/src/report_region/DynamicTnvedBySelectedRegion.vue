@@ -170,7 +170,7 @@
                         'interval': this.interval,
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
-                        'get': 'country'
+                        'get': 'region'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
@@ -190,7 +190,7 @@
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
                         'item': tnved,
-                        'get': 'country'
+                        'get': 'region'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)

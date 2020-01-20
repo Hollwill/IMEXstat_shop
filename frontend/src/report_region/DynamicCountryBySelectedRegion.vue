@@ -1,18 +1,18 @@
 <template>
   <div class="dynamic-selected-tnved">
-    <h1>Вовлеченность стран в выбранные кода ТНВЭД</h1>
+    <h1>Вовлеченность регионов в торговлю с выбранными странами</h1>
     <highcharts class="chart" :options="chartOptions" :deepCopyOnUpdate="true" :updateArgs="updateArgs"></highcharts>
-    <h1>Динамика выбранных кодов ТНВЭД</h1>
+    <h1>Регионы участвующие в товарообороте с выбранными странами</h1>
     <div class="d-table">
       <div class="d-tr" v-for="(item, index) in dynamicTable" :key="index">
-          <div class="d-td div-as-button" @click="countryDataRequest(item.label)">{{item.label}}</div>
+          <div class="d-td div-as-button" @click="regionDataRequest(item.label)">{{item.label}}</div>
           <div class="d-td">{{item.weight}}</div>
           <div class="d-td">{{item.dynamicWeight}}</div>
           <div class="d-td">{{item.stoim}}</div>
           <div class="d-td">{{item.dynamicStoim}}</div>
       </div>
     </div>
-    <h1>Сегментный бублик</h1>
+    <h1>Доля субъектов РФ в товарообороте выбранных стран</h1>
     <highcharts class="chart" :options="firstTnvedCountriesPieOptions" :updateArgs="updateArgs"></highcharts>
 <!--    <h1>Доля первого кода в вышестоящем</h1>-->
 <!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
@@ -36,11 +36,11 @@
     Vue.use(HighchartsVue);
 
     export default {
-        name: "DynamicTnvedBySelectedCountry",
+        name: "DynamicRegionBySelectedCountry",
         props: ['date', 'params', 'interval', 'category', 'tnved_list'],
         data () {
             return {
-                country_data: [],
+                region_data: [],
                 date_labels: [],
                 updateArgs: [true, true, true],
                 chartOptions: {
@@ -89,17 +89,17 @@
                 let weight_arr = [];
                 let stoim_arr = [];
 
-                for (let data of this.country_data) {
-                    let item = (this.category === 'ИМ') ? data.imp : data.exp
-                    let weight = item.weight
-                    let stoim = item.cost
+                for (let data of this.region_data) {
+                    let item = (this.category === 'ИМ') ? data.imp : data.exp;
+                    let weight = item.weight;
+                    let stoim = item.cost;
 
-                    weight_arr.push(weight)
-                    stoim_arr.push(stoim)
+                    weight_arr.push(weight);
+                    stoim_arr.push(stoim);
 
                     value.push(
                         {
-                            short_label: data.item_short,
+                            short_label: data.item,
                             label: data.item,
                             weight: weight,
                             stoim: stoim,
@@ -127,9 +127,9 @@
                           }
                         return b - a
                     });
-                    let value = []
+                    let value = [];
                     for (let i of sorted_arr.slice(0, 9)) {
-                        let data
+                        let data;
                         if (this.category === 'ИМ') {
                               data = (this.params === 'stoim') ? i.imp.cost : i.imp.weight
                           } else {
@@ -137,9 +137,9 @@
                           }
                         value.push({name: i.item, y: data});
                     }
-                    let sum_data = 0
+                    let sum_data = 0;
                     for (let i of sorted_arr.slice(10)) {
-                        let data
+                        let data;
                         if (this.category === 'ИМ') {
                               data = (this.params === 'stoim') ? i.imp.cost : i.imp.weight
                           } else {
@@ -147,7 +147,7 @@
                           }
                         sum_data += data
                     }
-                    value.push({name: 'Остальные', y: sum_data})
+                    value.push({name: 'Остальные', y: sum_data});
                     this.firstTnvedCountriesPieOptions.series[0].data = value
                 },
                 deep: true
@@ -163,14 +163,14 @@
                 return new_arr
             },
             recount() {
-                HTTP.get('statistic/country_report/', {
+                HTTP.get('statistic/region_report/', {
                     params: {
                         'date_to': (this.date.from != null && this.date.to != null) ? this.date.to  : moment(new Date()).format('YYYY-MM'),
                         'date_from': (this.date.from != null && this.date.to != null) ? this.date.from : moment(new Date()).subtract(3, 'year').format('YYYY-MM'),
                         'interval': this.interval,
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
-                        'get': 'country'
+                        'get': 'region'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
@@ -178,19 +178,19 @@
                 })
                     .then(response => {
                         this.firstTnvedCountriesPieData = response.data.pie;
-                        this.country_data = response.data.table;
+                        this.region_data = response.data.table;
                     })
             },
-            countryDataRequest(tnved) {
-                HTTP.get('statistic/detailed_country_report/', {
+            regionDataRequest(region) {
+                HTTP.get('statistic/detailed_region_report/', {
                     params: {
                         'date_to': (this.date.from != null && this.date.to != null) ? this.date.to  : moment(new Date()).format('YYYY-MM'),
                         'date_from': (this.date.from != null && this.date.to != null) ? this.date.from : moment(new Date()).subtract(3, 'year').format('YYYY-MM'),
                         'interval': this.interval,
                         'item_list': this.tnved_list,
                         'item_list_length': this.tnved_list.length,
-                        'item': tnved,
-                        'get': 'country'
+                        'item': region,
+                        'get': 'region'
                     },
                     paramsSerializer: params => {
                       return qs.stringify(params)
