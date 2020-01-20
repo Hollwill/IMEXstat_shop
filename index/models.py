@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from singleton_model import SingletonModel
 
 
 class Tasks(models.Model):
@@ -74,3 +75,26 @@ class MenuManagement(models.Model):
 	class Meta:
 		verbose_name = 'Пункт меню'
 		verbose_name_plural = 'Пункты меню'
+
+
+class Contacts(models.Model):
+	fax = models.CharField(max_length=255, blank=True, null=True, verbose_name="Факс")
+	email = models.CharField(max_length=255, blank=True, null=True, verbose_name='E-mail')
+	INN = models.CharField(max_length=255, blank=True, null=True, verbose_name='ИНН')
+	OGRN = models.CharField(max_length=255, blank=True, null=True, verbose_name='ОГРН')
+	KPP = models.CharField(max_length=255, blank=True, null=True, verbose_name='КПП')
+
+
+class ContactsPhone(models.Model):
+	contacts = models.ForeignKey(Contacts, on_delete=models.CASCADE)
+	number = models.CharField(max_length=255, verbose_name='Номер телефона')
+
+class ContactsOffice(models.Model):
+	name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Название")
+	address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Адрес")
+	map_link = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ссылка карты")
+
+
+class ContactsOfficeImage(models.Model):
+	office = models.ForeignKey(ContactsOffice, on_delete=models.CASCADE)
+	img_link = models.ImageField()

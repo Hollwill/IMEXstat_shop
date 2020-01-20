@@ -3,11 +3,13 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('', include('index.urls', namespace='index')),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path('lk/', include('personal_cabinet.urls', namespace='lk')),
     path('research/', include('products.urls', namespace='research')),
     path('article/', include('articles.urls', namespace='article')),

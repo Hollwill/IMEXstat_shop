@@ -34,13 +34,13 @@
       <button @click="getData">Получить обновленные данные</button>
     </div>
     <div id="page-container">
-    <router-view
-              :date="date"
-              :params="params"
-              :interval="interval"
-              :category="category"
-              :tnved_list="selectedTnved"
-      ></router-view>
+      <router-view
+                :date="date"
+                :params="params"
+                :interval="interval"
+                :category="category"
+                :tnved_list="selectedTnved"
+        ></router-view>
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@ import { MonthPickerInput } from 'vue-month-picker'
 // import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
 import AutocompleteItemTemplate from "./AutocompleteItemTemplate";
-import {HTTP} from './http-common'
+// import {HTTP} from './http-common'
 
 export default {
   name: 'App',
@@ -70,6 +70,9 @@ export default {
           category: 'ИМ',
       }
   },
+  mounted: function() {
+      window.console.log(this.$router)
+  },
   methods: {
       addTnved () {
           this.selectedTnved.push(this.item)
@@ -78,17 +81,17 @@ export default {
       rmTnved (index) {
           this.selectedTnved.splice(index, 1)
       },
-      updateItems (text) {
-        HTTP.get('statistic/autocomplete/', {
-            params: {
-                'q': text
-            }
-        })
-            .then(response => {
-                this.items = response.data
-            })
-
-      },
+      // updateItems (text) {
+      //   HTTP.get('statistic/autocomplete/', {
+      //       params: {
+      //           'q': text
+      //       }
+      //   })
+      //       .then(response => {
+      //           this.items = response.data
+      //       })
+      //
+      // },
       getLabel(item) {
           return item
       },
@@ -130,7 +133,6 @@ export default {
       padding-bottom: 1em;
     }
     .sidenav {
-
       width: 160px;
       z-index: 1;
       top: 0;
