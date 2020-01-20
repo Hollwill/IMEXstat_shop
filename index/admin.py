@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Tasks, Feedback, ClientsImages, MenuManagement, Products
+from solo.admin import SingletonModelAdmin
+from nested_admin.nested import NestedStackedInline, NestedModelAdmin, InlineModelAdmin
+from .models import Tasks, Feedback, ClientsImages, MenuManagement, Products, Contacts, ContactsPhone, ContactsOffice, \
+	ContactsOfficeImage, ContactsTeam
 
 
 class FeedbackAdmin(admin.ModelAdmin):
@@ -12,6 +15,34 @@ class TasksAdmin(admin.ModelAdmin):
 	list_editable = ['priority']
 
 
+class ContactsPhoneInline(admin.TabularInline):
+	model = ContactsPhone
+
+
+class ContactsOfficeImageInline(admin.TabularInline):
+	model = ContactsOfficeImage
+
+
+class ContactsOfficeInline(NestedStackedInline):
+	model = ContactsOffice
+	inlines = [
+		ContactsOfficeImageInline
+	]
+
+
+class ContactsTeamInline(NestedStackedInline):
+	model = ContactsTeam
+
+
+class ContactsAdmin(NestedModelAdmin, SingletonModelAdmin):
+	inlines = [
+		ContactsPhoneInline,
+		ContactsOfficeInline,
+		ContactsTeamInline,
+	]
+
+
+admin.site.register(Contacts, ContactsAdmin)
 admin.site.register(MenuManagement)
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Tasks, TasksAdmin)

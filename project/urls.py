@@ -17,7 +17,8 @@ urlpatterns = [
     path('register/', include('django_registration.backends.activation.urls')),
     path('order/', include('orders.urls', namespace='orders')),
     path('pages/', include('django.contrib.flatpages.urls')),
-    path('statistic/', include('statistic.urls', namespace='statistic'))
+    path('statistic/', include('statistic.urls', namespace='statistic')),
+    path('nested_admin/', include('nested_admin.urls')),
 ]
 
 # Справочник вырезан из кода на время
