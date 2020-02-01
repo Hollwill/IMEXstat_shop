@@ -97,10 +97,12 @@ function showCostAlone() {
     let check_frequency = $(`.checkbox__input:checked`).attr('value');
     // window.console.log(check_frequency)
     if (check_frequency === "QU") {
-        $(`.radiobtn input[value="OM"]`).prop('disabled', true)
-        $(`.radiobtn input[value="OM"]`).prop('checked', false)
+        $(`.radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
+        $(`.radiobtn.OM label`).css('background', 'gray').css('cursor', 'default');
     } else {
-        $(`.radiobtn input[value="OM"]`).prop("disabled", false)
+        $(`.radiobtn input[value="OM"]`).prop("disabled", false);
+        $(`.radiobtn.OM label`).css('background', '').css('cursor', '');
+
     }
     let price_div = $('.cartBuy__item-price').children();
     if (check_duration && check_frequency) {
@@ -117,10 +119,11 @@ function showCost() {
         let check_duration = $(`.${classes[0]}.${num} .radiobtn input:checked`).attr('value');
         let check_frequency = $(`.${classes[0]}.${num} .checkbox__input:checked`).attr('value');
         if (check_frequency === "QU") {
-            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', true);
-            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('checked', false);
+            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
+            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', 'gray').css('cursor', 'default');
         } else {
             $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', false);
+            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', '').css('cursor', '');
         }
         let price_div = $(this).siblings('.cartBuy__item-price').children();
         if (check_duration && check_frequency) {

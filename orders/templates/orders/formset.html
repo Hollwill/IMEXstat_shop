@@ -70,7 +70,7 @@
             <p class="OQ QU" style="display: none;">{{ research.Q_OQ_cost }} Р</p>
             <p class="HY QU" style="display: none;">{{ research.Q_HY_cost }} Р</p>
             <p class="OY QU" style="display: none;">{{ research.Q_OY_cost }} Р</p>
-            <a href="{% url 'orders:cart_purchase' %}?remove_from_order={{ research.slug }}">Отменить заказ</a>
+            <a href="{% url 'orders:cart_purchase' %}?remove_from_cart={{ research.slug }}">Отменить заказ</a>
         </div>
     </div>
 </div>
