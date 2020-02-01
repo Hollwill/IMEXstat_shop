@@ -20,9 +20,17 @@ tnved_dict = {
 class Autocomplete(APIView):
     def get(self, request):
         search = request.query_params.get('q')
-        if search:
-            values_list = [i['tnved'] for i in
-                           StatisticData.objects.filter(tnved__startswith=search).values('tnved').distinct()][:5]
+        category = request.query_params.get('category')
+        if search and category:
+            if category == 'tnved':
+                values_list = [i['tnved'] for i in
+                               StatisticData.objects.filter(tnved__startswith=search).values('tnved').distinct()][:5]
+            elif category == 'country':
+                values_list = [i['description'] for i in
+                               CountryHandbook.objects.filter(description__icontains=search).values('description').distinct()][:5]
+            elif category == 'region':
+                values_list = [i['region'] for i in
+                               StatisticData.objects.filter(region__icontains=search).values('region').distinct()][:5]
             return JsonResponse(values_list, safe=False)
 
 
