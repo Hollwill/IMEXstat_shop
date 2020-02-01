@@ -1,11 +1,11 @@
-{% load seo %}
+{% load set %}
 {% load static %}
 {% load flatblocks %}
 <!doctype html>
 <html lang="ru">
 <head>
 
-    {% get_seo_data seo %}
+{#    {% get_seo_data seo %}#}
     {% get_seo_data request.seo %}
 
     <title>
@@ -100,21 +100,11 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Таможенная статистика</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'research:list' %}">Заказные исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Готовые исследования</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">По ИНН</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Контакты</a>
-                                </li>
+                                {% for menu in menu %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'index:index' %}{{menu.url}}">{{ menu.title }}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </nav>

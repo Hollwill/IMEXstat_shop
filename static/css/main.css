@@ -130,10 +130,8 @@ header {
 	align-items: center;
 }
 .logo {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	background: #FFED00;
+	width: 156px;
+	height: 35px;
 }
 .header__logo p {
 	font-family: Open Sans;

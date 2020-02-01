@@ -95,6 +95,13 @@ $(function ()    {
 function showCostAlone() {
     let check_duration = $(`.radiobtn input:checked`).attr('value');
     let check_frequency = $(`.checkbox__input:checked`).attr('value');
+    // window.console.log(check_frequency)
+    if (check_frequency === "QU") {
+        $(`.radiobtn input[value="OM"]`).prop('disabled', true)
+        $(`.radiobtn input[value="OM"]`).prop('checked', false)
+    } else {
+        $(`.radiobtn input[value="OM"]`).prop("disabled", false)
+    }
     let price_div = $('.cartBuy__item-price').children();
     if (check_duration && check_frequency) {
         price_div.children('p').hide();
@@ -109,6 +116,12 @@ function showCost() {
         let num = classes[1];
         let check_duration = $(`.${classes[0]}.${num} .radiobtn input:checked`).attr('value');
         let check_frequency = $(`.${classes[0]}.${num} .checkbox__input:checked`).attr('value');
+        if (check_frequency === "QU") {
+            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', true);
+            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('checked', false);
+        } else {
+            $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', false);
+        }
         let price_div = $(this).siblings('.cartBuy__item-price').children();
         if (check_duration && check_frequency) {
             price_div.children('p').hide();
@@ -117,9 +130,9 @@ function showCost() {
     });
 }
 
-$(document).ready(function(){
-    showCost()
-});
+// $(document).ready(function(){
+//     showCost()
+// });
 
 function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";
