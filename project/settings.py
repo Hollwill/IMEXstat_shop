@@ -5,6 +5,7 @@ import os
 
 
 class Base(Configuration):
+    DISABLE_SERVER_SIDE_CURSORS = True
 
     SEO_SITE_NAME = 'Маркетинговое агенство'
 
@@ -130,6 +131,7 @@ class Base(Configuration):
     STATIC_URL = '/static/'
     STATICFILES_DIRS = (
         os.path.join(ROOT_PATH, 'files',  "static"),
+        os.path.join(FRONTEND_DIR, 'dist'),
     )
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -201,7 +203,7 @@ class Dev(Base):
             'NAME': 'imex',
             'USER': 'imex',
             'PASSWORD': '09qxwq8i2r',
-            'HOST': '80.249.145.226',
+            'HOST': '127.0.0.1',
             'PORT': '5432'
         }
     }

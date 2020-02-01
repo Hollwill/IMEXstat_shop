@@ -101,7 +101,6 @@ class ContactsPhone(models.Model):
 		verbose_name = "Телефонный номер"
 		verbose_name_plural = "Телефонные номера"
 
-
 class ContactsOffice(models.Model):
 	contacts = models.ForeignKey(Contacts, related_name='offices', blank=True, null=True, on_delete=models.CASCADE)
 	name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Название")
