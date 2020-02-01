@@ -1,11 +1,13 @@
 
 from configurations import Configuration
-
+from django.utils.translation import pgettext_lazy
 import os
 
 
 class Base(Configuration):
     DISABLE_SERVER_SIDE_CURSORS = True
+
+    SEO_SITE_NAME = 'Маркетинговое агенство'
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -180,7 +182,7 @@ class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
-    SITE_ID = 7
+    SITE_ID = 8
 
     ALLOWED_HOSTS = ['*']
 
@@ -234,7 +236,7 @@ class Prod(Base):
     EMAIL_HOST_PASSWORD = 'opmiktrihhpfgaam'
 
     DEBUG = False
-    ALLOWED_HOSTS = ['imex.naminteresno.ru']
+    ALLOWED_HOSTS = ['*']
 
     SITE_ID = 7
     DATABASES = {

@@ -75,12 +75,14 @@ $(function ()    {
             $('.readyInner__text').hide();
             $('#contents').show();
         });
+
         $('#using_methods_button').on('click', function (event) {
             $('.ready__type-item').removeClass('ready__type-itemActive');
             $('#using_methods_button').addClass('ready__type-itemActive');
             $('.readyInner__text').hide();
             $('#using_methods').show();
         });
+
         $('#data_sources_button').on('click', function (event) {
             $('.ready__type-item').removeClass('ready__type-itemActive');
             $('#data_sources_button').addClass('ready__type-itemActive');
@@ -90,30 +92,40 @@ $(function ()    {
     });
 });
 
-function showCost(a, b, c, d, i) {
-    if  ($(`.${i}` + 'QU').prop("checked") || $(`.${i}` + 'MU').prop("checked")) {
-        $(`.${i}M`).hide()
-        $(`.${i}Q`).hide()
-        if ($(`.${i}` + 'MU').prop("checked")) {
-            $(`.${a}.${i}M`).show()
-            $(`.${b}.${i}M`).hide()
-            $(`.${c}.${i}M`).hide()
-            $(`.${d}.${i}M`).hide()
-        } else {
-            $(`.${a}.${i}Q`).show()
-            $(`.${b}.${i}Q`).hide()
-            $(`.${c}.${i}Q`).hide()
-            $(`.${d}.${i}Q`).hide()
-        }
+function showCostAlone() {
+    let check_duration = $(`.radiobtn input:checked`).attr('value');
+    let check_frequency = $(`.checkbox__input:checked`).attr('value');
+    console.log(check_frequency)
+    if (check_frequency === "QU") {
+        console.log('disabled')
+        $(`.radiobtn input:checked[value="OM"]`).prop('disabled', true)
     }
+    let price_div = $('.cartBuy__item-price').children();
+    if (check_duration && check_frequency) {
+        price_div.children('p').hide();
+        price_div.children(`.${check_duration}.${check_frequency}`).show()
+    }
+
 }
 
-function changeFrequency(a) {
-    $(`.${a}` + 'D').prop('checked', false);
-    $(`.${a}M`).hide()
-    $(`.${a}Q`).hide()
-
+function showCost() {
+    $('.cartBuy__item-settings').each(function () {
+        let classes = $(this).attr('class').split(/\s+/);
+        let num = classes[1];
+        let check_duration = $(`.${classes[0]}.${num} .radiobtn input:checked`).attr('value');
+        let check_frequency = $(`.${classes[0]}.${num} .checkbox__input:checked`).attr('value');
+        let price_div = $(this).siblings('.cartBuy__item-price').children();
+        if (check_duration && check_frequency) {
+            price_div.children('p').hide();
+            price_div.children(`.${check_duration}.${check_frequency}`).show()
+        }
+    });
 }
+
+$(document).ready(function(){
+    showCost()
+});
+
 function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";
     document.getElementById(b).style.display = "none";

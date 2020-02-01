@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-
+from seo.mixins.models import SeoTagsMixin
 def autocomplete(request):
 	if request.is_ajax():
 		queryset = Research.objects.filter(title__icontains=request.GET.get('search'))
@@ -31,7 +31,7 @@ class IndexFormView(generic.FormView):
 		return HttpResponseRedirect(self.success_url)
 
 
-class IndexList(IndexFormView, generic.TemplateView):
+class IndexList(IndexFormView,  generic.TemplateView):
 	template_name = 'index/index.html'
 	success_url = reverse_lazy('index:index')
 
@@ -76,6 +76,7 @@ class ElectionView(generic.TemplateView, IndexFormView):
 class SearchView(generic.TemplateView, IndexFormView):
 	template_name = 'index/search.html'
 	success_url = reverse_lazy('index:search')
+
 
 class RobotsView(generic.TemplateView):
 	template_name = 'robots.txt'
