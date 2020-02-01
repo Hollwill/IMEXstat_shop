@@ -95,14 +95,32 @@ $(function ()    {
 function showCostAlone() {
     let check_duration = $(`.radiobtn input:checked`).attr('value');
     let check_frequency = $(`.checkbox__input:checked`).attr('value');
-    // window.console.log(check_frequency)
+    window.console.log(check_duration)
     if (check_frequency === "QU") {
         $(`.radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
         $(`.radiobtn.OM label`).css('background', 'gray').css('cursor', 'default');
     } else {
         $(`.radiobtn input[value="OM"]`).prop("disabled", false);
         $(`.radiobtn.OM label`).css('background', '').css('cursor', '');
+    }
+    let children_inp = $(`.cartBuy__item-settingsRight`).find('input');
+    let children_label = $(`.cartBuy__item-settingsRight`).find('label');
 
+    for (let i = 0; i < children_inp.length; i++) {
+        let child = $(children_inp[i]);
+        if (!check_frequency) {
+            $(`.radiobtn input:checked`).prop('checked', false);
+        }
+        if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
+
+            children_label[i].style['background'] = '';
+            child.prop('disabled', false)
+        } else {
+            console.log('checked_false')
+            children_label[i].style['background'] = 'gray';
+            child.prop('disabled', true);
+
+        }
     }
     let price_div = $('.cartBuy__item-price').children();
     if (check_duration && check_frequency) {
@@ -125,6 +143,26 @@ function showCost() {
             $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', false);
             $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', '').css('cursor', '');
         }
+
+        let children_inp = $(`.cartBuy__item-settingsRight.${num}`).find('input');
+        let children_label = $(`.cartBuy__item-settingsRight.${num}`).find('label');
+
+        for (let i = 0; i < children_inp.length; i++) {
+            let child = $(children_inp[i]);
+            if (!check_frequency) {
+                $(`.${classes[0]}.${num} .radiobtn input:checked`).prop('checked', false);
+            }
+            if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
+
+                children_label[i].style['background'] = '';
+                child.prop('disabled', false)
+            } else {
+                children_label[i].style['background'] = 'gray';
+                child.prop('disabled', true);
+
+            }
+        }
+
         let price_div = $(this).siblings('.cartBuy__item-price').children();
         if (check_duration && check_frequency) {
             price_div.children('p').hide();
@@ -133,9 +171,10 @@ function showCost() {
     });
 }
 
-// $(document).ready(function(){
-//     showCost()
-// });
+$(document).ready(function(){
+    showCost();
+    showCostAlone();
+});
 
 function cartBuy(a,b) {
     document.getElementById(a).style.display = "flex";

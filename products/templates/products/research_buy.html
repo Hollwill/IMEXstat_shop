@@ -38,6 +38,7 @@
                         </div>
                     </div>
 
+                    {% with research as r %}
                     <form id="submit_form" method="post">
                         {% csrf_token %}
                         <div class="readyInner__extend">
@@ -54,44 +55,45 @@
                                 </div>
                                 <div class="cartBuy__item-settingsRight">
                                     <div class="radiobtn OM">
-                                        <input 
+                                        <input
                                         onchange="showCostAlone()"
-                                        type="radio" 
-                                        name="{{ form.duration.html_name }}"  
-                                        id="{{ form.duration.1.id_for_label }}" 
-                                        value="OM" class="Duration_choice">
+                                        type="radio"
+                                        name="{{ form.duration.html_name }}"
+                                        id="{{ form.duration.1.id_for_label }}"
+                                        value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %} {% if r.Q_OM_cost %}QU{% endif %}">
                                         <label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
 
                                     </div>
                                     <div class="radiobtn OQ">
-                                        <input 
+                                        <input
                                         onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"  
-                                        id="{{ form.duration.2.id_for_label }}" 
-                                        value="OQ" class="Duration_choice">
+                                        type="radio" name="{{ form.duration.html_name }}"
+                                        id="{{ form.duration.2.id_for_label }}"
+                                        value="OQ" class="Duration_choice {% if r.M_OQ_cost %}MU{% endif %} {% if r.Q_OQ_cost %}QU{% endif %}">
                                         <label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
                                     </div>
                                     <div class="radiobtn HY">
-                                        <input 
+                                        <input
                                         onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"  
-                                        id="{{ form.duration.3.id_for_label }}" 
-                                        value="HY" class="Duration_choice">
+                                        type="radio" name="{{ form.duration.html_name }}"
+                                        id="{{ form.duration.3.id_for_label }}"
+                                        value="HY" class="Duration_choice {% if r.M_HY_cost %}MU{% endif %} {% if r.Q_HY_cost %}QU{% endif %}">
                                         <label for="{{ form.duration.3.id_for_label }}">На пол года</label>
                                     </div>
                                     <div class="radiobtn OY">
-                                        <input 
+                                        <input
                                         onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"  
-                                        id="{{ form.duration.4.id_for_label }}" 
-                                        value="OY" class="Duration_choice">
+                                        type="radio" name="{{ form.duration.html_name }}"
+                                        id="{{ form.duration.4.id_for_label }}"
+                                        value="OY" class="Duration_choice {% if r.M_OY_cost %}MU{% endif %} {% if r.Q_OY_cost %}QU{% endif %}">
                                         <label for="{{ form.duration.4.id_for_label }}">На один год</label>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                         <div class="readyInner__btns">
-                            {% if research.demo %}
+                            {% if r.demo %}
                             <div class="readyInner__btns-left">
                                 <a href="{{ research.demo.url }}">Скачать демо версию</a>
                                 <img src="{% static "img/pdf.svg" %}" alt="">
@@ -101,20 +103,22 @@
                                 <a href="javascript:{}" onclick="document.getElementById('submit_form').submit();" class="readyInner__btns-add">Добавить в корзину</a>
                                 <div class="cartBuy__item-price">
                                     <div class="cartBuy__item-priceBlock">
-                                        <p class="nominal">{{ research.nominal }} P</p>
-                                        <p class="OM MU" style="display: none;">{{ research.M_OM_cost }} Р</p>
-                                        <p class="OQ MU" style="display: none;">{{ research.M_OQ_cost }} Р</p>
-                                        <p class="HY MU" style="display: none;">{{ research.M_HY_cost }} Р</p>
-                                        <p class="OY MU" style="display: none;">{{ research.M_OY_cost }} Р</p>
-                                        <p class="OM QU" style="display: none;">{{ research.Q_OM_cost }} Р</p>
-                                        <p class="OQ QU" style="display: none;">{{ research.Q_OQ_cost }} Р</p>
-                                        <p class="HY QU" style="display: none;">{{ research.Q_HY_cost }} Р</p>
-                                        <p class="OY QU" style="display: none;">{{ research.Q_OY_cost }} Р</p>
+                                        <p class="nominal">{{ r.nominal }} P</p>
+                                        <p class="OM MU" style="display: none;">{% if r.M_OM_cost %}{{ r.M_OM_cost }} Р{% endif %}</p>
+                                        <p class="OQ MU" style="display: none;">{% if r.M_OQ_cost %}{{ r.M_OQ_cost }} Р{% endif %}</p>
+                                        <p class="HY MU" style="display: none;">{% if r.M_HY_cost %}{{ r.M_HY_cost }} Р{% endif %}</p>
+                                        <p class="OY MU" style="display: none;">{% if r.M_OY_cost %}{{ r.M_OY_cost }} Р{% endif %}</p>
+                                        <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>
+                                        <p class="OQ QU" style="display: none;">{% if r.Q_OQ_cost %}{{ r.Q_OQ_cost }} Р{% endif %}</p>
+                                        <p class="HY QU" style="display: none;">{% if r.Q_HY_cost %}{{ r.Q_HY_cost }} Р{% endif %}</p>
+                                        <p class="OY QU" style="display: none;">{% if r.Q_OY_cost %}{{ r.Q_OY_cost }} Р{% endif %}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
+                    {% endwith %}
+
                     <div class="ready__type readyInner__bot">
                         <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
                         <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>
