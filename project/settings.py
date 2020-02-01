@@ -51,6 +51,7 @@ class Base(Configuration):
         'mptt',
         'flatblocks',
         'django_elasticsearch_dsl',
+        'solo',
 
     ]
 
