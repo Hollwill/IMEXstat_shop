@@ -95,13 +95,12 @@ $(function ()    {
 function showCostAlone() {
     let check_duration = $(`.radiobtn input:checked`).attr('value');
     let check_frequency = $(`.checkbox__input:checked`).attr('value');
-    window.console.log(check_duration)
     if (check_frequency === "QU") {
         $(`.radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
-        $(`.radiobtn.OM label`).css('background', 'gray').css('cursor', 'default');
+        $(`.radiobtn.OM label`).css('background', 'white').css('cursor', 'default').css('color', 'gray');
     } else {
         $(`.radiobtn input[value="OM"]`).prop("disabled", false);
-        $(`.radiobtn.OM label`).css('background', '').css('cursor', '');
+        $(`.radiobtn.OM label`).css('background', '').css('cursor', '').css('color', '');
     }
     let children_inp = $(`.cartBuy__item-settingsRight`).find('input');
     let children_label = $(`.cartBuy__item-settingsRight`).find('label');
@@ -114,10 +113,13 @@ function showCostAlone() {
         if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
 
             children_label[i].style['background'] = '';
+            children_label[i].style['color'] = '';
+            children_label[i].style['cursor'] = '';
             child.prop('disabled', false)
         } else {
-            console.log('checked_false')
-            children_label[i].style['background'] = 'gray';
+            children_label[i].style['background'] = 'white';
+            children_label[i].style['color'] = 'gray';
+            children_label[i].style['cursor'] = 'default';
             child.prop('disabled', true);
 
         }
@@ -138,10 +140,10 @@ function showCost() {
         let check_frequency = $(`.${classes[0]}.${num} .checkbox__input:checked`).attr('value');
         if (check_frequency === "QU") {
             $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
-            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', 'gray').css('cursor', 'default');
+            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', 'white').css('cursor', 'default').css('color', 'gray');
         } else {
             $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', false);
-            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', '').css('cursor', '');
+            $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', '').css('cursor', '').css('color', '');
         }
 
         let children_inp = $(`.cartBuy__item-settingsRight.${num}`).find('input');
@@ -153,11 +155,15 @@ function showCost() {
                 $(`.${classes[0]}.${num} .radiobtn input:checked`).prop('checked', false);
             }
             if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
-
                 children_label[i].style['background'] = '';
+                children_label[i].style['color'] = '';
+                children_label[i].style['cursor'] = '';
                 child.prop('disabled', false)
             } else {
-                children_label[i].style['background'] = 'gray';
+                children_label[i].style['background'] = 'white';
+                children_label[i].style['color'] = 'gray';
+                children_label[i].style['cursor'] = 'default';
+
                 child.prop('disabled', true);
 
             }

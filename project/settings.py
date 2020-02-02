@@ -203,7 +203,7 @@ class Dev(Base):
             'NAME': 'imex',
             'USER': 'imex',
             'PASSWORD': '09qxwq8i2r',
-            'HOST': '127.0.0.1',
+            'HOST': '80.249.145.226',
             'PORT': '5432'
         }
     }
