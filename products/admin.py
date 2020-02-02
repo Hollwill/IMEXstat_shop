@@ -1,14 +1,14 @@
 from django.contrib import admin
 from .models import Category, Research, IndividualResearchFeedback
-from mptt.admin import DraggableMPTTAdmin
+from mptt.admin import DraggableMPTTAdmin, TreeRelatedFieldListFilter
 from seo.admin import ModelInstanceSeoInline
+
 
 class ResearchAdmin(admin.ModelAdmin):
 	inlines = [ModelInstanceSeoInline]
 	prepopulated_fields = {'slug': ('title',)}
-	list_filter = ('category', 'research_type')
+	list_filter = (('category', TreeRelatedFieldListFilter), 'research_type')
 	list_display = ('__str__', 'stock', 'discount', 'nominal', 'has_image', 'has_file')
-	# readonly_fields = ['has_image']
 	list_editable = ('stock', 'discount', 'nominal')
 
 	def has_image(self, obj):
