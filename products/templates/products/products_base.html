@@ -78,27 +78,27 @@
 		<div class="row">
 			<div class="content__container">
 				<div class="content__menu">
-                    <div class="list-group">
-                        {% recursetree categories %}
-                            {% if node.get_children %}
-                                <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
-                            {% else %}
-                                <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
+          <div class="list-group">
+            {% recursetree categories %}
+              {% if node.get_children %}
+                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
+              {% else %}
+                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
 
-                            {% endif %}
-                            {% if not node.is_leaf_node %}
-                                <div class="list-group__dropdown">
-                                    {{ children }}
-                                </div>
-                            {% endif %}
+              {% endif %}
+              {% if not node.is_leaf_node %}
+                  <div class="list-group__dropdown">
+                      {{ children }}
+                  </div>
+              {% endif %}
 
-                        {% endrecursetree %}
+            {% endrecursetree %}
 					</div>
 				</div>
 				<div class="content__main">
 					<div class="ready__type">
 						<a href="{{ request.path }}?type=industry" id="industry" class="ready__type-item ">Отраслевые</a>
-						<a href="{{ request.path }}?type=export" id="export" class="ready__type-item">Экспорт</a>
+						<a href="{{ request.path }}?type=export" id="export" class="ready__type-item ready__type-item__middle">Экспорт</a>
 						<a href="{{ request.path }}?type=import" id="import" class="ready__type-item">Импорт</a>
 					</div>
 					{% block inner_content %}

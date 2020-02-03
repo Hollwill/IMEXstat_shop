@@ -11,7 +11,6 @@
     <div class="ready__item">
         <div itemprop="associatedMedia" class="ready__item-img">
         {% if research.image %}
-
             <a href="{% url 'research:buy' research.slug %}"><img class="ready__item-img" src="{{ research.image.url }}" alt=""></a>
         {% endif %}
         </div> 

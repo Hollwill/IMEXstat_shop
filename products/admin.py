@@ -7,7 +7,7 @@ from seo.admin import ModelInstanceSeoInline
 class ResearchAdmin(admin.ModelAdmin):
 	inlines = [ModelInstanceSeoInline]
 	prepopulated_fields = {'slug': ('title',)}
-	list_filter = (('category', TreeRelatedFieldListFilter), 'research_type')
+	list_filter = ('research_type', ('category', TreeRelatedFieldListFilter))
 	list_display = ('__str__', 'stock', 'discount', 'nominal', 'has_image', 'has_file')
 	list_editable = ('stock', 'discount', 'nominal')
 
