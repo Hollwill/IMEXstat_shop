@@ -14,11 +14,11 @@
     <div class="cartBuy__item-settings {{ i }}">
         <div class="cartBuy__item-settingsLeft">
             <label class="checkbox-transform">
-                <input {% if form.initial.update_frequency == 'MU' %}checked{% endif %} onchange="showCost()" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU">
+                <input {% if form.initial.update_frequency == 'MU' %}checked{% endif %} onchange="showCost()" type="radio"  name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input {{i}}MU radio_update_frequency">
                 <span class="checkbox__label">Ежемесячное обновление</span>
             </label>
             <label class="checkbox-transform">
-                <input {% if form.initial.update_frequency == 'QU' %}checked{% endif %} onchange="showCost()" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU">
+                <input {% if form.initial.update_frequency == 'QU' %}checked{% endif %} onchange="showCost()" type="radio" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input {{i}}QU radio_update_frequency">
                 <span class="checkbox__label">Ежеквартальное обновление</span>
             </label>
         </div>
