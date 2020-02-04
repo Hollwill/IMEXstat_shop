@@ -27,7 +27,7 @@
                     type="radio"
                     name="{{ form.duration.html_name }}"
                     id="{{ form.duration.1.id_for_label }}"
-                    value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %} {% if r.Q_OM_cost %}QU{% endif %}">
+                    value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %}">
                 <label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
 
             </div>
@@ -67,7 +67,7 @@
             <p class="OQ MU" style="display: none;">{% if r.M_OQ_cost %}{{ r.M_OQ_cost }} Р{% endif %}</p>
             <p class="HY MU" style="display: none;">{% if r.M_HY_cost %}{{ r.M_HY_cost }} Р{% endif %}</p>
             <p class="OY MU" style="display: none;">{% if r.M_OY_cost %}{{ r.M_OY_cost }} Р{% endif %}</p>
-            <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>
+{#            <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>#}
             <p class="OQ QU" style="display: none;">{% if r.Q_OQ_cost %}{{ r.Q_OQ_cost }} Р{% endif %}</p>
             <p class="HY QU" style="display: none;">{% if r.Q_HY_cost %}{{ r.Q_HY_cost }} Р{% endif %}</p>
             <p class="OY QU" style="display: none;">{% if r.Q_OY_cost %}{{ r.Q_OY_cost }} Р{% endif %}</p>

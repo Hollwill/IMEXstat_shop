@@ -32,7 +32,7 @@ class Research(models.Model):
     M_OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На один квартал')
     M_HY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На пол года')
     M_OY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежемесячное обновление - На один год')
-    Q_OM_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один месяц')
+    # Q_OM_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один месяц')
     Q_OQ_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один квартал')
     Q_HY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На пол года')
     Q_OY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один год')
@@ -41,11 +41,11 @@ class Research(models.Model):
 
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        super(Research, self).save()
-        if not self.slug.endswith('-' + str(self.id)):
-            self.slug += '-' + str(self.id)
-            super(Research, self).save()
+    # def save(self, *args, **kwargs):
+    #     super(Research, self).save()
+    #     if not self.slug.endswith('-' + str(self.id)):
+    #         self.slug += '-' + str(self.id)
+    #         super(Research, self).save()
 
     def __str__(self):
         return self.title

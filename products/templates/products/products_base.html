@@ -80,12 +80,13 @@
 				<div class="content__menu">
           <div class="list-group">
             {% recursetree categories %}
-              {% if node.get_children %}
-                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item_category list-group-item-action">{{ node.title }}</a>
-              {% else %}
-                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}" class="list-group-item list-group-item-action">{{ node.title }}</a>
-
-              {% endif %}
+                  <a href="{% url 'research:category' node.slug %}{% if request.GET.type %}?type={{ request.GET.type }}{% endif %}"
+                     class="list-group-item list-group-item-action
+                     {% if node.get_children %} list-group-item_category {% endif %}
+                     {% for child in node.get_children %}
+                     {% if child.slug == view.kwargs.slug %} active {% endif %}
+                     {% endfor %}
+                     {% if node.slug == view.kwargs.slug %}list-group-item_current{% endif %}">{{ node.title }}</a>
               {% if not node.is_leaf_node %}
                   <div class="list-group__dropdown">
                       {{ children }}
@@ -96,11 +97,13 @@
 					</div>
 				</div>
 				<div class="content__main">
+          <p style="margin-bottom: 15px; margin-left: 4%;"> {{ current_category_parent.title }} - {{ current_category.title }} </p>
 					<div class="ready__type">
 						<a href="{{ request.path }}?type=industry" id="industry" class="ready__type-item ">Отраслевые</a>
 						<a href="{{ request.path }}?type=export" id="export" class="ready__type-item ready__type-item__middle">Экспорт</a>
 						<a href="{{ request.path }}?type=import" id="import" class="ready__type-item">Импорт</a>
 					</div>
+
 					{% block inner_content %}
 
 					{% endblock inner_content %}

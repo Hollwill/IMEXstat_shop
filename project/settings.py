@@ -54,6 +54,7 @@ class Base(Configuration):
         'flatblocks',
         'django_elasticsearch_dsl',
         'solo',
+        'reset_migrations',
 
     ]
 

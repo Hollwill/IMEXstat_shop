@@ -75,9 +75,9 @@ class OrderItem(models.Model):
             elif self.duration == 'OY':
                 self.price = self.research.M_OY_cost
         elif self.update_frequency == 'QU':
-            if self.duration == 'OM':
-                self.price = self.research.Q_OM_cost
-            elif self.duration == 'OQ':
+            # if self.duration == 'OM':
+            #     self.price = self.research.Q_OM_cost
+            if self.duration == 'OQ':
                 self.price = self.research.Q_OQ_cost
             elif self.duration == 'HY':
                 self.price = self.research.Q_HY_cost

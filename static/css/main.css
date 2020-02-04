@@ -1038,7 +1038,7 @@ footer {
 	border-bottom: 1px solid #E6E6E6;
 	border-left: 1px solid #E6E6E6;
 	width: 100%;
-	padding-top: 57px;
+	padding-top: 40px;
 }
 .ready .row {
 	padding: 0 0 0 60px;
@@ -4636,12 +4636,18 @@ footer {
 .list-group-item_category.active + .list-group__dropdown {
 	display: block;
 }
-
+.list-group-item_current {
+	font-weight: bold !important;
+	text-decoration: underline;
+}
+.list-group-item_current:hover {
+	text-decoration: underline;
+}
 .content__main {
 	border-bottom: 1px solid #E6E6E6;
 	border-left: 1px solid #E6E6E6;
 	width: 100%;
-	padding-top: 57px;
+	padding-top: 40px;
 }
 .icon-ruble {
 	position: relative;

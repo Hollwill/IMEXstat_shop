@@ -70,4 +70,9 @@ class CategoryContextMixin(ContextMixin):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context["categories"] = Category.objects.all()
+		try:
+			context["current_category"] = Category.objects._mptt_filter(slug=self.kwargs.get('slug')).first()
+			context["current_category_parent"] = context["current_category"].get_ancestors()[0]
+		except:
+			pass
 		return context
