@@ -65,24 +65,27 @@ class OrderItem(models.Model):
     price = models.IntegerField(blank=True, null=True, verbose_name='стоимость')
 
     def save(self, *args, **kwargs):
-        if self.update_frequency == 'MU':
-            if self.duration == 'OM':
-                self.price = self.research.M_OM_cost
-            elif self.duration == 'OQ':
-                self.price = self.research.M_OQ_cost
-            elif self.duration == 'HY':
-                self.price = self.research.M_HY_cost
-            elif self.duration == 'OY':
-                self.price = self.research.M_OY_cost
-        elif self.update_frequency == 'QU':
-            # if self.duration == 'OM':
-            #     self.price = self.research.Q_OM_cost
-            if self.duration == 'OQ':
-                self.price = self.research.Q_OQ_cost
-            elif self.duration == 'HY':
-                self.price = self.research.Q_HY_cost
-            elif self.duration == 'OY':
-                self.price = self.research.Q_OY_cost
+        if self.update_frequency and self.duration:
+            if self.update_frequency == 'MU':
+                if self.duration == 'OM':
+                    self.price = self.research.M_OM_cost
+                elif self.duration == 'OQ':
+                    self.price = self.research.M_OQ_cost
+                elif self.duration == 'HY':
+                    self.price = self.research.M_HY_cost
+                elif self.duration == 'OY':
+                    self.price = self.research.M_OY_cost
+            elif self.update_frequency == 'QU':
+                # if self.duration == 'OM':
+                #     self.price = self.research.Q_OM_cost
+                if self.duration == 'OQ':
+                    self.price = self.research.Q_OQ_cost
+                elif self.duration == 'HY':
+                    self.price = self.research.Q_HY_cost
+                elif self.duration == 'OY':
+                    self.price = self.research.Q_OY_cost
+        else:
+            self.price = self.research.nominal
         if self.research.stock:
             self.price = int(self.price - (self.price * self.research.discount / 100))
         super(OrderItem, self).save(*args, **kwargs)
@@ -155,9 +158,14 @@ class Cart(models.Model):
         return str(self.creation_date)
 
     def summary_price(self):
-        product = CartItem.objects.filter(cart=self)
-        count = product.aggregate(Sum('price'))
-        return count.get('price__sum')
+        products = CartItem.objects.filter(cart=self)
+        count = 0
+        for product in products:
+            if product.research.stock:
+                count += product.research.get_discount_cost(product.price)
+            else:
+                count += product.price
+        return count
     price = property(summary_price)
 
 

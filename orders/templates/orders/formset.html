@@ -1,3 +1,5 @@
+{% load discount %}
+
 <div class="cartBuy__item">
     {% with research as r %}
     <div class="cartBuy__item-name">
@@ -8,6 +10,7 @@
     </div>
 
     {{ form.research }}
+    {% if not r.only_nominal %}
     <div class="cartBuy__item-settings {{ i }}">
         <div class="cartBuy__item-settingsLeft">
             <label class="checkbox-transform">
@@ -60,17 +63,20 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="cartBuy__item-price">
         <div class="cartBuy__item-priceBlock">
-            <p class="nominal">{{ research.nominal }} Р</p>
-            <p class="OM MU" style="display: none;">{% if r.M_OM_cost %}{{ r.M_OM_cost }} Р{% endif %}</p>
-            <p class="OQ MU" style="display: none;">{% if r.M_OQ_cost %}{{ r.M_OQ_cost }} Р{% endif %}</p>
-            <p class="HY MU" style="display: none;">{% if r.M_HY_cost %}{{ r.M_HY_cost }} Р{% endif %}</p>
-            <p class="OY MU" style="display: none;">{% if r.M_OY_cost %}{{ r.M_OY_cost }} Р{% endif %}</p>
-{#            <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>#}
-            <p class="OQ QU" style="display: none;">{% if r.Q_OQ_cost %}{{ r.Q_OQ_cost }} Р{% endif %}</p>
-            <p class="HY QU" style="display: none;">{% if r.Q_HY_cost %}{{ r.Q_HY_cost }} Р{% endif %}</p>
-            <p class="OY QU" style="display: none;">{% if r.Q_OY_cost %}{{ r.Q_OY_cost }} Р{% endif %}</p>
+            <p class="nominal">{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }} Р</span></p>
+            {% if not r.only_nominal %}
+            <p class="OM MU" style="display: none;">{% get_cost r.M_OM_cost %}</p>
+            <p class="OQ MU" style="display: none;">{% get_cost r.M_OQ_cost %}</p>
+            <p class="HY MU" style="display: none;">{% get_cost r.M_HY_cost %}</p>
+            <p class="OY MU" style="display: none;">{% get_cost r.M_OY_cost %}</p>
+{#          <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>#}
+            <p class="OQ QU" style="display: none;">{% get_cost r.Q_OQ_cost %}</p>
+            <p class="HY QU" style="display: none;">{% get_cost r.Q_HY_cost %}</p>
+            <p class="OY QU" style="display: none;">{% get_cost r.Q_OY_cost %}</p>
+            {% endif %}
             <a href="{% url 'orders:cart_purchase' %}?remove_from_cart={{ research.slug }}">Отменить заказ</a>
         </div>
     </div>

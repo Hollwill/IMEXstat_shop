@@ -3,7 +3,9 @@
 
 {% block title %}Каталог исследований{% endblock title %}
 
+{% load discount %}
 {% load static %}
+
 {% block inner_content %}
 
 <div itemscope itemtype="https://schema.org/NewsArticle" class="ready__items">
@@ -20,7 +22,9 @@
                     <div class="ready__item-topLeftRow">
                         <a href="{% url 'research:buy' research.slug %}"><h2 itemprop="headline">{{ research.title}}</h2></a>
                         <div class="ready__item-stars"></div>
-                        <h2><span class="icon-ruble">{{ research.nominal}}</span></h2>
+                        {% with research as r %}
+                          <h2><span class="icon-ruble">{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %}Р </span>{% endif %}<span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }}</span></span></h2>
+                        {% endwith %}
                     </div>
                     <p id="research_description" itemprop="description">{{ research.description|safe }}</p>
                     <a href="{% url 'research:buy' research.slug %}">Подробнее...</a>

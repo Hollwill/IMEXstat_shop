@@ -1,0 +1,3 @@
+{% load discount %}
+
+{% if cost %}{% if r.stock %}<span style="color: red;">{%  discount_cost cost %} Р </span> {% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ cost }} Р</span>  {% endif %}

@@ -41,11 +41,21 @@ class Research(models.Model):
 
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
-    # def save(self, *args, **kwargs):
-    #     super(Research, self).save()
-    #     if not self.slug.endswith('-' + str(self.id)):
-    #         self.slug += '-' + str(self.id)
-    #         super(Research, self).save()
+    def save(self, *args, **kwargs):
+        super(Research, self).save()
+        if not self.slug.endswith('-' + str(self.id)):
+            self.slug += '-' + str(self.id)
+            super(Research, self).save()
+
+    def only_nominal(self):
+        if self.M_OM_cost or self.M_OQ_cost or self.M_HY_cost or self.M_OY_cost or \
+                self.Q_OQ_cost or self.M_HY_cost or self.Q_OY_cost:
+            return False
+        else:
+            return True
+
+    def get_discount_cost(self, value):
+        return int(value - (value * self.discount / 100))
 
     def __str__(self):
         return self.title

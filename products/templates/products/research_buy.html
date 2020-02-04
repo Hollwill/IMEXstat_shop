@@ -1,136 +1,144 @@
 {% extends "products/products_base.html" %}
 
 {% load static %}
+{% load discount %}
 
 {% block inner_content %}
-                    <div itemscope itemtype="https://schema.org/NewsArticle" class="readyInner__title">
-                        <div class="section__title">
-                            <div class="readyInner__title-content">
-                                <div class="readyInner__title-contentLeft">
-                                    <h2 itemprop="headline">{{ research.title }}</h2>
-                                    <p><a id="research-list-star" href="{% url 'research:buy' research.slug %}?add_to_favorite={{ research.slug }}"><img src="{% static "img/star.svg" %}"  id="product-star"></a></p>
-                                </div>
-                                <div class="readyInner__title-contentRight">
-                                    <h2>{{ research.nominal}} Р</h2>
-                                </div>
-                            </div>
-                            <div class="section__title-line"></div>
-                        </div>
-                    </div>
+<div itemscope itemtype="https://schema.org/NewsArticle" class="readyInner__title">
+    <div class="section__title">
+        <div class="readyInner__title-content">
+            <div class="readyInner__title-contentLeft">
+                <h2 itemprop="headline">{{ research.title }}</h2>
+                <p><a id="research-list-star" href="{% url 'research:buy' research.slug %}?add_to_favorite={{ research.slug }}"><img src="{% static "img/star.svg" %}"  id="product-star"></a></p>
+            </div>
+            <div class="readyInner__title-contentRight">
+            {% with research as r %}
+                <h2>{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }} Р</span></h2>
+            {% endwith %}
+            </div>
+        </div>
+        <div class="section__title-line"></div>
+    </div>
+</div>
 
-                    <div class="readyInner__content" itemscope itemtype="https://schema.org/NewsArticle">
-                        {% if research.image %}
-                        <div class="readyInner__content-img">
-                            <img class="readyInner__content-img" src="{{ research.image.url }}" alt="">
-                        </div>
-                        {% endif %}
-                        <div class="readyInner__content-text">
-                            <h3>Цель иследования</h3>
-                            <div class="readyInner__content-textLine"></div>
-                            <p>{{ research.target|safe }}</p>
-                            <h3 >Описание иследования</h3>
-                            <div class="readyInner__content-textLine"></div>
-                            <p itemprop="description">{{ research.description|safe }}</p>
-                            <h3>Обновление данных</h3>
-                            <div class="readyInner__content-textLine"></div>
-                            <p>{{ research.data_update|safe }}</p>
+<div class="readyInner__content" itemscope itemtype="https://schema.org/NewsArticle">
+    {% if research.image %}
+    <div class="readyInner__content-img">
+        <img class="readyInner__content-img" src="{{ research.image.url }}" alt="">
+    </div>
+    {% endif %}
+    <div class="readyInner__content-text">
+        <h3>Цель иследования</h3>
+        <div class="readyInner__content-textLine"></div>
+        <p>{{ research.target|safe }}</p>
+        <h3 >Описание иследования</h3>
+        <div class="readyInner__content-textLine"></div>
+        <p itemprop="description">{{ research.description|safe }}</p>
+        <h3>Обновление данных</h3>
+        <div class="readyInner__content-textLine"></div>
+        <p>{{ research.data_update|safe }}</p>
 {#                            <p><span>Подписка на обновления данных отчета ( при первой покупки - первые 3-и месяца - БЕСПЛАТНО! ) </span></p>#}
-                        </div>
-                    </div>
+    </div>
+</div>
 
-                    {% with research as r %}
-                    <form id="submit_form" method="post">
-                        {% csrf_token %}
-                        <div class="readyInner__extend">
-                            <div class="cartBuy__item-settings">
-                                <div class="cartBuy__item-settingsLeft">
-                                    <label class="checkbox-transform">
-                                        <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
-                                        <span class="checkbox__label">Ежемесячное обновление</span>
-                                    </label>
-                                    <label class="checkbox-transform">
-                                        <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
-                                        <span class="checkbox__label">Ежеквартальное обновление</span>
-                                    </label>
-                                </div>
-                                <div class="cartBuy__item-settingsRight">
-                                    <div class="radiobtn OM">
-                                        <input
-                                        onchange="showCostAlone()"
-                                        type="radio"
-                                        name="{{ form.duration.html_name }}"
-                                        id="{{ form.duration.1.id_for_label }}"
-                                        value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %}">
-                                        <label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
+{% with research as r %}
+<form id="submit_form" method="post">
+    {% csrf_token %}
+    {% if not r.only_nominal %}
 
-                                    </div>
-                                    <div class="radiobtn OQ">
-                                        <input
-                                        onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"
-                                        id="{{ form.duration.2.id_for_label }}"
-                                        value="OQ" class="Duration_choice {% if r.M_OQ_cost %}MU{% endif %} {% if r.Q_OQ_cost %}QU{% endif %}">
-                                        <label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
-                                    </div>
-                                    <div class="radiobtn HY">
-                                        <input
-                                        onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"
-                                        id="{{ form.duration.3.id_for_label }}"
-                                        value="HY" class="Duration_choice {% if r.M_HY_cost %}MU{% endif %} {% if r.Q_HY_cost %}QU{% endif %}">
-                                        <label for="{{ form.duration.3.id_for_label }}">На пол года</label>
-                                    </div>
-                                    <div class="radiobtn OY">
-                                        <input
-                                        onchange="showCostAlone()"
-                                        type="radio" name="{{ form.duration.html_name }}"
-                                        id="{{ form.duration.4.id_for_label }}"
-                                        value="OY" class="Duration_choice {% if r.M_OY_cost %}MU{% endif %} {% if r.Q_OY_cost %}QU{% endif %}">
-                                        <label for="{{ form.duration.4.id_for_label }}">На один год</label>
-                                    </div>
+    <div class="readyInner__extend">
+        <div class="cartBuy__item-settings">
+            <div class="cartBuy__item-settingsLeft">
+                <label class="checkbox-transform">
+                    <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input">
+                    <span class="checkbox__label">Ежемесячное обновление</span>
+                </label>
+                <label class="checkbox-transform">
+                    <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}"  id="{{ form.update_frequency.2.id_for_label }}" value="QU" class="checkbox__input">
+                    <span class="checkbox__label">Ежеквартальное обновление</span>
+                </label>
+            </div>
+            <div class="cartBuy__item-settingsRight">
+                <div class="radiobtn OM">
+                    <input
+                    onchange="showCostAlone()"
+                    type="radio"
+                    name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.1.id_for_label }}"
+                    value="OM" class="Duration_choice {% if r.M_OM_cost %}MU{% endif %}">
+                    <label for="{{ form.duration.1.id_for_label }}">На один месяц</label>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="readyInner__btns">
-                            {% if r.demo %}
-                            <div class="readyInner__btns-left">
-                                <a href="{{ research.demo.url }}">Скачать демо версию</a>
-                                <img src="{% static "img/pdf.svg" %}" alt="">
-                            </div>
-                            {% endif %}
-                            <div class="readyInner__btns-right">
-                                <a href="javascript:{}" onclick="document.getElementById('submit_form').submit();" class="readyInner__btns-add">Добавить в корзину</a>
-                                <div class="cartBuy__item-price">
-                                    <div class="cartBuy__item-priceBlock">
-                                        <p class="nominal">{{ r.nominal }} P</p>
-                                        <p class="OM MU" style="display: none;">{% if r.M_OM_cost %}{{ r.M_OM_cost }} Р{% endif %}</p>
-                                        <p class="OQ MU" style="display: none;">{% if r.M_OQ_cost %}{{ r.M_OQ_cost }} Р{% endif %}</p>
-                                        <p class="HY MU" style="display: none;">{% if r.M_HY_cost %}{{ r.M_HY_cost }} Р{% endif %}</p>
-                                        <p class="OY MU" style="display: none;">{% if r.M_OY_cost %}{{ r.M_OY_cost }} Р{% endif %}</p>
+                </div>
+                <div class="radiobtn OQ">
+                    <input
+                    onchange="showCostAlone()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.2.id_for_label }}"
+                    value="OQ" class="Duration_choice {% if r.M_OQ_cost %}MU{% endif %} {% if r.Q_OQ_cost %}QU{% endif %}">
+                    <label for="{{ form.duration.2.id_for_label }}">На один квартал</label>
+                </div>
+                <div class="radiobtn HY">
+                    <input
+                    onchange="showCostAlone()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.3.id_for_label }}"
+                    value="HY" class="Duration_choice {% if r.M_HY_cost %}MU{% endif %} {% if r.Q_HY_cost %}QU{% endif %}">
+                    <label for="{{ form.duration.3.id_for_label }}">На пол года</label>
+                </div>
+                <div class="radiobtn OY">
+                    <input
+                    onchange="showCostAlone()"
+                    type="radio" name="{{ form.duration.html_name }}"
+                    id="{{ form.duration.4.id_for_label }}"
+                    value="OY" class="Duration_choice {% if r.M_OY_cost %}MU{% endif %} {% if r.Q_OY_cost %}QU{% endif %}">
+                    <label for="{{ form.duration.4.id_for_label }}">На один год</label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="readyInner__btns">
+        {% if r.demo %}
+        <div class="readyInner__btns-left">
+            <a href="{{ research.demo.url }}">Скачать демо версию</a>
+            <img src="{% static "img/pdf.svg" %}" alt="">
+        </div>
+        {% endif %}
+        <div class="readyInner__btns-right">
+            <a href="javascript:{}" onclick="document.getElementById('submit_form').submit();" class="readyInner__btns-add">Добавить в корзину</a>
+            <div class="cartBuy__item-price">
+                <div class="cartBuy__item-priceBlock">
+                    <p class="nominal">{% if r.stock %} <span style="color: red;">{%  discount_cost r.nominal %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ r.nominal }} Р</span></p>
+                    {% if not r.only_nominal %}
+                    <p class="OM MU" style="display: none;">{% get_cost r.M_OM_cost %}</p>
+                    <p class="OQ MU" style="display: none;">{% get_cost r.M_OQ_cost %}</p>
+                    <p class="HY MU" style="display: none;">{% get_cost r.M_HY_cost %}</p>
+                    <p class="OY MU" style="display: none;">{% get_cost r.M_OY_cost %}</p>
 {#                                        <p class="OM QU" style="display: none;">{% if r.Q_OM_cost %}{{ r.Q_OM_cost }} Р{% endif %}</p>#}
-                                        <p class="OQ QU" style="display: none;">{% if r.Q_OQ_cost %}{{ r.Q_OQ_cost }} Р{% endif %}</p>
-                                        <p class="HY QU" style="display: none;">{% if r.Q_HY_cost %}{{ r.Q_HY_cost }} Р{% endif %}</p>
-                                        <p class="OY QU" style="display: none;">{% if r.Q_OY_cost %}{{ r.Q_OY_cost }} Р{% endif %}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    {% endwith %}
+                    <p class="OQ QU" style="display: none;">{% get_cost r.Q_OQ_cost %}</p>
+                    <p class="HY QU" style="display: none;">{% get_cost r.Q_HY_cost %}</p>
+                    <p class="OY QU" style="display: none;">{% get_cost r.Q_OY_cost %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endwith %}
 
-                    <div class="ready__type readyInner__bot">
-                        <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
-                        <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>
-                        <a href="#" onclick="return false;" id="data_sources_button" class="ready__type-item">Источники данных</a>
-                    </div>
-                    <div id="contents" class="readyInner__text">
-                        <p>{{ research.contents |safe }}</p>
-                    </div>
-                    <div style="display:none" id="using_methods" class="readyInner__text">
-                        <p>{{ research.using_methods |safe }}</p>
-                    </div>
-                    <div style="display:none" id="data_sources" class="readyInner__text">
-                        <p>{{ research.data_sources |safe }}</p>
-                    </div>
-                    {% endblock inner_content %}
+<div class="ready__type readyInner__bot">
+    <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
+    <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>
+    <a href="#" onclick="return false;" id="data_sources_button" class="ready__type-item">Источники данных</a>
+</div>
+<div id="contents" class="readyInner__text">
+    <p>{{ research.contents |safe }}</p>
+</div>
+<div style="display:none" id="using_methods" class="readyInner__text">
+    <p>{{ research.using_methods |safe }}</p>
+</div>
+<div style="display:none" id="data_sources" class="readyInner__text">
+    <p>{{ research.data_sources |safe }}</p>
+</div>
+{% endblock inner_content %}

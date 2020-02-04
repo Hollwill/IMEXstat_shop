@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load discount %}
+
 {% block content %}
 <section class="cart">
 	<div class="container-fluid">
@@ -23,7 +25,9 @@
 					<div class="cart__item-left">
 						<div class="cart__item-left-top">
 							<h2>{{ research.title }}</h2>
-							<h2>{{ cartitem.price }} Р</h2>
+              {% with research as r %}
+                <h2>{% if r.stock %} <span style="color: red;">{%  discount_cost cartitem.price %} Р</span>{% endif %} <span class="{% if r.stock %}is_stock{% endif %}">{{ cartitem.price }} Р</span></h2>
+              {% endwith %}
 						</div>
 						<div class="cart__item-left-text">
 							<p >{{ research.description|safe}}</p>

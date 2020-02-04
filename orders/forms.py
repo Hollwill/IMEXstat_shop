@@ -25,6 +25,8 @@ class CartResearchForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['research'].widget.attrs.update({'style': 'display:none;'})
         self.fields['research'].required = False
+        self.fields['update_frequency'].required = False
+        self.fields['duration'].required = False
 
     class Meta(object):
         model = OrderItem

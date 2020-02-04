@@ -89,9 +89,7 @@ class Cart:
             return False
 
     def summary(self):
-        result = 0
-        for item in self.cart.cartitem_set.all():
-            result += item.price
+        result = self.cart.summary_price()
         return result
 
     def clear(self):

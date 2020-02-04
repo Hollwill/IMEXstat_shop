@@ -1,6 +1,7 @@
 {% load set %}
 {% load static %}
 {% load flatblocks %}
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -118,15 +119,21 @@
     {% endblock content %}
     <footer class="{% block footer_class %}footer__bg-none{% endblock %}">
         <div class="container">
-            {% block footer_form %}
+          {% block footer_form %}
 
-            {% endblock %}
+          {% endblock %}
+          <div class="row footer__menu footer__logo">
+            <a href="" class="header__logo">
+                <div class="logo">
+                    <img class="logo" src="{% static 'img/Imex_logo_footer.jpg' %}" >
+                </div>
+            </a>
+          </div>
+        </div>
+        <div class="container">
+
             <div class="row header__row footer__menu">
-                <a href="" class="header__logo">
-                    <div class="logo">
-                        <img class="logo" src="{% static 'img/Imex_logo_footer.jpg' %}" >
-                    </div>
-                </a>
+
                 <div class="header__menu header__menu-desktop" id="header__menu">
                     <nav class="navbar navbar-expand-lg navbar-light" id="menu">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
