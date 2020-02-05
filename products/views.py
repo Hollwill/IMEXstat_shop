@@ -1,5 +1,5 @@
 from django.views import generic
-from .models import Research
+from .models import Research, Category
 from orders.cart import Cart
 from orders.models import CartItem
 from .mixins import CategoryContextMixin
@@ -48,6 +48,12 @@ class ResearchListView(generic.ListView, CategoryContextMixin):
 class ResearchCategoryListView(generic.ListView, CategoryContextMixin):
     context_object_name = 'researchs'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["current_category"] = Category.objects._mptt_filter(slug=self.kwargs.get('slug')).first()
+        context["current_category_parent"] = context["current_category"].get_ancestors()[0]
+        return context
+
     def get_queryset(self):
         type = self.request.GET.get('type')
         if type:
@@ -71,6 +77,8 @@ class ResearchBuyView(ModelInstanceViewSeoMixin, generic.DetailView, CategoryCon
     def get_context_data(self, *args, **kwargs):
         context = super(ResearchBuyView, self).get_context_data(**kwargs)
         context['form'] = self.get_form()
+        context["current_category"] = self.object.category
+        context["current_category_parent"] = context["current_category"].get_ancestors()[0]
         return context
 
     def form_valid(self, form):
