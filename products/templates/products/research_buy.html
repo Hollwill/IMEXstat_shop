@@ -47,7 +47,7 @@
     {% if not r.only_nominal %}
 
     <div class="readyInner__extend">
-        <div class="cartBuy__item-settings">
+        <div class="cartBuy__item-settings research_buy_form">
             <div class="cartBuy__item-settingsLeft">
                 <label class="checkbox-transform">
                     <input type="radio" onchange="showCostAlone()" name="{{ form.update_frequency.html_name }}" id="{{ form.update_frequency.1.id_for_label }}" value="MU" class="checkbox__input radio_update_frequency">
@@ -98,7 +98,7 @@
         </div>
     </div>
     {% endif %}
-    <div class="readyInner__btns">
+    <div class="readyInner__btns research_buy_form">
         {% if r.demo %}
         <div class="readyInner__btns-left">
             <a href="{{ research.demo.url }}">Скачать демо версию</a>

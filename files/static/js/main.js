@@ -97,22 +97,22 @@ $(function ()    {
 
 
 function showCostAlone() {
-    let check_duration = $(`.radiobtn input:checked`).attr('value');
-    let check_frequency = $(`.checkbox__input:checked`).attr('value');
+    let check_duration = $(`.research_buy_form .radiobtn input:checked`).attr('value');
+    let check_frequency = $(`.research_buy_form .checkbox__input:checked`).attr('value');
     if (check_frequency === "QU") {
-        $(`.radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
-        $(`.radiobtn.OM label`).css('background', 'white').css('cursor', 'default').css('color', 'gray');
+        $(`.research_buy_form .radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
+        $(`.research_buy_form .radiobtn.OM label`).css('background', 'white').css('cursor', 'default').css('color', 'gray');
     } else {
-        $(`.radiobtn input[value="OM"]`).prop("disabled", false);
-        $(`.radiobtn.OM label`).css('background', '').css('cursor', '').css('color', '');
+        $(`.research_buy_form .radiobtn input[value="OM"]`).prop("disabled", false);
+        $(`.research_buy_form .radiobtn.OM label`).css('background', '').css('cursor', '').css('color', '');
     }
-    let children_inp = $(`.cartBuy__item-settingsRight`).find('input');
-    let children_label = $(`.cartBuy__item-settingsRight`).find('label');
+    let children_inp = $(`.research_buy_form .cartBuy__item-settingsRight`).find('input');
+    let children_label = $(`.research_buy_form .cartBuy__item-settingsRight`).find('label');
 
     for (let i = 0; i < children_inp.length; i++) {
         let child = $(children_inp[i]);
         if (!check_frequency) {
-            $(`.radiobtn input:checked`).prop('checked', false);
+            $(`.research_buy_form .radiobtn input:checked`).prop('checked', false);
         }
         if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
             children_label[i].style['background'] = '';
@@ -127,7 +127,7 @@ function showCostAlone() {
             child.prop('checked', false);
         }
     }
-    let price_div = $('.cartBuy__item-price').children();
+    let price_div = $('.research_buy_form .cartBuy__item-price').children();
     if (check_duration && check_frequency) {
         price_div.children('p').hide();
         price_div.children(`.${check_duration}.${check_frequency}`).show()
@@ -135,7 +135,6 @@ function showCostAlone() {
         price_div.children('p').hide();
         price_div.children(`.nominal`).show()
     }
-
 }
 
 function showCost() {
@@ -144,6 +143,7 @@ function showCost() {
         let num = classes[1];
         let check_duration = $(`.${classes[0]}.${num} .radiobtn input:checked`).attr('value');
         let check_frequency = $(`.${classes[0]}.${num} .checkbox__input:checked`).attr('value');
+
         if (check_frequency === "QU") {
             $(`.${classes[0]}.${num} .radiobtn input[value="OM"]`).prop('disabled', true).prop('checked', false);
             $(`.${classes[0]}.${num} .radiobtn.OM label`).css('background', 'white').css('cursor', 'default').css('color', 'gray');
@@ -160,7 +160,7 @@ function showCost() {
         for (let i = 0; i < children_inp.length; i++) {
             let child = $(children_inp[i]);
             if (!check_frequency) {
-                $(`.${classes[0]}.${num} .radiobtn input:checked`).prop('checked', false);
+                $(`.${classes[0]}.${num} .radiobtn input`).prop('checked', false);
             }
             if (check_frequency && (check_frequency === children_inp[i].classList[1] || check_frequency === children_inp[i].classList[2])) {
                 children_label[i].style['background'] = '';
@@ -175,7 +175,6 @@ function showCost() {
                 child.prop('checked', false);
             }
         }
-        console.log(check_duration)
         let price_div = $(this).siblings('.cartBuy__item-price').children();
 
         if (check_duration && check_frequency) {
@@ -208,10 +207,13 @@ $(document).ready(function(){
       document.querySelectorAll(
           `.radio_update_frequency[name=${this.name}]`).forEach((elem) => {
         elem.previous = elem.checked;
+
       });
       showCost();
       showCostAlone();
     }
+      showCost();
+      showCostAlone();
 });
 
 function cartBuy(a,b) {
