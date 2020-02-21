@@ -129,7 +129,9 @@ class Base(Configuration):
     LOGOUT_REDIRECT_URL = 'index:index'
 
     STATIC_ROOT = os.path.join(ROOT_PATH, 'static')
+
     STATIC_URL = '/static/'
+
     STATICFILES_DIRS = (
         os.path.join(ROOT_PATH, 'files',  "static"),
         os.path.join(FRONTEND_DIR, 'dist'),

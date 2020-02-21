@@ -14,6 +14,9 @@
     </div>
     <h1>Сегментный бублик</h1>
     <highcharts class="chart" :options="firstTnvedCountriesPieOptions" :updateArgs="updateArgs"></highcharts>
+    <highcharts class="chart" :options="selectedItemPieOptions" :updateArgs="updateArgs"></highcharts>
+    <highcharts class="chart" :options="avgBarOptions"></highcharts>
+
 <!--    <h1>Доля первого кода в вышестоящем</h1>-->
 <!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
   </div>
@@ -43,6 +46,28 @@
                 region_data: [],
                 date_labels: [],
                 updateArgs: [true, true, true],
+                avgBarOptions: {
+                  chart: {
+                      type: 'column'
+                  },
+                  xAxis: {
+                      type: 'category',
+                      labels: {
+                          rotation: -45,
+                          style: {
+                              fontSize: '13px',
+                              fontFamily: 'Verdana, sans-serif'
+                          }
+                      }
+                  },
+                  legend: {
+                      enabled: false
+                  },
+                  series: [{
+                      data: [],
+                  }]
+
+                },
                 chartOptions: {
                   xAxis: {
                       categories: null
@@ -58,6 +83,27 @@
                       },
 
                   ]
+                },
+                selectedItemPieOptions: {
+                  plotOptions: {
+                    series: {
+                      dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.percentage:.2f}%'
+                      }
+                    }
+                  },
+                  tooltip: {
+                    // headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: 'значение: <b>{point.y}</b><br/>'
+                  },
+                  chart: {
+                    type: "pie"
+                  },
+
+                  series: [{
+                    data: [],
+                  }],
                 },
                 firstTnvedCountriesPieData: [],
                 firstTnvedCountriesPieOptions: {
@@ -154,6 +200,31 @@
             }
         },
         methods: {
+            updateselectedItemPie(val) {
+              this.selectedItemPieOptions.series[0].data = [];
+              for (let el of val) {
+                let data;
+                if (this.category === 'ИМ') {
+                    data = (this.params === 'stoim') ? el.imp.cost : el.imp.weight
+                } else {
+                    data = (this.params === 'netto') ? el.exp.cost : el.exp.weight
+                }
+                window.console.log(data, el.item)
+                this.selectedItemPieOptions.series[0].data.push([el.item, data])
+              }
+            },
+            updateAvgChart(val) {
+              this.avgBarOptions.series[0].data = [];
+              for (let i = 0; i < this.date_labels.length; i++) {
+                  let data;
+                  if (this.category === 'ИМ') {
+                      data = (this.params === 'stoim') ? val.imp.cost[i] : val.imp.weight[i]
+                  } else {
+                      data = (this.params === 'netto') ? val.exp.cost[i] : val.exp.weight[i]
+                  }
+                  this.avgBarOptions.series[0].data.push([this.date_labels[i], data])
+              }
+            },
             dynamics_array(arr) {
                 let new_arr = [0];
                 for (let i = 0; i < arr.length; i++) {
@@ -201,6 +272,9 @@
                         this.chartOptions.series[0].data = (this.params === 'stoim') ? response.data.data.imp.cost : response.data.data.imp.weight;
                         this.chartOptions.series[1].data = (this.params === 'stoim') ? response.data.data.exp.cost : response.data.data.exp.weight;
                         this.chartOptions.xAxis.categories = response.data.labels;
+                        this.date_labels = response.data.labels;
+                        this.updateAvgChart(response.data.data);
+                        this.updateselectedItemPie(response.data.extend_data)
                     })
             }
         },

@@ -37,8 +37,8 @@
     </div>
     <h1>Сегментный бублик</h1>
     <highcharts class="chart" :options="segmentPieOptions" :updateArgs="updateArgs"></highcharts>
-<!--    <h1>Доля первого кода в вышестоящем</h1>-->
-<!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
+    <highcharts class="chart" :options="avgBarOptions"></highcharts>
+
   </div>
 </template>
 
@@ -76,27 +76,6 @@
                     weight: null
                 },
                 updateArgs: [true, true, true],
-                firstTnvedPartsPieOptions: {
-                  plotOptions: {
-                    series: {
-                      dataLabels: {
-                        enabled: true,
-                        format: '{point.name}: {point.percentage:.2f}%'
-                      }
-                    }
-                  },
-                  tooltip: {
-                    // headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: 'value: <b>{point.y}</b><br/>'
-                  },
-                  chart: {
-                    type: "pie"
-                  },
-
-                  series: [{
-                    data: [],
-                  }],
-                },
                 segmentPieOptions: {
                   plotOptions: {
                     series: {
@@ -140,16 +119,38 @@
                     text: 'Sin chart'
                   },
                   series: []
-                }
+                },
+                avgBarOptions: {
+                    chart: {
+                        type: 'column'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        labels: {
+                            rotation: -45,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        data: [],
+                    }]
+
+                  }
             }
         },
         watch: {
             tnved_data: {
                 handler(val) {
+                    this.updateAvgChart(val);
                     this.updateLineChart(val);
                     this.sumTables(val);
                     this.segmentPieData(val);
-                    this.updateFirstTnvedPartsPie(this.tnved_extend_data)
                 },
                 deep: true
             }
@@ -189,21 +190,21 @@
             },
         },
         methods: {
-            updateFirstTnvedPartsPie(val) {
-                this.firstTnvedPartsPieOptions.series[0].data = [];
-                for (let i of val) {
-                    let data;
-                    if (this.category === 'ИМ') {
-                          data = (this.params === 'stoim') ? i.imp.stoim : i.imp.weight
-                      } else {
-                          data = (this.params === 'netto') ? i.exp.stoim : i.exp.weight
-                      }
-                    this.firstTnvedPartsPieOptions.series[0].data.push({
-                        name: i.item,
-                        y: data
-                    })
+            updateAvgChart(val) {
+              this.avgBarOptions.series[0].data = [];
+              for (let i = 0; i < this.date_labels.length; i++) {
+                let sum = 0;
+                for (let el of val) {
+                  let data;
+                  if (this.category === 'ИМ') {
+                      data = (this.params === 'stoim') ? el.imp.stoim[i] : el.imp.weight[i]
+                  } else {
+                      data = (this.params === 'netto') ? el.exp.stoim[i] : el.exp.weight[i]
+                  }
+                  sum += data
                 }
-
+                this.avgBarOptions.series[0].data.push([this.date_labels[i], sum / val.length])
+              }
             },
             segmentPieData(val) {
                 this.segmentPieOptions.series[0].data = [

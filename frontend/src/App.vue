@@ -70,9 +70,6 @@ export default {
           category: 'ИМ',
       }
   },
-  mounted: function() {
-      window.console.log(this.$router)
-  },
   methods: {
       addTnved () {
           this.selectedTnved.push(this.item)

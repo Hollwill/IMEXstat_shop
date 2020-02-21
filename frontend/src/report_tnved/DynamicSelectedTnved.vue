@@ -40,6 +40,7 @@
     <highcharts class="chart" :options="segmentPieOptions" :updateArgs="updateArgs"></highcharts>
     <h1>Доля первого кода в вышестоящем</h1>
     <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>
+    <highcharts class="chart" :options="avgBarOptions"></highcharts>
   </div>
 </template>
 
@@ -141,12 +142,35 @@
                     text: 'Sin chart'
                   },
                   series: []
+                },
+                avgBarOptions: {
+                  chart: {
+                      type: 'column'
+                  },
+                  xAxis: {
+                      type: 'category',
+                      labels: {
+                          rotation: -45,
+                          style: {
+                              fontSize: '13px',
+                              fontFamily: 'Verdana, sans-serif'
+                          }
+                      }
+                  },
+                  legend: {
+                      enabled: false
+                  },
+                  series: [{
+                      data: [],
+                  }]
+
                 }
             }
         },
         watch: {
             tnved_data: {
                 handler(val) {
+                    this.updateAvgChart(val);
                     this.updateLineChart(val);
                     this.sumTables(val);
                     this.segmentPieData(val);
@@ -190,6 +214,22 @@
             },
         },
         methods: {
+            updateAvgChart(val) {
+              this.avgBarOptions.series[0].data = [];
+              for (let i = 0; i < this.date_labels.length; i++) {
+                let sum = 0;
+                for (let el of val) {
+                  let data;
+                  if (this.category === 'ИМ') {
+                      data = (this.params === 'stoim') ? el.imp.stoim[i] : el.imp.weight[i]
+                  } else {
+                      data = (this.params === 'netto') ? el.exp.stoim[i] : el.exp.weight[i]
+                  }
+                  sum += data
+                }
+                this.avgBarOptions.series[0].data.push([this.date_labels[i], sum / val.length])
+              }
+            },
             updateFirstTnvedPartsPie(val) {
                 this.firstTnvedPartsPieOptions.series[0].data = [];
                 for (let i of val) {

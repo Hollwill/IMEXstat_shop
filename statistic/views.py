@@ -27,7 +27,8 @@ class Autocomplete(APIView):
                                StatisticData.objects.filter(tnved__startswith=search).values('tnved').distinct()][:5]
             elif category == 'country':
                 values_list = [i['description'] for i in
-                               CountryHandbook.objects.filter(description__icontains=search).values('description').distinct()][:5]
+                               CountryHandbook.objects.filter(description__icontains=search).values(
+                                   'description').distinct()][:5]
             elif category == 'region':
                 values_list = [i['region'] for i in
                                StatisticData.objects.filter(region__icontains=search).values('region').distinct()][:5]
@@ -212,7 +213,7 @@ class CountryStatistic(APIView):
         return JsonResponse(context)
 
 
-# ================= ReportByTnved ================
+# ================= Report ================
 
 class TnvedDynamic(APIView):
     def get(self, request):
@@ -279,9 +280,7 @@ class CountryReportByTnved(APIView):
             values_list = [i[0] for i in item_data.values_list('strana' if get == 'tnved' else 'tnved_two').distinct()]
             values_list = values_list[:18]
             data = []
-            print(len(values_list))
             for value in values_list:
-                print(value)
                 value_dict = {'exp': {}, 'imp': {}}
                 if get == 'tnved':
                     value_dict['item'] = CountryHandbook.objects.get(country=value).description
@@ -300,8 +299,10 @@ class CountryReportByTnved(APIView):
                     'netto__sum'] else 0
                 data.append(value_dict)
             return data
+
         item_list = [request.query_params.get('item_list[%s]' % i)
-                      for i in range(int(request.query_params.get('item_list_length')))]
+                     for i in range(int(request.query_params.get('item_list_length')))]
+
         context = {
             'table': get_data(request, item_list),
         }
@@ -314,13 +315,13 @@ class DetailedCountryReportByTnved(APIView):
         get = request.query_params.get('get')
         selected_item = request.query_params.get('item')
         item_list = [request.query_params.get('item_list[%s]' % i)
-                      for i in range(int(request.query_params.get('item_list_length')))]
+                     for i in range(int(request.query_params.get('item_list_length')))]
         q_objects = _Q()
         for item in item_list:
             if get == 'tnved':
                 filter_dict = {tnved_dict[len(item)]: item}
             elif get == 'country':
-                filter_dict = {'strana': item}
+                filter_dict = {'strana': CountryHandbook.objects.get(description=item).country}
             elif get == 'region':
                 filter_dict = {'region': item}
             q_objects |= _Q(**filter_dict)
@@ -332,20 +333,24 @@ class DetailedCountryReportByTnved(APIView):
 
         split_dates = StatisticData.pd_split_dates_by_inreval(request)
         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
+
         country_data = {
             'exp': {},
             'imp': {},
         }
         aggregate_data_imp = [
-            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ИМ').aggregate(
+            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]],
+                                      napr='ИМ').aggregate(
                 Sum('stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
         aggregate_data_exp = [
-            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ЭК', ).aggregate(
+            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]],
+                                      napr='ЭК', ).aggregate(
                 Sum('stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
         country_data['imp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_imp]
         country_data['imp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_imp]
         country_data['exp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_exp]
         country_data['exp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_exp]
+        format_dates_list.pop(0)
         context = {
             'labels': format_dates_list,
             'data': country_data,
@@ -372,7 +377,8 @@ class RegionReportByTnved(APIView):
                     filter_dict = {'region': item}
                 q_objects |= _Q(**filter_dict)
             item_data = StatisticData.objects.filter(q_objects, period__range=str_date_range)
-            values_list = [i[0] for i in item_data.values_list('region' if get == 'country' or get == 'tnved' else 'strana').distinct()]
+            values_list = [i[0] for i in item_data.values_list(
+                'region' if get == 'country' or get == 'tnved' else 'strana').distinct()]
             data = []
             values_list = values_list[:18]
             for value in values_list:
@@ -395,8 +401,9 @@ class RegionReportByTnved(APIView):
                     'netto__sum'] else 0
                 data.append(value_dict)
             return data
+
         item_list = [request.query_params.get('item_list[%s]' % i)
-                      for i in range(int(request.query_params.get('item_list_length')))]
+                     for i in range(int(request.query_params.get('item_list_length')))]
         context = {
             'table': get_data(request, item_list),
         }
@@ -411,7 +418,7 @@ class DetailedRegionReportByTnved(APIView):
         selected_item = request.query_params.get('item')
 
         item_list = [request.query_params.get('item_list[%s]' % i)
-                      for i in range(int(request.query_params.get('item_list_length')))]
+                     for i in range(int(request.query_params.get('item_list_length')))]
         if get == 'country':
             item_list = [CountryHandbook.objects.get(description=i).country for i in item_list]
         q_objects = _Q()
@@ -426,9 +433,8 @@ class DetailedRegionReportByTnved(APIView):
         if get == 'tnved' or get == 'country':
             filter_dict = {'region': selected_item}
         elif get == 'region':
-            filter_dict = {'strana': CountryHandbook.objects.get(description=selected_item).country }
+            filter_dict = {'strana': CountryHandbook.objects.get(description=selected_item).country}
         selected_item_data = StatisticData.objects.filter(q_objects, **filter_dict)
-        print(filter_dict)
 
         split_dates = StatisticData.pd_split_dates_by_inreval(request)
         format_dates_list = [i.strftime("%Y-%m-%d") for i in split_dates]
@@ -437,17 +443,66 @@ class DetailedRegionReportByTnved(APIView):
             'imp': {},
         }
         aggregate_data_imp = [
-            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ИМ').aggregate(
+            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]],
+                                      napr='ИМ').aggregate(
                 Sum('stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
         aggregate_data_exp = [
-            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]], napr='ЭК', ).aggregate(
+            selected_item_data.filter(period__range=[format_dates_list[i], format_dates_list[i + 1]],
+                                      napr='ЭК', ).aggregate(
                 Sum('stoim'), Sum('netto')) for i in range(len(format_dates_list) - 1)]
         region_data['imp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_imp]
         region_data['imp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_imp]
         region_data['exp']['cost'] = [int(i['stoim__sum']) if i['stoim__sum'] else 0 for i in aggregate_data_exp]
         region_data['exp']['weight'] = [int(i['netto__sum']) if i['netto__sum'] else 0 for i in aggregate_data_exp]
+        format_dates_list.pop(0)
+
+
+        extend_data = []
+        for item in q_objects.children:
+
+            aggregate_data_imp = StatisticData.objects.filter(
+                napr='ИМ', period__range=[format_dates_list[0], format_dates_list[-1]],
+                **{item[0]: item[1], **filter_dict}).aggregate(Sum('stoim'), Sum('netto'))
+            aggregate_data_exp = StatisticData.objects.filter(
+                napr='ИМ', period__range=[format_dates_list[0], format_dates_list[-1]],
+                **{item[0]: item[1], **filter_dict}).aggregate(Sum('stoim'), Sum('netto'))
+            extend_data.append({
+                'item': item[1],
+                'imp': {
+                    'cost': int(aggregate_data_imp['stoim__sum']),
+                    'weight': int(aggregate_data_imp['netto__sum']),
+                },
+                'exp': {
+                    'cost': int(aggregate_data_exp['stoim__sum']),
+                    'weight': int(aggregate_data_exp['netto__sum']),
+                },
+            })
+
+
         context = {
+            'extend_data': extend_data,
             'labels': format_dates_list,
             'data': region_data,
         }
         return JsonResponse(context)
+
+
+class Compare(APIView):
+    def get(self, request):
+        filter_dict = {}
+        tnved_list = [request.query_params.get(f'tnved_list[{i}]')
+                      for i in range(int(request.query_params.get('tnved_list_length')))]
+        for tnved in tnved_list:
+            key = tnved_dict[len(tnved)] + '__in'
+            if key in filter_dict:
+                filter_dict[key].append(tnved)
+            else:
+                filter_dict[key] = [tnved, ]
+        country_list = [request.query_params.get(f'country_list[{i}]')
+                        for i in range(int(request.query_params.get('country_list_length')))]
+        if country_list: filter_dict['strana__in'] = country_list
+        region_list = [request.query_params.get(f'region_list[{i}]')
+                       for i in range(int(request.query_params.get('region_list_length')))]
+        if region_list: filter_dict['region'] = region_list
+        if filter_dict:
+            data = StatisticData.objects.filter(**filter_dict)
