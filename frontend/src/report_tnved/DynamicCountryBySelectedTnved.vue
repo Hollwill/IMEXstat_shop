@@ -14,10 +14,14 @@
     </div>
     <h1>Сегментный бублик</h1>
     <highcharts class="chart" :options="firstTnvedCountriesPieOptions" :updateArgs="updateArgs"></highcharts>
+    <highcharts class="chart" :options="selectedItemPieOptions" :updateArgs="updateArgs"></highcharts>
+
     <highcharts class="chart" :options="avgBarOptions"></highcharts>
 
 
-<!--    <h1>Доля первого кода в вышестоящем</h1>-->
+<!--    <h1>Доля первого код
+
+а в вышестоящем</h1>-->
 <!--    <highcharts class="chart" :options="firstTnvedPartsPieOptions" :updateArgs="updateArgs"></highcharts>-->
   </div>
 </template>
@@ -83,6 +87,27 @@
                       },
 
                   ]
+                },
+                selectedItemPieOptions: {
+                  plotOptions: {
+                    series: {
+                      dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.percentage:.2f}%'
+                      }
+                    }
+                  },
+                  tooltip: {
+                    // headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: 'значение: <b>{point.y}</b><br/>'
+                  },
+                  chart: {
+                    type: "pie"
+                  },
+
+                  series: [{
+                    data: [],
+                  }],
                 },
                 firstTnvedCountriesPieData: [],
                 firstTnvedCountriesPieOptions: {
@@ -179,6 +204,19 @@
             }
         },
         methods: {
+            updateselectedItemPie(val) {
+              this.selectedItemPieOptions.series[0].data = [];
+              for (let el of val) {
+                let data;
+                if (this.category === 'ИМ') {
+                    data = (this.params === 'stoim') ? el.imp.cost : el.imp.weight
+                } else {
+                    data = (this.params === 'netto') ? el.exp.cost : el.exp.weight
+                }
+                window.console.log(data, el.item);
+                this.selectedItemPieOptions.series[0].data.push([el.item, data])
+              }
+            },
             updateAvgChart(val) {
               this.avgBarOptions.series[0].data = [];
               for (let i = 0; i < this.date_labels.length; i++) {
@@ -239,6 +277,7 @@
                         this.chartOptions.xAxis.categories = response.data.labels;
                         this.date_labels = response.data.labels;
                         this.updateAvgChart(response.data.data);
+                        this.updateselectedItemPie(response.data.extend_data)
                     })
             }
         },

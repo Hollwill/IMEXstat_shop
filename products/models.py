@@ -7,6 +7,8 @@ from ckeditor.fields import RichTextField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.fields import TreeForeignKey as TreeKey
 
+import django
+
 
 class Research(models.Model):
     TYPE_RESEARCH_CHOICE = [
@@ -38,8 +40,10 @@ class Research(models.Model):
     Q_OY_cost = models.IntegerField(blank=True, null=True, verbose_name='Ежеквартальное обновление - На один год')
     stock = models.BooleanField(default=False, verbose_name='Акция')
     discount = models.IntegerField(default=0, choices=[(i, i) for i in range(0, 101)], verbose_name='Скидка')
-
+    date_update = models.DateField(default=django.utils.timezone.now(), blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+    # TODO: добавить пункт дата обновления
 
     def save(self, *args, **kwargs):
         super(Research, self).save()
@@ -98,6 +102,3 @@ class IndividualResearchFeedback(models.Model):
     class Meta:
         verbose_name = 'Исследование на заказ'
         verbose_name_plural = "Исследования на заказ"
-
-
-

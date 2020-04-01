@@ -11,12 +11,19 @@
         <month-picker-input @input="date_from" :no-default="true" lang="ru"></month-picker-input>
         <month-picker-input @input='date_to' :no-default="true" lang="ru"></month-picker-input>
       </div>
-      <input type="text" v-model="item">
-<!--      <autocomplete :min-len="1" :placeholder="'Введите код тнвэд'" :items="items" v-model="item" :get-label="getLabel" :component-item="template" @update-items="updateItems"></autocomplete>-->
-      <button @click="addTnved">+</button>
-      <div class="tnved_list" v-for="(tnved, index) in selectedTnved" :key="index">
-        <span class="div-as-button" @click="rmTnved(index)">{{tnved}}</span>
+<!--      <input type="text" v-model="item">-->
+      <autocomplete :min-len="2" @item-clicked="tnved_search" :placeholder="'Введите код тнвэд'" :items="items" v-model="item" :get-label="getLabel" :component-item="template" @update-items="updateItems"></autocomplete>
+      <button @click="addItem">+</button>
+      <div class="item_list" v-for="(tnved, index) in selectedTnved" :key="index">
+        <span class="div-as-button" @click="rmItem(index, selectedTnved)">{{tnved}}</span>
       </div>
+      <div class="item_list" v-for="(country, index) in selectedCountry" :key="index">
+        <span class="div-as-button" @click="rmItem(index, selectedCountry)">{{country}}</span>
+      </div>
+      <div class="item_list" v-for="(region, index) in selectedRegion" :key="index">
+        <span class="div-as-button" @click="rmItem(index, selectedRegion)">{{region}}</span>
+      </div>
+
       <br>
       <select v-model="params">
         <option value="stoim">Стоимость</option>
@@ -39,7 +46,7 @@
                 :params="params"
                 :interval="interval"
                 :category="category"
-                :tnved_list="selectedTnved"
+                :tnved_list="selectedItems"
         ></router-view>
     </div>
   </div>
@@ -48,10 +55,10 @@
 
 <script>
 import { MonthPickerInput } from 'vue-month-picker'
-// import Autocomplete from 'v-autocomplete'
+import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
 import AutocompleteItemTemplate from "./AutocompleteItemTemplate";
-// import {HTTP} from './http-common'
+import {HTTP} from './http-common'
 
 export default {
   name: 'App',
@@ -61,6 +68,8 @@ export default {
           items: [],
           item: null,
           selectedTnved: [],
+          selectedCountry: [],
+          selectedRegion: [],
           date: {
               from: null,
               to: null
@@ -70,25 +79,62 @@ export default {
           category: 'ИМ',
       }
   },
+  computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    selectedItems: function() {
+        if (this.$route.name === 'report_tnved') {
+          return this.selectedTnved
+        } else if (this.$route.name === 'report_country') {
+          return this.selectedCountry
+        } else if (this.$route.name === 'report_region') {
+          return this.selectedRegion
+        }
+      },
+  },
   methods: {
-      addTnved () {
-          this.selectedTnved.push(this.item)
+
+      tnved_search() {
+        if (this.$route.name === 'report_tnved' && this.item.length < 10) {
+          this.updateItems(this.item)
+        }
+      },
+      addItem () {
+        if (this.item) {
+          if (this.$route.name === 'report_tnved') {
+            this.selectedTnved.push(this.item);
+          } else if (this.$route.name === 'report_country') {
+            this.selectedCountry.push(this.item);
+          } else if (this.$route.name === 'report_region') {
+            this.selectedRegion.push(this.item)
+          }
           this.item = null
+        }
       },
-      rmTnved (index) {
-          this.selectedTnved.splice(index, 1)
+      rmItem (index, list) {
+          list.splice(index, 1)
       },
-      // updateItems (text) {
-      //   HTTP.get('statistic/autocomplete/', {
-      //       params: {
-      //           'q': text
-      //       }
-      //   })
-      //       .then(response => {
-      //           this.items = response.data
-      //       })
-      //
-      // },
+      updateItems (text) {
+        if (text) {
+          let category
+          if (this.$route.name === 'report_tnved' && text.length % 2 === 0) {
+            category = 'tnved'
+          } else if (this.$route.name === 'report_country') {
+            category = 'country'
+          } else if (this.$route.name === 'report_region') {
+            category = 'region'
+          }
+          HTTP.get('statistic/autocomplete/', {
+              params: {
+                  'q': text,
+                  'category': category
+              }
+          })
+              .then(response => {
+                  this.items = response.data
+
+              })
+        }
+      },
       getLabel(item) {
           return item
       },
@@ -112,7 +158,7 @@ export default {
   },
   components: {
     MonthPickerInput,
-    // Autocomplete
+    Autocomplete
   },
 };
 </script>

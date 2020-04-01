@@ -38,86 +38,86 @@ class StatisticData(models.Model):
         date_range = [date(int(a[:4]), int(a[5:7]), 0o01) for a in str_date_range]
         return [i for i in pd.date_range(start=date_range[0], end=date_range[1], freq=pd_interval[interval])]
 
-    @classmethod
-    def get_statistic_with_split_by_dates(cls, request, item_list):
-        get = request.query_params.get('get')
-        split_dates = cls.pd_split_dates_by_inreval(request)
-        imp_data = StatisticData.objects.filter(napr='ИМ')
-        exp_data = StatisticData.objects.filter(napr='ЭК')
-        data_list = []
-        for item in item_list:
-            item_data = {
-                'item': item,
-                'exp': {
-                    'stoim': [],
-                    'weight': []
-                },
-                'imp': {
-                    'stoim': [],
-                    'weight': []
-                }
-            }
-            if get == 'tnved':
-                filter_dict = {tnved_dict[len(item)]: item}
-            elif get == 'country':
-                filter_dict = {'strana': item}
-            elif get == 'region':
-                filter_dict = {'region': item}
-            tnved_imp_data = imp_data.filter(**filter_dict)
-            tnved_exp_data = exp_data.filter(**filter_dict)
-            for i in range(len(split_dates) - 1):
-                tnved_agg_imp = tnved_imp_data.filter(
-                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
-                    Sum('stoim'), Sum('netto'))
-                tnved_agg_exp = tnved_exp_data.filter(
-                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
-                    Sum('stoim'), Sum('netto'))
-                item_data['imp']['stoim'].append(int(tnved_agg_imp['stoim__sum']) if tnved_agg_imp['stoim__sum'] else 0)
-                item_data['imp']['weight'].append(int(tnved_agg_imp['netto__sum']) if tnved_agg_imp['netto__sum'] else 0)
-                item_data['exp']['stoim'].append(int(tnved_agg_exp['stoim__sum']) if tnved_agg_exp['stoim__sum'] else 0)
-                item_data['exp']['weight'].append(int(tnved_agg_exp['netto__sum']) if tnved_agg_exp['netto__sum'] else 0)
-            data_list.append(item_data)
-        del split_dates[0]
-        return data_list, split_dates
-
-    @classmethod
-    def get_country_statistic_with_split_by_dates(cls, request, country_list):
-        split_dates = cls.pd_split_dates_by_inreval(request)
-        imp_data = StatisticData.objects.filter(napr='ИМ')
-        exp_data = StatisticData.objects.filter(napr='ЭК')
-        tnved_data_list = []
-        for country in country_list:
-            tnved_data = {
-                'tnved': country,
-                'exp': {
-                    'stoim': [],
-                    'weight': []
-                },
-                'imp': {
-                    'stoim': [],
-                    'weight': []
-                }
-            }
-            tnved_imp_data = imp_data.filter(strana=country)
-            tnved_exp_data = exp_data.filter(strana=country)
-            for i in range(len(split_dates) - 1):
-                tnved_agg_imp = tnved_imp_data.filter(
-                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
-                    Sum('stoim'), Sum('netto'))
-                tnved_agg_exp = tnved_exp_data.filter(
-                    period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
-                    Sum('stoim'), Sum('netto'))
-                tnved_data['imp']['stoim'].append(
-                    int(tnved_agg_imp['stoim__sum']) if tnved_agg_imp['stoim__sum'] else 0)
-                tnved_data['imp']['weight'].append(
-                    int(tnved_agg_imp['netto__sum']) if tnved_agg_imp['netto__sum'] else 0)
-                tnved_data['exp']['stoim'].append(
-                    int(tnved_agg_exp['stoim__sum']) if tnved_agg_exp['stoim__sum'] else 0)
-                tnved_data['exp']['weight'].append(
-                    int(tnved_agg_exp['netto__sum']) if tnved_agg_exp['netto__sum'] else 0)
-            tnved_data_list.append(tnved_data)
-        del split_dates[0]
-        return tnved_data_list, split_dates
+    # @classmethod
+    # def get_statistic_with_split_by_dates(cls, request, item_list):
+    #     get = request.query_params.get('get')
+    #     split_dates = cls.pd_split_dates_by_inreval(request)
+    #     imp_data = StatisticData.objects.filter(napr='ИМ')
+    #     exp_data = StatisticData.objects.filter(napr='ЭК')
+    #     data_list = []
+    #     for item in item_list:
+    #         item_data = {
+    #             'item': item,
+    #             'exp': {
+    #                 'stoim': [],
+    #                 'weight': []
+    #             },
+    #             'imp': {
+    #                 'stoim': [],
+    #                 'weight': []
+    #             }
+    #         }
+    #         if get == 'tnved':
+    #             filter_dict = {tnved_dict[len(item)]: item}
+    #         elif get == 'country':
+    #             filter_dict = {'strana': item}
+    #         elif get == 'region':
+    #             filter_dict = {'region': item}
+    #         tnved_imp_data = imp_data.filter(**filter_dict)
+    #         tnved_exp_data = exp_data.filter(**filter_dict)
+    #         for i in range(len(split_dates) - 1):
+    #             tnved_agg_imp = tnved_imp_data.filter(
+    #                 period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+    #                 Sum('stoim'), Sum('netto'))
+    #             tnved_agg_exp = tnved_exp_data.filter(
+    #                 period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+    #                 Sum('stoim'), Sum('netto'))
+    #             item_data['imp']['stoim'].append(int(tnved_agg_imp['stoim__sum']) if tnved_agg_imp['stoim__sum'] else 0)
+    #             item_data['imp']['weight'].append(int(tnved_agg_imp['netto__sum']) if tnved_agg_imp['netto__sum'] else 0)
+    #             item_data['exp']['stoim'].append(int(tnved_agg_exp['stoim__sum']) if tnved_agg_exp['stoim__sum'] else 0)
+    #             item_data['exp']['weight'].append(int(tnved_agg_exp['netto__sum']) if tnved_agg_exp['netto__sum'] else 0)
+    #         data_list.append(item_data)
+    #     del split_dates[0]
+    #     return data_list, split_dates
+    #
+    # @classmethod
+    # def get_country_statistic_with_split_by_dates(cls, request, country_list):
+    #     split_dates = cls.pd_split_dates_by_inreval(request)
+    #     imp_data = StatisticData.objects.filter(napr='ИМ')
+    #     exp_data = StatisticData.objects.filter(napr='ЭК')
+    #     tnved_data_list = []
+    #     for country in country_list:
+    #         tnved_data = {
+    #             'tnved': country,
+    #             'exp': {
+    #                 'stoim': [],
+    #                 'weight': []
+    #             },
+    #             'imp': {
+    #                 'stoim': [],
+    #                 'weight': []
+    #             }
+    #         }
+    #         tnved_imp_data = imp_data.filter(strana=country)
+    #         tnved_exp_data = exp_data.filter(strana=country)
+    #         for i in range(len(split_dates) - 1):
+    #             tnved_agg_imp = tnved_imp_data.filter(
+    #                 period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+    #                 Sum('stoim'), Sum('netto'))
+    #             tnved_agg_exp = tnved_exp_data.filter(
+    #                 period__range=[split_dates[i], split_dates[i + 1]]).aggregate(
+    #                 Sum('stoim'), Sum('netto'))
+    #             tnved_data['imp']['stoim'].append(
+    #                 int(tnved_agg_imp['stoim__sum']) if tnved_agg_imp['stoim__sum'] else 0)
+    #             tnved_data['imp']['weight'].append(
+    #                 int(tnved_agg_imp['netto__sum']) if tnved_agg_imp['netto__sum'] else 0)
+    #             tnved_data['exp']['stoim'].append(
+    #                 int(tnved_agg_exp['stoim__sum']) if tnved_agg_exp['stoim__sum'] else 0)
+    #             tnved_data['exp']['weight'].append(
+    #                 int(tnved_agg_exp['netto__sum']) if tnved_agg_exp['netto__sum'] else 0)
+    #         tnved_data_list.append(tnved_data)
+    #     del split_dates[0]
+    #     return tnved_data_list, split_dates
 
 
 @registry.register_document
@@ -160,9 +160,15 @@ class TnvedHandbook(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
 
 
+class RegionHandbook(models.Model):
+    okato = models.CharField(max_length=5, blank=True, null=True)
+    region = models.CharField(max_length=255, blank=True, null=True)
+
+
 class CountryHandbook(models.Model):
     country = models.CharField(max_length=255, db_index=True)
     description = models.CharField(max_length=255, blank=True, null=True)
+    continent = models.CharField(max_length=50, blank=True, null=True)
 
 
 class CountryAggregateData(models.Model):

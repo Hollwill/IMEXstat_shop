@@ -32,7 +32,6 @@
           TurnoverStructure: () => import('./market_summary/TurnoverStructure'),
           CountryStatistic: () => import('./market_summary/CountryStatistic')
         },
-
     }
 </script>
 

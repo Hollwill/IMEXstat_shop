@@ -244,7 +244,6 @@
                         y: data
                     })
                 }
-
             },
             segmentPieData(val) {
                 this.segmentPieOptions.series[0].data = [

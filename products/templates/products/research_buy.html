@@ -129,15 +129,15 @@
 
 <div class="ready__type readyInner__bot">
     <a href="#" onclick="return false;" id="contents_button" class="ready__type-item ready__type-itemActive">Структура исследования</a>
-    <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемы методы</a>
+{#    <a href="#" onclick="return false;" id="using_methods_button" class="ready__type-item">Используемые методы</a>#}
     <a href="#" onclick="return false;" id="data_sources_button" class="ready__type-item">Источники данных</a>
 </div>
 <div id="contents" class="readyInner__text">
     <p>{{ research.contents |safe }}</p>
 </div>
-<div style="display:none" id="using_methods" class="readyInner__text">
-    <p>{{ research.using_methods |safe }}</p>
-</div>
+{#<div style="display:none" id="using_methods" class="readyInner__text">#}
+{#    <p>{{ research.using_methods |safe }}</p>#}
+{#</div>#}
 <div style="display:none" id="data_sources" class="readyInner__text">
     <p>{{ research.data_sources |safe }}</p>
 </div>

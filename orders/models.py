@@ -44,7 +44,7 @@ class Order(models.Model):
         if self.client:
             return self.client.user.username
         else:
-            return self.firstname
+            return self.firstname if self.firstname else 'неизвестный'
 
     class Meta:
         verbose_name = 'Заказ'

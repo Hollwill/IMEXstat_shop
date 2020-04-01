@@ -36,7 +36,7 @@
 						<p>Фамилия</p>
 						{{ forms.individual_form.lastname }}
 					</div>
-          <div class="cartBuy__bio-formItem">
+                    <div class="cartBuy__bio-formItem">
 						<p>Отчество</p>
 						{{ forms.individual_form.middle_name }}
 					</div>
@@ -58,13 +58,40 @@
 				</div>
 
 				<div class="row cartBuy__bio-forms" id="urbioform">
+                    <div class="cartBuy__bio-formItem">
+						<p>Как вас зовут?</p>
+						<p>*Имя</p>
+						{{ forms.entity_form.firstname }}
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>Фамилия</p>
+						{{ forms.entity_form.lastname }}
+					</div>
+                    <div class="cartBuy__bio-formItem">
+						<p>Отчество</p>
+						{{ forms.entity_form.middle_name }}
+					</div>
 					<div class="cartBuy__bio-formItem">
 						<p>Название компании</p>
 						{{ forms.entity_form.firm_name }}
+					</div>
+                    <div class="cartBuy__bio-formItem">
+						<p>Контактные данные:</p>
+						<p>*Почта</p>
+						{{ forms.entity_form.email }}
+					</div>
+					<div class="cartBuy__bio-formItem">
+						<p>*Телефон (+79670841726)</p>
+						{% if forms.individual_form.phone.errors %}
+							<p class="settings_form_error">Введите действительный номер телефона</p>
+						{% endif %}
 
+						{{ forms.entity_form.phone }}
+						</p>
 					</div>
 					<div class="cartBuy__bio-formItem">
 						<div class="row">
+
 							<div class="cartBuy__bio-formItem cartBuy__bio-formItemBot">
 								<p>ИНН</p>
 								{{ forms.entity_form.INN }}
@@ -73,9 +100,9 @@
 								<p>КПП</p>
 								{{ forms.entity_form.KPP }}
 							</div>
-              <div class="">
+                            <div class="">
 								<p>Реквизиты</p>
-								{{ forms.entity_form.requisites_file }}
+                                <input type="file" name="requisites_file" id="id_requisites_file">
 							</div>
 						</div>
 					</div>

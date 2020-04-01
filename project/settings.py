@@ -185,7 +185,7 @@ class Dev(Base):
     BASE_DIR = Base.BASE_DIR
     DEBUG = True
 
-    SITE_ID = 8
+    SITE_ID = 9
 
     ALLOWED_HOSTS = ['*']
 
