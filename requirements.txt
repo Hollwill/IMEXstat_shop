@@ -31,7 +31,7 @@ django-treebeard==4.3
 django-unused-media==0.1.13
 django-webpack-loader==0.6.0
 django-widget-tweaks==1.4.5
-djangorestframework==3.10.3
+djangorestframework==3.11.2
 DjangoSEO==1.0
 elasticsearch==7.1.0
 elasticsearch-dsl==7.1.0
