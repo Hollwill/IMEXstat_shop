@@ -21,7 +21,7 @@ django-multi-form-view==2.0.1
 django-multiforloop==0.2.1
 django-ok-seo==0.8.2
 django-phonenumber-field==3.0.1
-django-registration==3.0.1
+django-registration==3.1.2
 django-rest-framework==0.1.0
 django-seo2==1.0.1
 django-singleton-model==0.2.3
